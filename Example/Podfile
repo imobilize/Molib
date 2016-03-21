@@ -1,6 +1,8 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
+pod 'AlamoFire'
+
 target 'Molib_Example', :exclusive => true do
   pod "Molib", :path => "../"
 end
@@ -8,8 +10,7 @@ end
 target 'Molib_Tests', :exclusive => true do
   pod "Molib", :path => "../"
 
-  pod 'Quick', '~> 0.3.1'
-  pod 'Nimble'
+  pod 'Quick', '~> 0.6.0'
+  pod 'Nimble', '2.0.0-rc.3'
   pod 'FBSnapshotTestCase'
-  pod 'Nimble-Snapshots'
 end

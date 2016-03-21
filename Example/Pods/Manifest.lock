@@ -1,0 +1,30 @@
+PODS:
+  - Alamofire (2.0.0)
+  - FBSnapshotTestCase (2.0.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.0.4)
+  - FBSnapshotTestCase/Core (2.0.4)
+  - FBSnapshotTestCase/SwiftSupport (2.0.4):
+    - FBSnapshotTestCase/Core
+  - Molib (0.1.0)
+  - Nimble (2.0.0-rc.3)
+  - Quick (0.6.0)
+
+DEPENDENCIES:
+  - AlamoFire
+  - FBSnapshotTestCase
+  - Molib (from `../`)
+  - Nimble (= 2.0.0-rc.3)
+  - Quick (~> 0.6.0)
+
+EXTERNAL SOURCES:
+  Molib:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Alamofire: 2f13548b29d25a58ecd91c9225fb51493e2b782b
+  FBSnapshotTestCase: d94cf34841c9e77390e29009e8e2713479d48753
+  Molib: 7e94b4bf258b58c5260c21bdcf2efbba33f84121
+  Nimble: 9dff98ee195ffe7351d3b2fb01d3a1420fd97948
+  Quick: 563686dbcf0ae0f9f7401ac9cd2d786ee1b7f3d7
+
+COCOAPODS: 0.36.3
