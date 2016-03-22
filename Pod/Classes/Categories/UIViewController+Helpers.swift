@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-enum UIViewControllerTransition {
+public enum UIViewControllerTransition {
     
     case FlowFromRight
     case PushToBack
@@ -10,7 +10,7 @@ enum UIViewControllerTransition {
 
 extension UIStoryboard {
     
-    class func controllerWithIdentifier(identifier: String) -> AnyObject {
+    public class func controllerWithIdentifier(identifier: String) -> AnyObject {
         
         let application = UIApplication.sharedApplication()
         
@@ -25,63 +25,63 @@ extension UIStoryboard {
 
 extension UIViewController {
     
-    var navController: UINavigationController {
+    public var navController: UINavigationController {
         
         get {
             return self.navigationController!
         }
     }
 
-    func setRightButtonItem(item: UIBarButtonItem?) {
+    public func setRightButtonItem(item: UIBarButtonItem?) {
         
         self.navigationItem.rightBarButtonItem = item
     }
     
-    func setLeftButtonItem(item: UIBarButtonItem?) {
+    public func setLeftButtonItem(item: UIBarButtonItem?) {
         
         self.navigationItem.leftBarButtonItem = item
     }
     
-    func pushViewController(viewController: UIViewController) {
+    public func pushViewController(viewController: UIViewController) {
         
         self.navController.pushViewController(viewController, animated: true)
     }
     
     
-    func insertViewController(controller: UIViewController, belowViewController: UIViewController, withTransition: UIViewControllerTransition, duration: NSTimeInterval) {
+    public func insertViewController(controller: UIViewController, belowViewController: UIViewController, withTransition: UIViewControllerTransition, duration: NSTimeInterval) {
         
         
     }
     
-    func presentViewControllerNonAnimated(viewController: UIViewController) {
+    public func presentViewControllerNonAnimated(viewController: UIViewController) {
         
         presentViewController(viewController, animated: false, completion: nil)
 
     }
 
-    func presentViewController(viewController: UIViewController) {
+    public func presentViewController(viewController: UIViewController) {
         
         presentViewController(viewController, animated: true, completion: nil)
     }
     
-    func dismissViewController() {
+    public func dismissViewController() {
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
 
     
-    func addViewController(viewController: UIViewController, inView:UIView) {
+    public func addViewController(viewController: UIViewController, inView:UIView) {
         
         addViewController(viewController, inView: inView, underView:nil, parentController:self)
     }
     
-    func addViewController(viewController: UIViewController, inView:UIView, fromController:UIViewController) {
+    public func addViewController(viewController: UIViewController, inView:UIView, fromController:UIViewController) {
         
         addViewController(viewController, inView: inView, underView: nil, parentController: fromController)
     }
     
-    func removeViewController(viewController: UIViewController) {
+    public func removeViewController(viewController: UIViewController) {
         
         viewController.willMoveToParentViewController(nil)
         
@@ -91,7 +91,7 @@ extension UIViewController {
     }
     
     
-    func addViewController(viewController: UIViewController, inView:UIView, underView:UIView?, parentController:UIViewController) {
+    public func addViewController(viewController: UIViewController, inView:UIView, underView:UIView?, parentController:UIViewController) {
         
         viewController.willMoveToParentViewController(parentController)
         
@@ -128,7 +128,7 @@ extension UIViewController {
     }
     
     
-    func rootViewController() -> UIViewController {
+    public func rootViewController() -> UIViewController {
         
         let window: UIWindow = UIApplication.sharedApplication().windows[0] 
         

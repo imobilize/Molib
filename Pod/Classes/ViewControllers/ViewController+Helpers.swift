@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol MOContainerViewDelegate {
+public protocol MOContainerViewDelegate {
 
     func headerOffset() -> CGFloat
 

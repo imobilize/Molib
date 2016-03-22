@@ -15,26 +15,26 @@ let kLineThickness: CGFloat = 0.5
 
 extension UIView {
     
-    var height: CGFloat {
+    public var height: CGFloat {
     
         get {
             return self.frame.size.height
         }
     }
     
-    var width: CGFloat {
+    public var width: CGFloat {
         
         get {
             return self.frame.size.width
         }
     }
     
-    func addDivider() {
+    public func addDivider() {
     
         addDividerAtLocation(self.height - 1.0)
     }
     
-    func addDividerAtLocation(location: CGFloat, withEdgeInset insets:UIEdgeInsets) {
+    public func addDividerAtLocation(location: CGFloat, withEdgeInset insets:UIEdgeInsets) {
     
         let grayColor =  UIColor(white: kGrayLineColor, alpha: CGFloat(1.0))
     
@@ -47,13 +47,13 @@ extension UIView {
         addSubview(divider)
     }
     
-    func addDividerAtLocation(location: CGFloat) {
+    public func addDividerAtLocation(location: CGFloat) {
     
         let grayColor = UIColor(white: kGrayLineColor, alpha: 1.0)
         addDividerAtLocation(location, withColor:grayColor)
     }
     
-    func addDividerAtLocation(location: CGFloat, withColor color:UIColor) {
+    public func addDividerAtLocation(location: CGFloat, withColor color:UIColor) {
     
         let divider = UIView(frame:CGRectMake(0.0, location, self.width, kLineThickness))
     
@@ -62,13 +62,13 @@ extension UIView {
         addSubview(divider)
     }
 
-    func addBorderWithColor(color: UIColor) {
+    public func addBorderWithColor(color: UIColor) {
     
         self.layer.borderColor = color.CGColor
         self.layer.borderWidth = 1.0
     }
     
-    func roundCorners(corners: UIRectCorner, withRadius radius:CGFloat) {
+    public func roundCorners(corners: UIRectCorner, withRadius radius:CGFloat) {
     
         self.layer.cornerRadius = radius
         

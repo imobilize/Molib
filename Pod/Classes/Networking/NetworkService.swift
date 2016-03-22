@@ -173,11 +173,13 @@ extension Operation {
     }
 }
 
-class SDWebImageService: ImageService {
+public class SDWebImageService: ImageService {
     
     let imageManager = SDWebImageManager.sharedManager()
     
-    func enqueueImageRequest(request: ImageRequest) -> Operation {
+    public init() {}
+    
+    public func enqueueImageRequest(request: ImageRequest) -> Operation {
         
         let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: SDWebImageOptions.HighPriority, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
             
@@ -187,7 +189,7 @@ class SDWebImageService: ImageService {
         return SDImageOperation(imageOperation: operation)
     }
     
-    func enqueueImageRequestBypassingCached(request: ImageRequest) -> Operation {
+    public func enqueueImageRequestBypassingCached(request: ImageRequest) -> Operation {
         
         let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: SDWebImageOptions.RefreshCached, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
             

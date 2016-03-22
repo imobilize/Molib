@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-class MOHitTestContainerView: UIView {
+public class MOHitTestContainerView: UIView {
     
-    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+    override public func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
         
         var hitView: UIView? = super.hitTest(point, withEvent: event)
     

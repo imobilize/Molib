@@ -3,12 +3,12 @@ import Foundation
 import UIKit
 
 
-protocol Operation {
+public protocol Operation {
     
     func cancel()
 }
 
-protocol UploadOperation: Operation {
+public protocol UploadOperation: Operation {
     
     func pause()
     
@@ -17,14 +17,14 @@ protocol UploadOperation: Operation {
     func registerProgressUpdate(progressUpdate: ProgressUpdate)
 }
 
-protocol NetworkRequest {
+public protocol NetworkRequest {
     
     var urlRequest: NSURLRequest { get }
     
     func handleResponse(dataOptional: NSData?, errorOptional: NSError?)
 }
 
-protocol NetworkService {
+public protocol NetworkService {
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation?
     
@@ -58,7 +58,7 @@ extension NetworkService {
     }
 }
 
-protocol ImageService {
+public protocol ImageService {
     
     func enqueueImageRequest(request: ImageRequest) -> Operation
     
@@ -66,7 +66,7 @@ protocol ImageService {
 
 }
 
-protocol ImageRequest {
+public protocol ImageRequest {
     
     var urlRequest: NSURLRequest { get }
 
@@ -74,7 +74,7 @@ protocol ImageRequest {
 
 }
 
-protocol MOConnectionHelper {
+public protocol MOConnectionHelper {
     
     func relativeURLStringForKey(key:String) -> String
     

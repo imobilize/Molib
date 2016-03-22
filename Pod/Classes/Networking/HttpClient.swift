@@ -7,12 +7,12 @@ import Foundation
 
 let kNetworkServiceClass = "NetworkService"
 
-class NetworkServiceFactory {
+public class NetworkServiceFactory {
     
     private static var serviceInstance: NetworkService?
     private static var authenticatedNetworkServiceInstance: AuththenticatedNetworkService?
     
-    static func networkService() -> NetworkService {
+    public static func networkService() -> NetworkService {
         
         if serviceInstance == nil {
             
@@ -22,7 +22,7 @@ class NetworkServiceFactory {
         return serviceInstance!
     }
     
-    static func authenticatedNetworkService() -> AuththenticatedNetworkService {
+    public static func authenticatedNetworkService() -> AuththenticatedNetworkService {
         
         if authenticatedNetworkServiceInstance == nil {
             

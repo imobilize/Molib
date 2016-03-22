@@ -11,10 +11,10 @@ var defaultsDictionary: NSMutableDictionary! = nil
 var secureItemsDictionary: NSMutableDictionary! = nil
 
 
-struct UserDefaultsImpl: UserDefaults {
+public struct UserDefaultsImpl: UserDefaults {
 
     
-    init() {
+    public init() {
         
         if(defaultsDictionary == nil) {
             
@@ -42,27 +42,27 @@ struct UserDefaultsImpl: UserDefaults {
         }
     }
     
-    func stringForKey(key: String) -> String? {
+    public func stringForKey(key: String) -> String? {
         
         return defaultsDictionary.objectForKey(key) as? String
     }
     
-    func secureStringForKey(key: String) -> String? {
+    public func secureStringForKey(key: String) -> String? {
         
         return secureItemsDictionary.objectForKey(key) as? String
     }
     
-    func dictionaryForKey(key: String) -> Dictionary<String, AnyObject>? {
+    public func dictionaryForKey(key: String) -> Dictionary<String, AnyObject>? {
         
         return defaultsDictionary.objectForKey(key) as? Dictionary
     }
     
-    func dataForKey(key: String) -> NSData? {
+    public func dataForKey(key: String) -> NSData? {
         
         return defaultsDictionary.objectForKey(key) as? NSData
     }
     
-    func boolForKey(key: String) -> Bool? {
+    public func boolForKey(key: String) -> Bool? {
         
         let number = defaultsDictionary.objectForKey(key) as? NSNumber
         
@@ -72,12 +72,12 @@ struct UserDefaultsImpl: UserDefaults {
     
     //MARK: Setting methods
 
-    func setString(value: String?, forKey key: String) {
+    public func setString(value: String?, forKey key: String) {
         
         setItem(value, forKey: key)
     }
     
-    func setSecureString(value: String?, forKey key: String) {
+    public func setSecureString(value: String?, forKey key: String) {
     
         if(secureItemsDictionary == nil) {
     
@@ -94,24 +94,24 @@ struct UserDefaultsImpl: UserDefaults {
         }
     }
     
-    func setDictionary(value: Dictionary<String, AnyObject>, forKey key: String) {
+    public func setDictionary(value: Dictionary<String, AnyObject>, forKey key: String) {
     
         setItem(value, forKey:key)
     }
     
-    func setData(value: NSData?, forKey key: String) {
+    public func setData(value: NSData?, forKey key: String) {
     
         setItem(value, forKey:key)
     }
     
-    func setBool(value: Bool, forKey key: String) {
+    public func setBool(value: Bool, forKey key: String) {
     
         let number = NSNumber(bool: value)
     
         setItem(number, forKey:key)
     }
     
-    func synchronize() -> Bool {
+    public func synchronize() -> Bool {
     
         if (secureItemsDictionary != nil) {
     

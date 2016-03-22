@@ -17,7 +17,7 @@ extension NSURLRequest {
         }
     }
     
-    class func POSTRequestJSON(urlString: String, bodyParameters: [String: AnyObject]) -> NSURLRequest? {
+    public class func POSTRequestJSON(urlString: String, bodyParameters: [String: AnyObject]) -> NSURLRequest? {
         
         if let url = NSURL(string: urlString) {
             
@@ -36,7 +36,7 @@ extension NSURLRequest {
         }
     }
     
-    class func POSTRequest(urlString: String, bodyParameters: AnyObject) -> NSURLRequest? {
+    public class func POSTRequest(urlString: String, bodyParameters: AnyObject) -> NSURLRequest? {
         
         if let url = NSURL(string: urlString) {
         
@@ -55,7 +55,7 @@ extension NSURLRequest {
         }
     }
     
-    class func POSTRequest(urlString: String, bodyData: NSData) -> NSURLRequest? {
+    public class func POSTRequest(urlString: String, bodyData: NSData) -> NSURLRequest? {
 
         if let url = NSURL(string: urlString) {
         
@@ -75,12 +75,12 @@ extension NSURLRequest {
         }
     }
     
-    class func GETRequest(urlString: String) -> NSURLRequest? {
+    public class func GETRequest(urlString: String) -> NSURLRequest? {
         
         return NSURLRequest.init(urlString: urlString)
     }
     
-    class func GETRequest(urlString: String, parameters: [String: AnyObject]) -> NSURLRequest? {
+    public class func GETRequest(urlString: String, parameters: [String: AnyObject]) -> NSURLRequest? {
         
         if let url = NSURL(string: urlString) {
             
@@ -100,7 +100,7 @@ extension NSURLRequest {
         }
     }
     
-    class func DELETERequest(urlString: String) -> NSURLRequest? {
+    public class func DELETERequest(urlString: String) -> NSURLRequest? {
         
         let request = NSMutableURLRequest.init(urlString: urlString)
         

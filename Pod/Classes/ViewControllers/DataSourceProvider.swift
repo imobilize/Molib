@@ -3,7 +3,7 @@ import Foundation
 import CoreData
 
 
-protocol DataSourceProvider {
+public protocol DataSourceProvider {
     
     typealias DataSourceDelegate: DataSourceProviderDelegate
     
@@ -34,7 +34,7 @@ protocol DataSourceProvider {
 }
 
 
-protocol DataSourceProviderDelegate {
+public protocol DataSourceProviderDelegate {
     
     typealias ItemType
     
@@ -61,16 +61,16 @@ protocol DataSourceProviderDelegate {
 }
 
 
-class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Delegate.ItemType == T>: DataSourceProvider {
+public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Delegate.ItemType == T>: DataSourceProvider {
     
-    var delegate: Delegate?
+    public var delegate: Delegate?
 
     private var arrayItems: [T]
     
     private var objectChanges: Array<(DataSourceChangeType,[NSIndexPath], [T])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
     
-    init() {
+    public init() {
         
         self.objectChanges = Array()
         self.sectionChanges = Array()
@@ -78,28 +78,27 @@ class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Dele
         arrayItems = [T]()
     }
     
-    func isEmpty() -> Bool {
+    public func isEmpty() -> Bool {
         
         return arrayItems.isEmpty
     }
     
-    func numberOfSections() -> Int {
+    public func numberOfSections() -> Int {
         
         return 1
     }
     
-    func numberOfRowsInSection(section: Int) -> Int {
+    public func numberOfRowsInSection(section: Int) -> Int {
         
         return arrayItems.count
     }
     
-    func itemAtIndexPath(indexPath: NSIndexPath) -> T {
+    public func itemAtIndexPath(indexPath: NSIndexPath) -> T {
         
         return arrayItems[indexPath.row]
     }
     
-    
-    func deleteItemAtIndexPath(indexPath: NSIndexPath) {
+    public func deleteItemAtIndexPath(indexPath: NSIndexPath) {
         
         let item = arrayItems[indexPath.row]
         
@@ -108,7 +107,7 @@ class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Dele
         delegate?.providerDidDeleteItemsAtIndexPaths([item], atIndexPaths: [indexPath])
     }
 
-    func insertItem(item: T, atIndexPath indexPath: NSIndexPath) {
+    public func insertItem(item: T, atIndexPath indexPath: NSIndexPath) {
         
         arrayItems.insert(item, atIndex: indexPath.row)
         
@@ -116,7 +115,7 @@ class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Dele
         
     }
     
-    func updateItem(item: T, atIndexPath indexPath: NSIndexPath) {
+    public func updateItem(item: T, atIndexPath indexPath: NSIndexPath) {
         
         var newItems = [T](arrayItems)
     
@@ -130,14 +129,14 @@ class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Dele
 
     }
     
-    func deleteAllInSection(section: Int) {
+    public func deleteAllInSection(section: Int) {
 
         arrayItems.removeAll()
         
         delegate?.providerDidDeleteAllItemsInSection(0)
     }
     
-    func batchUpdates(updatesBlock: VoidCompletion) {
+    public func batchUpdates(updatesBlock: VoidCompletion) {
         
         objc_sync_enter(self)
         
@@ -151,7 +150,7 @@ class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Dele
 
     }
     
-    func titleForHeaderAtSection(section: Int) -> String? {
+    public func titleForHeaderAtSection(section: Int) -> String? {
         return nil
     }
 }

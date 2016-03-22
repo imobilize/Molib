@@ -15,7 +15,7 @@ enum CoreDataStackType: Int {
     case InMemory
 }
 
-class CoreDataUtils {
+public class CoreDataUtils {
 
     let kShouldDeletePersistentStoreOnModelMismatch = true
    
@@ -24,12 +24,12 @@ class CoreDataUtils {
     private let sqliteFile: String
     private let storeType: String
     
-    class func inMemorySetup(storeName: String) -> CoreDataUtils {
+    public class func inMemorySetup(storeName: String) -> CoreDataUtils {
     
         return CoreDataUtils(storeName: storeName, storeType: NSInMemoryStoreType)
     }
     
-    class func defaultSetup(storeName: String) -> CoreDataUtils {
+    public class func defaultSetup(storeName: String) -> CoreDataUtils {
     
         return CoreDataUtils(storeName: storeName, storeType: NSSQLiteStoreType)
 
@@ -176,7 +176,7 @@ class CoreDataUtils {
         return coordinator
         }()
     
-    lazy var mainManagedObjectContext: NSManagedObjectContext? = {
+    public lazy var mainManagedObjectContext: NSManagedObjectContext? = {
         
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
@@ -193,7 +193,7 @@ class CoreDataUtils {
         }()
       // MARK: - Core Data Saving support
     
-    func saveContext () {
+    public func saveContext () {
         
         if let moc = self.mainManagedObjectContext {
             

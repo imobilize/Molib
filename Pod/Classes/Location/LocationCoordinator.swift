@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 import MapKit
 
-protocol LocationCoordinatorDelegate {
+public protocol LocationCoordinatorDelegate {
     
     func locationCoordinatorDidFindCurrentLocation(coordinator: LocationCoordinator, location: MOGeoLocation)
 
@@ -12,9 +12,9 @@ protocol LocationCoordinatorDelegate {
 }
 
 
-@objc class LocationCoordinator: NSObject, LocationManagerDelegate {
+@objc public class LocationCoordinator: NSObject, LocationManagerDelegate {
     
-    var delegate: LocationCoordinatorDelegate?
+    public var delegate: LocationCoordinatorDelegate?
     
     
     private var preferredLocation: MOGeoLocation
@@ -28,7 +28,7 @@ protocol LocationCoordinatorDelegate {
     private var alertController: UIAlertController!
     
     
-    init(locationManager: LocationManager, userDefaults: UserDefaults) {
+    public init(locationManager: LocationManager, userDefaults: UserDefaults) {
         
         self.locationManager = locationManager
         self.userDefaults = userDefaults
@@ -51,27 +51,27 @@ protocol LocationCoordinatorDelegate {
         self.locationManager.delegate = self
     }
     
-    func currentLocation() -> MOGeoLocation {
+    public func currentLocation() -> MOGeoLocation {
         
         return actualLocation
     }
     
-    func usersPreferredLocation() -> MOGeoLocation {
+    public func usersPreferredLocation() -> MOGeoLocation {
         
         return self.preferredLocation
     }
     
-    func setUsersPreferredLocation(location: MOGeoLocation) {
+    public func setUsersPreferredLocation(location: MOGeoLocation) {
         
         self.preferredLocation = location
     }
     
-    func requestCurrentLocation() {
+    public func requestCurrentLocation() {
         
         self.locationManager.requestCurrentLocation()
     }
     
-    func setCurrentLocation(geoLocation: MOGeoLocation) {
+    public func setCurrentLocation(geoLocation: MOGeoLocation) {
         
         let locationDictionary = geoLocation.toDictionary()
         
@@ -85,7 +85,7 @@ protocol LocationCoordinatorDelegate {
     
     //mark: - Location Manager Delegates
     
-    func locationFound(location: CLLocation) {
+    public func locationFound(location: CLLocation) {
         
         let geoLocation = MOGeoLocation(name: NSLocalizedString("Current location", comment: ""), coords: location.coordinate)
 
@@ -93,7 +93,7 @@ protocol LocationCoordinatorDelegate {
     }
     
     
-    func locationServicesDisabled() {
+    public func locationServicesDisabled() {
         
         let title = NSLocalizedString("Location Services Disabled", comment: "")
         let message = NSLocalizedString("You currently have all location services for this app disabled. You will need to enable them to get your current location", comment: "")
@@ -101,7 +101,7 @@ protocol LocationCoordinatorDelegate {
        showFailedAlert(title, message: message)
     }
     
-    func locationServiceFailed(error: NSError) {
+    public func locationServiceFailed(error: NSError) {
         
         let title = NSLocalizedString("Location Services Error", comment: "")
         let message = error.localizedDescription
@@ -120,11 +120,11 @@ protocol LocationCoordinatorDelegate {
 
     }
     
-    func geoCodeFound(placeMark: CLPlacemark) {
+    public func geoCodeFound(placeMark: CLPlacemark) {
         
     }
     
-    func geoCodeFailed(error: NSError) {
+    public func geoCodeFailed(error: NSError) {
         
     }
     

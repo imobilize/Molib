@@ -3,21 +3,22 @@ import Foundation
 import CoreLocation
 
 
-let kLocationDictionaryUserDefaultsKey = "selectedLocation"
-let kLocationDictionaryNameKey = "name"
-let kLocationDictionaryLatitudeey = "lat"
-let kLocationDictionaryLongitudeKey = "lon"
+public let kLocationDictionaryUserDefaultsKey = "selectedLocation"
+public let kLocationDictionaryNameKey = "name"
+public let kLocationDictionaryLatitudeey = "lat"
+public let kLocationDictionaryLongitudeKey = "lon"
 
-@objc class MOGeoLocation: NSObject {
+@objc public class MOGeoLocation: NSObject {
     
-    var locationName: String
-    var geoPoint: CLLocationCoordinate2D
-    var location: CLLocation {
+    public var locationName: String
+    public var geoPoint: CLLocationCoordinate2D
+
+    public var location: CLLocation {
         
         get { return CLLocation(latitude: geoPoint.latitude, longitude: geoPoint.longitude) }
     }
     
-    convenience init(dictionary: Dictionary<String, AnyObject>) {
+    public convenience init(dictionary: Dictionary<String, AnyObject>) {
     
         let name = dictionary[kLocationDictionaryNameKey] as? String
         let latitudeNumber = dictionary[kLocationDictionaryLatitudeey] as? Double
@@ -28,13 +29,13 @@ let kLocationDictionaryLongitudeKey = "lon"
         self.init(name: name!, coords:coordinates)
     }
     
-    init(name: String, coords:CLLocationCoordinate2D) {
+    public init(name: String, coords:CLLocationCoordinate2D) {
     
         locationName = name
         geoPoint = coords
     }
     
-    func toDictionary() -> Dictionary<String, AnyObject> {
+    public func toDictionary() -> Dictionary<String, AnyObject> {
     
         let dictonary: Dictionary<String, AnyObject>  = [ kLocationDictionaryNameKey: self.locationName,
                         kLocationDictionaryLatitudeey: self.geoPoint.latitude,

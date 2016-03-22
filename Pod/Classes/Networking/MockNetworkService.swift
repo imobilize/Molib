@@ -1,11 +1,11 @@
 
 import Foundation
 
-class MockRequestQueue {
+public class MockRequestQueue {
     
     private static var responses: Dictionary<String, String> = Dictionary<String, String>()
     
-    class func enqueueJsonResponseForRequestURL(urlString: String, responseFile: String) {
+    public class func enqueueJsonResponseForRequestURL(urlString: String, responseFile: String) {
         
         let bundle = NSBundle(forClass: self)
         
@@ -14,7 +14,7 @@ class MockRequestQueue {
         responses[urlString] = filePath
     }
     
-    class func dequeueResponeFileForRequestURL(urlString: String) -> String? {
+    public class func dequeueResponeFileForRequestURL(urlString: String) -> String? {
     
         let responseURL = responses[urlString]
     

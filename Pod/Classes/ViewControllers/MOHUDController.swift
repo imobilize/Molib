@@ -3,7 +3,7 @@ import UIKit
 import SVProgressHUD
 
 
-protocol ProgressHUD {
+public protocol ProgressHUD {
     
     func showSuccessWithMessage(message: String)
     
@@ -18,7 +18,7 @@ protocol ProgressHUD {
     func dismiss()
 }
 
-protocol ProgressHUDPresenter {
+public protocol ProgressHUDPresenter {
     
     var progressHUD: ProgressHUD { get }
 
@@ -59,7 +59,7 @@ struct MOHUDController: ProgressHUD {
 
 extension UIViewController:ProgressHUDPresenter {
     
-    var progressHUD: ProgressHUD {
+    public var progressHUD: ProgressHUD {
         
         get {
             var hud: MOHUDController?
@@ -78,7 +78,7 @@ extension UIViewController:ProgressHUDPresenter {
 
 extension UIViewController {
     
-    func showOkAlertWithTitle(title: String, message: String) {
+    public func showOkAlertWithTitle(title: String, message: String) {
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         

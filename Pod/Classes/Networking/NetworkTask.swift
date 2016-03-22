@@ -2,9 +2,9 @@
 import Foundation
 import UIKit
 
-struct DataRequestTask: NetworkRequest {
+public struct DataRequestTask: NetworkRequest {
     
-    let urlRequest: NSURLRequest
+    public let urlRequest: NSURLRequest
     
     let taskCompletion: DataResponseCompletion
     
@@ -15,29 +15,29 @@ struct DataRequestTask: NetworkRequest {
     }
     
     
-    func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
         self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
     }
 }
 
 
-struct JSONRequestTask: NetworkRequest {
+public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()
 
-    let urlRequest: NSURLRequest
+    public let urlRequest: NSURLRequest
     
     let taskCompletion: JSONResponseCompletion
     
-    init(urlRequest: NSURLRequest, taskCompletion: JSONResponseCompletion) {
+    public init(urlRequest: NSURLRequest, taskCompletion: JSONResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
     }
     
     
-    func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
         if let data = dataOptional {
             
@@ -64,9 +64,9 @@ struct JSONRequestTask: NetworkRequest {
     }
 }
 
-struct ImageRequestTask: ImageRequest {
+public struct ImageRequestTask: ImageRequest {
     
-    let urlRequest: NSURLRequest
+    public let urlRequest: NSURLRequest
 
     let taskCompletion: ImageResponseCompletion
     
@@ -78,7 +78,7 @@ struct ImageRequestTask: ImageRequest {
     }
     
     
-    func handleResponse(imageURL: String, image: UIImage?, error: NSError?) {
+    public func handleResponse(imageURL: String, image: UIImage?, error: NSError?) {
     
         self.taskCompletion(imageURL: imageURL, image: image, error: error)
     }

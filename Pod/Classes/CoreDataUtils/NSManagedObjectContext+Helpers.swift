@@ -12,7 +12,7 @@ import CoreData
 extension NSManagedObjectContext {
 
     
-    var childBackgroundContext: NSManagedObjectContext {
+    public var childBackgroundContext: NSManagedObjectContext {
         
         get {
         

@@ -6,7 +6,7 @@ import MapKit
 let kLocationErrorCode = 901
 
 
-@objc protocol LocationManagerDelegate: NSObjectProtocol {
+@objc public protocol LocationManagerDelegate: NSObjectProtocol {
 
     func locationServicesDisabled()
 
@@ -20,7 +20,7 @@ let kLocationErrorCode = 901
 }
 
 
-@objc class LocationManager: NSObject, CLLocationManagerDelegate {
+@objc public class LocationManager: NSObject, CLLocationManagerDelegate {
     
 
     var delegate: LocationManagerDelegate?
@@ -30,7 +30,7 @@ let kLocationErrorCode = 901
 
     private var currentLocation: CLLocation?
 
-    override init() {
+    override public init() {
         
         
         manager = CLLocationManager()
@@ -43,7 +43,7 @@ let kLocationErrorCode = 901
     }
 
     
-    func requestCurrentLocation() {
+    public func requestCurrentLocation() {
     
         manager.delegate = self
 
@@ -82,12 +82,12 @@ let kLocationErrorCode = 901
     
     
     //mark: - CLLocationManager Delegate Methods
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
         handleAuthorisationForState(status)
     }
 
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
  
         if let location = locations.last {
 
@@ -114,7 +114,7 @@ let kLocationErrorCode = 901
         }
     }
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    public func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 
         let clErrorCode = CLError(rawValue: error.code)
 
@@ -137,7 +137,7 @@ let kLocationErrorCode = 901
     
     // mark: - Utils
     
-    func distanceFromCurrentLocationToLocation(coordinate: CLLocationCoordinate2D) -> CLLocationDistance{
+    public func distanceFromCurrentLocationToLocation(coordinate: CLLocationCoordinate2D) -> CLLocationDistance{
     
         var distance: CLLocationDistance = 0
         

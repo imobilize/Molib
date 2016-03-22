@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Storable {
+public protocol Storable {
     
     static var typeName: String { get }
     
@@ -19,7 +19,7 @@ protocol Storable {
     init(dictionary: [String: AnyObject])
 }
 
-protocol DataStore {
+public protocol DataStore {
     
     func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable?
     
@@ -31,16 +31,16 @@ protocol DataStore {
     
 }
 
-class DataStoreImpl: DataStore {
+public class DataStoreImpl: DataStore {
     
     var storageDictionary: NSMutableDictionary
     
-    init(storageDictionary: NSMutableDictionary) {
+    public init(storageDictionary: NSMutableDictionary) {
         
         self.storageDictionary = storageDictionary
     }
     
-    func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable? {
+    public func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable? {
         
         var item: Storable?
         
@@ -56,7 +56,7 @@ class DataStoreImpl: DataStore {
         return item
     }
     
-    func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
+    public func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
         
         var items = [Storable]()
         
@@ -86,7 +86,7 @@ class DataStoreImpl: DataStore {
         return items
     }
     
-    func storeEntity<T: Storable>(type: T.Type, entity: Storable) {
+    public func storeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
         var typeDictionary = dictionaryForType(T.typeName)
 
@@ -100,7 +100,7 @@ class DataStoreImpl: DataStore {
         }
     }
     
-    func storeEntities<T: Storable>(type: T.Type, entities: [Storable]) {
+    public func storeEntities<T: Storable>(type: T.Type, entities: [Storable]) {
         
         var typeDictionary = dictionaryForType(T.typeName)
         

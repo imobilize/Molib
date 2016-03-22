@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol UserDefaults {
+public protocol UserDefaults {
     
     func stringForKey(key: String) -> String?
     

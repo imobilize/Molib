@@ -4,7 +4,7 @@ import Foundation
 let kRefreshTokenKey = "refreshToken"
 
 
-protocol AuththenticatedNetworkServiceDelegate {
+public protocol AuththenticatedNetworkServiceDelegate {
     
     func authenticatedNetworkServiceShouldReAuthenticate(service: AuththenticatedNetworkService) -> Bool
     
@@ -16,22 +16,22 @@ protocol AuththenticatedNetworkServiceDelegate {
 
 }
 
-class AuththenticatedNetworkService: NetworkService {
+public class AuththenticatedNetworkService: NetworkService {
     
-    var delegate: AuththenticatedNetworkServiceDelegate?
+    public var delegate: AuththenticatedNetworkServiceDelegate?
     
     let networkService: NetworkService
     
     let userDefaults: UserDefaults
     
-    init(networkService: NetworkService, userDefaults: UserDefaults) {
+    public init(networkService: NetworkService, userDefaults: UserDefaults) {
         
         self.networkService = networkService
         self.userDefaults = userDefaults
     }
     
     
-    func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
+    public func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         
@@ -42,7 +42,7 @@ class AuththenticatedNetworkService: NetworkService {
         return operation
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         
@@ -54,7 +54,7 @@ class AuththenticatedNetworkService: NetworkService {
 
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         

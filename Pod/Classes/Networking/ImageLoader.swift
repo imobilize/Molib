@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-protocol ImageLoader {
+public protocol ImageLoader {
     
     func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?)
     
@@ -14,20 +14,20 @@ protocol ImageLoader {
 }
 
 
-class AsyncImageLoader: ImageLoader {
+public class AsyncImageLoader: ImageLoader {
 
     let imageService: ImageService
     var currentTag: Int
     var loadingCache: Dictionary<String, Operation>
     
-    init(imageService: ImageService) {
+    public init(imageService: ImageService) {
     
         self.currentTag = 0
         self.imageService = imageService
         self.loadingCache = Dictionary<String, Operation>()
     }
     
-    func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?) {
+    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?) {
         
         dequeueImageView(imageView)
         
@@ -47,7 +47,7 @@ class AsyncImageLoader: ImageLoader {
         
     }
         
-    func dequeueImageView(imageView: UIImageView) {
+    public func dequeueImageView(imageView: UIImageView) {
             
         let imageViewKey = String(format: "%ld", imageView.tag)
             
@@ -62,7 +62,7 @@ class AsyncImageLoader: ImageLoader {
     }
     
     
-    func loadImage(src: String, completion: ImageResponseCompletion) -> Operation? {
+    public func loadImage(src: String, completion: ImageResponseCompletion) -> Operation? {
         
         var operation: Operation?
         
@@ -106,7 +106,7 @@ class AsyncImageLoader: ImageLoader {
         }
     }
     
-    func dequeueAll() {
+    public func dequeueAll() {
         
         for (_, imageOperation) in self.loadingCache {
             
