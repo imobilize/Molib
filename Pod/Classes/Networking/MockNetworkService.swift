@@ -7,7 +7,7 @@ public class MockRequestQueue {
     
     public class func enqueueJsonResponseForRequestURL(urlString: String, responseFile: String) {
         
-        let bundle = NSBundle(forClass: self)
+        let bundle = NSBundle.mainBundle()
         
         let filePath = bundle.pathForResource(responseFile, ofType: "json")
         
