@@ -1,6 +1,3 @@
-//
-//  Copyright (c) 2015 imobilize. All rights reserved.
-//
 
 import Foundation
 

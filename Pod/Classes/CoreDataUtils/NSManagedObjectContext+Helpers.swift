@@ -1,10 +1,3 @@
-//
-//  NSManagedObjectContext+Helpers.swift
-//  OnIt
-//
-//  Created by Andre Barrett on 29/01/2016.
-//  Copyright © 2016 imobilize. All rights reserved.
-//
 
 import Foundation
 import CoreData

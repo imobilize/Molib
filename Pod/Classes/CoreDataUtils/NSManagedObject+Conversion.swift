@@ -1,15 +1,8 @@
-//
-//  CoreDataTypeConversion.swift
-//  Bigger
-//
-//  Created by Andre Barrett on 13/08/2015.
-//  Copyright (c) 2015 BiggerEventsLtd. All rights reserved.
-//
 
 import Foundation
 import CoreData
 
-extension NSManagedObjectContext {
+extension NSManagedObject {
     
     public override func valueForUndefinedKey(key: String) -> AnyObject? {
         

@@ -1,10 +1,3 @@
-//
-//  NSUserDefaults+SecureProtocol.swift
-//  Bigger
-//
-//  Created by Andre Barrett on 23/08/2015.
-//  Copyright (c) 2015 BiggerEventsLtd. All rights reserved.
-//
 
 import Foundation
 

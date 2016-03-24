@@ -1,9 +1,3 @@
-//
-//  UIView+Helpers.swift
-//
-//  Created by Andre Barrett on 07/08/2015.
-//  Copyright (c) 2015 BiggerEventsLtd. All rights reserved.
-//
 
 import Foundation
 import UIKit

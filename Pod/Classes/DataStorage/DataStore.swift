@@ -1,10 +1,3 @@
-//
-//  DataStore.swift
-//  themixxapp
-//
-//  Created by Andre Barrett on 15/02/2016.
-//  Copyright © 2016 MixxLabs. All rights reserved.
-//
 
 import Foundation
 
@@ -29,6 +22,9 @@ public protocol DataStore {
     
     func storeEntities<T: Storable>(type: T.Type, entities: [Storable])
     
+    func removeEntity<T: Storable>(type: T.Type, entity: Storable)
+    
+    func removeEntities<T: Storable>(type: T.Type, entities: [Storable])
 }
 
 public class DataStoreImpl: DataStore {
@@ -113,6 +109,25 @@ public class DataStoreImpl: DataStore {
         
         self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
     }
+    
+    public func removeEntity<T: Storable>(type: T.Type, entity: Storable) {
+        
+        var typeDictionary = dictionaryForType(T.typeName)
+        
+        if let id = entity.id {
+            
+            typeDictionary[id] = nil
+            
+            self.storageDictionary.setValue(nil, forKey: type.typeName)
+        }
+        
+        
+    }
+    
+    public func removeEntities<T: Storable>(type: T.Type, entities: [Storable]) {
+        
+    }
+    
     
     func dictionaryForType(typeName: String) -> [String: AnyObject] {
         

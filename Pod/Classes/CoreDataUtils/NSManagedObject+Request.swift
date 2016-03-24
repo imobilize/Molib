@@ -1,10 +1,3 @@
-//
-//  CoreDataRequest.swift
-//  TrendiPeople
-//
-//  Created by Andre Barrett on 04/08/2015.
-//  Copyright (c) 2015 Andre Barrett. All rights reserved.
-//
 
 import Foundation
 import CoreData

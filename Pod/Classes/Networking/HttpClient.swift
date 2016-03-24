@@ -2,9 +2,6 @@
 import Foundation
 
 
-
-//mark Network Implementations
-
 let kNetworkServiceClass = "NetworkService"
 
 public class NetworkServiceFactory {

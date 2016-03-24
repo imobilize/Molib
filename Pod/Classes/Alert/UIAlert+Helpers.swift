@@ -1,10 +1,3 @@
-//
-//  UIAlert+Helpers.swift
-//  Bigger
-//
-//  Created by Andre Barrett on 14/08/2015.
-//  Copyright (c) 2015 BiggerEventsLtd. All rights reserved.
-//
 
 import Foundation
 import UIKit
