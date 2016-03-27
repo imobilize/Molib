@@ -5,12 +5,12 @@ import Alamofire
 
 extension NSURLRequest {
     
-    convenience init?(urlString: String) {
+    public convenience init?(urlString: String) {
         
         let url = NSURL(string: urlString)
         
         if url != nil {
-        
+            
             self.init(URL: url!, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 15)
         } else {
             return nil
@@ -36,18 +36,18 @@ extension NSURLRequest {
         }
     }
     
-    public class func POSTRequest(urlString: String, bodyParameters: AnyObject) -> NSURLRequest? {
+    public class func PUTRequestJSON(urlString: String, bodyParameters: [String: AnyObject]) -> NSURLRequest? {
         
         if let url = NSURL(string: urlString) {
-        
+            
             let request = NSMutableURLRequest(URL: url)
-        
-            request.HTTPMethod = RequestMethod.POST.rawValue
-        
-            let encoder: URLRequestEncoding = .URL
-        
+            
+            request.HTTPMethod = RequestMethod.PUT.rawValue
+            
+            let encoder: URLRequestEncoding = .JSON
+            
             let tuple = encoder.encode(request, parameters: bodyParameters)
-        
+            
             return tuple.0
         } else {
             
@@ -55,18 +55,57 @@ extension NSURLRequest {
         }
     }
     
-    public class func POSTRequest(urlString: String, bodyData: NSData) -> NSURLRequest? {
-
+    public class func PUTRequest(urlString: String, bodyData: NSData) -> NSURLRequest? {
+        
         if let url = NSURL(string: urlString) {
-        
+            
             let request = NSMutableURLRequest(URL: url)
-        
-            request.HTTPMethod = RequestMethod.POST.rawValue
-        
+            
+            request.HTTPMethod = RequestMethod.PUT.rawValue
+            
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
+            
             request.HTTPBody = bodyData
+            
+            return request
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    public class func POSTRequest(urlString: String, bodyParameters: AnyObject) -> NSURLRequest? {
         
+        if let url = NSURL(string: urlString) {
+            
+            let request = NSMutableURLRequest(URL: url)
+            
+            request.HTTPMethod = RequestMethod.POST.rawValue
+            
+            let encoder: URLRequestEncoding = .URL
+            
+            let tuple = encoder.encode(request, parameters: bodyParameters)
+            
+            return tuple.0
+        } else {
+            
+            return nil
+        }
+    }
+    
+    public class func POSTRequest(urlString: String, bodyData: NSData? = nil) -> NSURLRequest? {
+        
+        if let url = NSURL(string: urlString) {
+            
+            let request = NSMutableURLRequest(URL: url)
+            
+            request.HTTPMethod = RequestMethod.POST.rawValue
+            
+            request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+            
+            request.HTTPBody = bodyData
+            
             return request
             
         } else {
@@ -87,11 +126,11 @@ extension NSURLRequest {
             let request = NSMutableURLRequest(URL: url)
             
             request.HTTPMethod = RequestMethod.GET.rawValue
-        
+            
             let encoder: ParameterEncoding = .URLEncodedInURL
-        
+            
             let tuple = encoder.encode(request, parameters: parameters)
-        
+            
             return tuple.0
             
         } else {
@@ -153,13 +192,13 @@ public enum URLRequestEncoding {
             }
             
             encodeRequestWithTypeURL(mutableURLRequest, params: params)
-        
+            
         case .JSON:
-         
+            
             encodeRequestWithTypeJSON(mutableURLRequest, params: params)
             
         case .PropertyList(let format, let options):
-           
+            
             encodeRequestWithTypePropertyList(mutableURLRequest, params: params, types: (format, options))
             
         case .Custom(let closure):
@@ -167,7 +206,7 @@ public enum URLRequestEncoding {
         }
         
         return (mutableURLRequest, encodingError)
-    
+        
     }
     
     
@@ -221,12 +260,12 @@ public enum URLRequestEncoding {
                 allowLossyConversion: false
             )
         }
-     
+        
         return (mutableURLRequest, encodingError)
     }
-
+    
     func encodeRequestWithTypeJSON(mutableURLRequest: NSMutableURLRequest, params: AnyObject) -> (NSMutableURLRequest, NSError?)  {
-     
+        
         var encodingError: NSError? = nil
         
         do {
@@ -240,15 +279,15 @@ public enum URLRequestEncoding {
             
             encodingError = error as NSError
         }
-
+        
         return (mutableURLRequest, encodingError)
     }
     
     
     func encodeRequestWithTypePropertyList(mutableURLRequest: NSMutableURLRequest, params: AnyObject, types: (format: NSPropertyListFormat, options: NSPropertyListWriteOptions)) -> (NSMutableURLRequest, NSError?)  {
-
+        
         var encodingError: NSError? = nil
-
+        
         do {
             let data = try NSPropertyListSerialization.dataWithPropertyList(
                 params,
@@ -260,7 +299,7 @@ public enum URLRequestEncoding {
         } catch {
             encodingError = error as NSError
         }
-
+        
         return (mutableURLRequest, encodingError)
     }
     
@@ -274,7 +313,7 @@ public enum URLRequestEncoding {
      - returns: The percent-escaped, URL encoded query string components.
      */
     public func queryComponents(key: String, _ value: AnyObject) -> [(String, String)] {
-       
+        
         var components: [(String, String)] = []
         
         if let dictionary = value as? [String: AnyObject] {
@@ -328,23 +367,21 @@ public enum URLRequestEncoding {
         //
         //==========================================================================================================
         
-        if #available(iOS 8.3, OSX 10.10, *) {
-            escaped = string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
-        } else {
-            let batchSize = 50
-            var index = string.startIndex
+        
+        let batchSize = 50
+        var index = string.startIndex
+        
+        while index != string.endIndex {
+            let startIndex = index
+            let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
+            let range = Range(start: startIndex, end: endIndex)
             
-            while index != string.endIndex {
-                let startIndex = index
-                let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-                let range = Range(start: startIndex, end: endIndex)
-                
-                let substring = string.substringWithRange(range)
-                
-                escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
-                
-                index = endIndex
-            }
+            let substring = string.substringWithRange(range)
+            
+            escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
+            
+            index = endIndex
+            
         }
         
         return escaped

@@ -25,36 +25,39 @@ class AlamoFireNetworkService : NetworkService {
         return alamoFireRequestOperation
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation? {
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
-        let alamoFireRequest = self.manager.upload(method!, request.urlRequest.URL!.absoluteString, data: data)
+        let dataResponseCompletion = completionForRequest(request)
         
-        return enqueue(request, alamoFireRequest: alamoFireRequest)
-    }
-    
-    
-    func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation? {
+        var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
-        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
-        
-        let alamoFireRequest = self.manager.upload(method!, request.urlRequest.URL!.absoluteString, file: fileURL)
-        
-        return enqueue(request, alamoFireRequest: alamoFireRequest)
-    }
-    
-    
-    private func enqueue(request: NetworkRequest, alamoFireRequest: Request) -> UploadOperation? {
-        
-        let alamoFireUploadOperation = AlamoFireUploadOperation(request: alamoFireRequest)
-        
-        let completion = completionForRequest(request)
-        
-        alamoFireUploadOperation.fire(completion)
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+            
+            formData.appendBodyPart(data: data, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
+            
+            }, encodingCompletion: alamoFireUploadOperation.handleEncodingCompletion())
         
         return alamoFireUploadOperation
+    }
+    
+    
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
         
+        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
+        
+        let dataResponseCompletion = completionForRequest(request)
+        
+        var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
+        
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+            
+            formData.appendBodyPart(fileURL: fileURL, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
+            
+        }, encodingCompletion: alamoFireUploadOperation.handleEncodingCompletion())
+        
+        return alamoFireUploadOperation
     }
 }
 
@@ -83,44 +86,69 @@ struct AlamoFireRequestOperation: Operation {
 }
 
 
+
 struct AlamoFireUploadOperation : UploadOperation {
     
-    private let request: Request
+    typealias EncodingCompletion = (Manager.MultipartFormDataEncodingResult -> Void)
+
+    private var uploadRequest: Request?
+    private let dataCompletion: DataResponseCompletion
     
-    init(request: Request) {
-        self.request = request
+    
+    init(dataCompletion: DataResponseCompletion) {
+        
+        self.dataCompletion = dataCompletion
     }
     
-    func fire(completion: DataResponseCompletion) {
+    mutating func handleEncodingCompletion() -> EncodingCompletion {
         
-        request.validate().responseData { (networkResponse: Response<NSData, NSError>) -> Void in
+        return { (encodingResult) in
+        
+            switch encodingResult {
             
-            self.log.verbose("Request response for URL: \(self.request.request!.URL)")
+                case .Success(let request, _, _):
             
-            self.handleResponse(networkResponse, completion: completion)
+                    self.uploadRequest = request
+                    
+                    request.validate().responseData { (networkResponse: Response<NSData, NSError>) -> Void in
+                
+                        self.log.verbose("Request response for URL: \(request.request!.URL)")
+                
+                        self.handleResponse(networkResponse, completion: self.dataCompletion)
+                    }
+            
+                break
+            
+                case .Failure(_):
+                break
+            }
         }
     }
+
     
     func registerProgressUpdate(progressUpdate: ProgressUpdate) {
         
-        request.progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) -> Void in
+        if let request = uploadRequest {
             
-            let progress = CGFloat(totalBytesExpectedToWrite)/CGFloat(totalBytesWritten)
+            request.progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) -> Void in
             
-            progressUpdate(progress: progress)
+                let progress = CGFloat(totalBytesExpectedToWrite)/CGFloat(totalBytesWritten)
+            
+                progressUpdate(progress: progress)
+            }
         }
     }
     
     func pause() {
-        request.suspend()
+        uploadRequest?.suspend()
     }
     
     func resume() {
-        request.resume()
+        uploadRequest?.resume()
     }
     
     func cancel() {
-        request.cancel()
+        uploadRequest?.cancel()
     }
 }
 

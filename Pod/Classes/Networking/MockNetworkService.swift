@@ -38,7 +38,7 @@ class MockNetworkService : NetworkService {
         return operation
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation? {
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         
@@ -50,7 +50,7 @@ class MockNetworkService : NetworkService {
 
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation? {
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         

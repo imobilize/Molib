@@ -1,25 +1,25 @@
 import Foundation
 
-class ConnectionHelper: MOConnectionHelper {
+public class ConnectionHelper: MOConnectionHelper {
     
     var dictionary: [String: String]
     
-    init() {
+    public init() {
         
         dictionary = Dictionary()
     }
     
-    func relativeURLStringForKey(key:String) -> String {
+    public func relativeURLStringForKey(key:String) -> String {
         
         return dictionary[key]!
     }
     
-    func absoluteURLStringForKey(key: String) -> String {
+    public func absoluteURLStringForKey(key: String) -> String {
         
         return dictionary[key]!
     }
     
-    func absoluteURLForKey(key: String) -> NSURL {
+    public func absoluteURLForKey(key: String) -> NSURL {
         
         let urlString = dictionary[key]!
         

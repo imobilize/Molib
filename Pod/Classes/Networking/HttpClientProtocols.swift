@@ -24,14 +24,23 @@ public protocol NetworkRequest {
     func handleResponse(dataOptional: NSData?, errorOptional: NSError?)
 }
 
+public protocol NetworkUploadRequest: NetworkRequest {
+    
+    var name: String { get }
+    
+    var fileName: String { get }
+    
+    var mimeType: String { get }
+}
+
 public protocol NetworkService {
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation?
     
-    func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation?
-    
-    func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation?
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation?
 
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation?
+    
 }
 
 extension NetworkService {

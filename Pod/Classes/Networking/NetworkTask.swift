@@ -22,6 +22,33 @@ public struct DataRequestTask: NetworkRequest {
 }
 
 
+public struct DataUploadTask: NetworkUploadRequest {
+    
+    public let urlRequest: NSURLRequest
+
+    public let name: String
+    
+    public let fileName: String
+    
+    public let mimeType: String
+    
+    let taskCompletion: DataResponseCompletion
+
+    public init(urlRequest: NSURLRequest, name: String, fileName: String, mimeType: String, taskCompletion: DataResponseCompletion) {
+        
+        self.urlRequest = urlRequest
+        self.name = name
+        self.fileName = fileName
+        self.mimeType = mimeType
+        self.taskCompletion = taskCompletion
+    }
+    
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+        
+        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+    }
+}
+
 public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()
@@ -39,30 +66,36 @@ public struct JSONRequestTask: NetworkRequest {
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
+        let (json, jsonError) = convertResponseToJson(dataOptional)
+        
+        let error: NSError? = jsonError == nil ? errorOptional : jsonError
+
+        self.taskCompletion(responseOptional: json, errorOptional: error)
+    }
+}
+
+extension NetworkRequest {
+    
+    func convertResponseToJson(dataOptional: NSData?) -> (AnyObject?, NSError?) {
+        
+        var json: AnyObject?
+        var jsonError: NSError?
+
         if let data = dataOptional {
-            
-            var jsonError: NSError?
-            
-            let json: AnyObject?
+        
             do {
+            
                 json = try NSJSONSerialization.JSONObjectWithData(data, options: [NSJSONReadingOptions.MutableLeaves, NSJSONReadingOptions.MutableContainers])
             } catch let error as NSError {
                 jsonError = error
                 json = nil
             }
-            
-            let error: NSError? = jsonError == nil ? errorOptional : jsonError
-            
-            self.log.verbose("Response: \(json) Error: \(error)" )
-
-            self.taskCompletion(responseOptional: json, errorOptional: error)
-            
-        } else {
-            
-            self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
         }
+        
+        return (json, jsonError)
     }
 }
+
 
 public struct ImageRequestTask: ImageRequest {
     

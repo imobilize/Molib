@@ -1,7 +1,7 @@
 
 import Foundation
 
-let kRefreshTokenKey = "refreshToken"
+public let kRefreshTokenKey = "refreshToken"
 
 
 public protocol AuththenticatedNetworkServiceDelegate {
@@ -42,11 +42,11 @@ public class AuththenticatedNetworkService: NetworkService {
         return operation
     }
     
-    public func enqueueNetworkUploadRequest(request: NetworkRequest, fileURL: NSURL) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         
-        let authenticatedCheckTask = DataRequestTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
+        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
         let operation = networkService.enqueueNetworkUploadRequest(authenticatedCheckTask, fileURL: fileURL)
         
@@ -54,11 +54,11 @@ public class AuththenticatedNetworkService: NetworkService {
 
     }
     
-    public func enqueueNetworkUploadRequest(request: NetworkRequest, data: NSData) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         
-        let authenticatedCheckTask = DataRequestTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
+        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
         let operation = networkService.enqueueNetworkUploadRequest(authenticatedCheckTask, data: data)
         
