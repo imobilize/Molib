@@ -1,6 +1,9 @@
 
 import Foundation
 
+public typealias StorableDictionary = [String: AnyObject]
+
+
 public protocol Storable {
     
     static var typeName: String { get }
@@ -9,7 +12,7 @@ public protocol Storable {
     
     func toDictionary() -> [String: AnyObject]
     
-    init(dictionary: [String: AnyObject])
+    init(dictionary: StorableDictionary)
 }
 
 public protocol DataStore {
@@ -45,7 +48,7 @@ public class DataStoreImpl: DataStore {
         let typeDictionary = dictionaryForType(type.typeName)
         
         
-            if let object = typeDictionary[id] as? [String: AnyObject] {
+            if let object = typeDictionary[id] as? StorableDictionary {
             
                 item = T(dictionary: object)
             }
