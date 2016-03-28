@@ -55,7 +55,7 @@ extension NSURLRequest {
         }
     }
     
-    public class func PUTRequest(urlString: String, bodyData: NSData) -> NSURLRequest? {
+    public class func PUTRequest(urlString: String, bodyData: NSData?) -> NSURLRequest? {
         
         if let url = NSURL(string: urlString) {
             

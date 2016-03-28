@@ -16,8 +16,10 @@ public protocol DataStore {
     
     func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable?
     
-    func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable]
+    func fetchAllEntities<T: Storable>(type: T.Type) -> [Storable]
     
+    func fetchEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable]
+
     func storeEntity<T: Storable>(type: T.Type, entity: Storable)
     
     func storeEntities<T: Storable>(type: T.Type, entities: [Storable])
@@ -52,35 +54,16 @@ public class DataStoreImpl: DataStore {
         return item
     }
     
-    public func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
+    public func fetchAllEntities<T: Storable>(type: T.Type) -> [Storable] {
         
-        var items = [Storable]()
-        
-        let typeDictionary = dictionaryForType(T.typeName)
-        
-            let filteredItems = typeDictionary.filter({ (id: String, value: AnyObject) -> Bool in
-
-                var includeObject = true
-                
-                if let predicate = predicateOptional {
-                    includeObject = predicate.evaluateWithObject(value)
-                }
-                
-                return includeObject
-            })
-            
-            filteredItems.forEach({ (id: String, value: AnyObject) -> () in
-                
-                let objectDictionary = value as! [String: AnyObject]
-                
-                let item = T(dictionary: objectDictionary)
-                
-                items.append(item)
-            })
-        
-        
-        return items
+        return fetchEntities(type, predicateOptional: nil)
     }
+
+    public func fetchEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
+        
+        return fetchAllEntities(type, predicateOptional: predicateOptional)
+    }
+
     
     public func storeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
@@ -128,6 +111,35 @@ public class DataStoreImpl: DataStore {
         
     }
     
+    private func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate? = nil) -> [Storable] {
+            
+            var items = [Storable]()
+            
+            let typeDictionary = dictionaryForType(T.typeName)
+            
+            let filteredItems = typeDictionary.filter({ (id: String, value: AnyObject) -> Bool in
+                
+                var includeObject = true
+                
+                if let predicate = predicateOptional {
+                    includeObject = predicate.evaluateWithObject(value)
+                }
+                
+                return includeObject
+            })
+            
+            filteredItems.forEach({ (id: String, value: AnyObject) -> () in
+                
+                let objectDictionary = value as! [String: AnyObject]
+                
+                let item = T(dictionary: objectDictionary)
+                
+                items.append(item)
+            })
+            
+            
+            return items
+        }
     
     func dictionaryForType(typeName: String) -> [String: AnyObject] {
         

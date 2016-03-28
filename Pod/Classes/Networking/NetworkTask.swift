@@ -49,6 +49,38 @@ public struct DataUploadTask: NetworkUploadRequest {
     }
 }
 
+public struct DataUploadJsonResponseTask: NetworkUploadRequest {
+    
+    public let urlRequest: NSURLRequest
+    
+    public let name: String
+    
+    public let fileName: String
+    
+    public let mimeType: String
+    
+    let taskCompletion: JSONResponseCompletion
+    
+    public init(urlRequest: NSURLRequest, name: String, fileName: String, mimeType: String,  taskCompletion: JSONResponseCompletion) {
+        
+        self.urlRequest = urlRequest
+        self.name = name
+        self.fileName = fileName
+        self.mimeType = mimeType
+        self.taskCompletion = taskCompletion
+    }
+    
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+        
+        let (json, jsonError) = convertResponseToJson(dataOptional)
+        
+        let error: NSError? = jsonError == nil ? errorOptional : jsonError
+        
+        self.taskCompletion(responseOptional: json, errorOptional: error)
+
+    }
+}
+
 public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()
@@ -76,7 +108,7 @@ public struct JSONRequestTask: NetworkRequest {
 
 extension NetworkRequest {
     
-    func convertResponseToJson(dataOptional: NSData?) -> (AnyObject?, NSError?) {
+    public func convertResponseToJson(dataOptional: NSData?) -> (AnyObject?, NSError?) {
         
         var json: AnyObject?
         var jsonError: NSError?

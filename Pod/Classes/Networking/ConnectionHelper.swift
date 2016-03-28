@@ -28,3 +28,29 @@ public class ConnectionHelper: MOConnectionHelper {
         return url!
     }
 }
+
+extension String {
+    
+    public func URLReplacingPathParamaters(parameters: Dictionary<String, String>) -> String {
+        
+        var path = self
+        
+        for (key, value) in parameters {
+            
+            let str = "{\(key)}"
+            
+            path = path.stringByReplacingOccurrencesOfString(str, withString: value)
+            
+            
+        }
+        
+        if let finalPath = path.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+            
+            path = finalPath
+        }
+        
+        return path
+    }
+}
+
+
