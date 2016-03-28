@@ -48,12 +48,17 @@ extension UIView {
     }
     
     public func addDividerAtLocation(location: CGFloat, withColor color:UIColor) {
-    
+        
         let divider = UIView(frame:CGRectMake(0.0, location, self.width, kLineThickness))
     
         divider.backgroundColor = color
     
         addSubview(divider)
+        
+        let constraint = NSLayoutConstraint(item: divider, attribute: .Bottom, relatedBy: .Equal,
+                                        toItem: self, attribute: .Bottom, multiplier: 1.0, constant: location)
+        
+        self.addConstraint(constraint)
     }
 
     public func addBorderWithColor(color: UIColor) {
