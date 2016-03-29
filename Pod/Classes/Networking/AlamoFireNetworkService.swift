@@ -26,7 +26,7 @@ class AlamoFireNetworkService : NetworkService {
     }
     
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
-        
+                
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
         let dataResponseCompletion = completionForRequest(request)
@@ -109,14 +109,9 @@ struct AlamoFireUploadOperation : UploadOperation {
                 case .Success(let request, _, _):
             
                     self.uploadRequest = request
+
+                    self.performRequest()
                     
-                    request.validate().responseData { (networkResponse: Response<NSData, NSError>) -> Void in
-                
-                        self.log.verbose("Request response for URL: \(request.request!.URL)")
-                
-                        self.handleResponse(networkResponse, completion: self.dataCompletion)
-                    }
-            
                 break
             
                 case .Failure(_):
@@ -125,6 +120,17 @@ struct AlamoFireUploadOperation : UploadOperation {
         }
     }
 
+    private func performRequest() {
+    
+    
+        uploadRequest?.validate().responseData { (networkResponse: Response<NSData, NSError>) -> Void in
+    
+            self.log.verbose("Request response for URL: \(self.uploadRequest!.request!.URL)")
+    
+            self.handleResponse(networkResponse, completion: self.dataCompletion)
+    }
+
+    }
     
     func registerProgressUpdate(progressUpdate: ProgressUpdate) {
         

@@ -71,7 +71,7 @@ public protocol ImageService {
     
     func enqueueImageRequest(request: ImageRequest) -> Operation
     
-    func enqueueImageRequestBypassingCached(request: ImageRequest) -> Operation
+    func enqueueImageRequestRefreshingCache(request: ImageRequest) -> Operation
 
 }
 

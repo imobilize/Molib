@@ -4,6 +4,8 @@ import UIKit
 
 public protocol ImageLoader {
     
+    func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?, refreshCache: Bool)
+
     func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?)
     
     func dequeueImageView(imageView: UIImageView)
@@ -27,23 +29,29 @@ public class AsyncImageLoader: ImageLoader {
         self.loadingCache = Dictionary<String, Operation>()
     }
     
-    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?) {
+    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?, refreshCache: Bool) {
         
         dequeueImageView(imageView)
         
         currentTag++
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
-            
+        
         imageView.tag = self.currentTag
-            
+        
         if (placeholder != nil) {
-                
+            
             imageView.image = UIImage(named: placeholder!)
         }
         
         let imageViewKey = String(format: "%ld", imageView.tag)
+        
+        loadImageSrc(imageURL, forImageView:imageView, identifier: imageViewKey, refreshCache: refreshCache)
+        
+    }
 
-        loadImageSrc(imageURL, forImageView:imageView, identifier: imageViewKey)
+    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?) {
+        
+        enqueueImageView(imageView, withURL: imageURL, placeholder: placeholder, refreshCache: false)
         
     }
         
@@ -80,7 +88,7 @@ public class AsyncImageLoader: ImageLoader {
 
 //MARK: - Private methods
 
-    private func loadImageSrc(src: String, forImageView imageView: UIImageView, identifier: String) {
+    private func loadImageSrc(src: String, forImageView imageView: UIImageView, identifier: String, refreshCache: Bool) {
      
         if let imageRequest =  NSURLRequest.GETRequest(src) {
             
@@ -91,7 +99,16 @@ public class AsyncImageLoader: ImageLoader {
             
             let imageRequest = ImageRequestTask(urlRequest: imageRequest, taskCompletion: imageRequestTaskCompletion)
             
-            let imageOperation = imageService.enqueueImageRequest(imageRequest)
+            let imageOperation: Operation
+            
+            if refreshCache {
+                
+                imageOperation = imageService.enqueueImageRequestRefreshingCache(imageRequest)
+                
+            } else {
+                
+                imageOperation = imageService.enqueueImageRequest(imageRequest)
+            }
             
             loadingCache[identifier] = imageOperation
         }

@@ -18,9 +18,11 @@ public class SDWebImageService: ImageService {
         return SDImageOperation(imageOperation: operation)
     }
     
-    public func enqueueImageRequestBypassingCached(request: ImageRequest) -> Operation {
+    public func enqueueImageRequestRefreshingCache(request: ImageRequest) -> Operation {
         
-        let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: SDWebImageOptions.RefreshCached, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
+        let options = SDWebImageOptions.RefreshCached.union(.RetryFailed)
+        
+        let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: options, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
             
             request.handleResponse(url.URLString, image: image, error: error)
         })
