@@ -53,6 +53,8 @@ extension UIView {
     
         divider.backgroundColor = color
     
+        divider.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(divider)
         
         let constraint = NSLayoutConstraint(item: divider, attribute: .Bottom, relatedBy: .Equal,
