@@ -33,6 +33,8 @@ public protocol DataStore {
     func removeEntities<T: Storable>(type: T.Type, entities: [Storable])
     
     func synchronize()
+
+    func removeAllObjects()
 }
 
 public class DataStoreImpl: DataStore {
@@ -132,7 +134,7 @@ public class DataStoreImpl: DataStore {
         
         if let id = entity.id {
             
-            typeDictionary[id] = nil
+//            typeDictionary[id] = nil
             
             self.storageDictionary.setValue(nil, forKey: type.typeName)
         }
@@ -141,6 +143,12 @@ public class DataStoreImpl: DataStore {
     }
     
     public func removeEntities<T: Storable>(type: T.Type, entities: [Storable]) {
+    
+    }
+    
+    public func removeAllObjects() {
+        
+        self.storageDictionary.removeAllObjects()
         
     }
     
