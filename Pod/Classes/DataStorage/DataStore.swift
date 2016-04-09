@@ -3,6 +3,7 @@ import Foundation
 
 public typealias StorableDictionary = [String: AnyObject]
 
+let kStorageDictionaryKey = "StorageDictionary"
 
 public protocol Storable {
     
@@ -22,7 +23,7 @@ public protocol DataStore {
     func fetchAllEntities<T: Storable>(type: T.Type) -> [Storable]
     
     func fetchEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable]
-
+    
     func storeEntity<T: Storable>(type: T.Type, entity: Storable)
     
     func storeEntities<T: Storable>(type: T.Type, entities: [Storable])
@@ -30,16 +31,45 @@ public protocol DataStore {
     func removeEntity<T: Storable>(type: T.Type, entity: Storable)
     
     func removeEntities<T: Storable>(type: T.Type, entities: [Storable])
+    
+    func synchronize()
 }
 
 public class DataStoreImpl: DataStore {
     
     var storageDictionary: NSMutableDictionary
     
-    public init(storageDictionary: NSMutableDictionary) {
+    var userDefaults: UserDefaults
+    
+    public init(userDefaults: UserDefaults) {
         
-        self.storageDictionary = storageDictionary
+        self.userDefaults = userDefaults
+        
+        if let dictionary = self.userDefaults.dictionaryForKey(kStorageDictionaryKey) {
+            
+            storageDictionary = NSMutableDictionary(dictionary: dictionary)
+            
+        } else {
+            
+            storageDictionary = NSMutableDictionary()
+            
+        }
+        
     }
+    
+    public func synchronize() {
+        
+        var dict = [String: AnyObject]()
+        
+        for (key, value) in self.storageDictionary {
+            dict[key as! String] = value
+        }
+        
+        self.userDefaults.setDictionary(dict, forKey: kStorageDictionaryKey)
+        
+        self.userDefaults.synchronize()
+    }
+    
     
     public func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable? {
         
@@ -48,10 +78,10 @@ public class DataStoreImpl: DataStore {
         let typeDictionary = dictionaryForType(type.typeName)
         
         
-            if let object = typeDictionary[id] as? StorableDictionary {
+        if let object = typeDictionary[id] as? StorableDictionary {
             
-                item = T(dictionary: object)
-            }
+            item = T(dictionary: object)
+        }
         
         
         return item
@@ -61,19 +91,19 @@ public class DataStoreImpl: DataStore {
         
         return fetchEntities(type, predicateOptional: nil)
     }
-
+    
     public func fetchEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
         
         return fetchAllEntities(type, predicateOptional: predicateOptional)
     }
-
+    
     
     public func storeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
         var typeDictionary = dictionaryForType(T.typeName)
-
+        
         if let id = entity.id {
-         
+            
             let itemDictionary = entity.toDictionary()
             
             typeDictionary[id] = itemDictionary
@@ -115,34 +145,34 @@ public class DataStoreImpl: DataStore {
     }
     
     private func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate? = nil) -> [Storable] {
+        
+        var items = [Storable]()
+        
+        let typeDictionary = dictionaryForType(T.typeName)
+        
+        let filteredItems = typeDictionary.filter({ (id: String, value: AnyObject) -> Bool in
             
-            var items = [Storable]()
+            var includeObject = true
             
-            let typeDictionary = dictionaryForType(T.typeName)
+            if let predicate = predicateOptional {
+                includeObject = predicate.evaluateWithObject(value)
+            }
             
-            let filteredItems = typeDictionary.filter({ (id: String, value: AnyObject) -> Bool in
-                
-                var includeObject = true
-                
-                if let predicate = predicateOptional {
-                    includeObject = predicate.evaluateWithObject(value)
-                }
-                
-                return includeObject
-            })
+            return includeObject
+        })
+        
+        filteredItems.forEach({ (id: String, value: AnyObject) -> () in
             
-            filteredItems.forEach({ (id: String, value: AnyObject) -> () in
-                
-                let objectDictionary = value as! [String: AnyObject]
-                
-                let item = T(dictionary: objectDictionary)
-                
-                items.append(item)
-            })
+            let objectDictionary = value as! [String: AnyObject]
             
+            let item = T(dictionary: objectDictionary)
             
-            return items
-        }
+            items.append(item)
+        })
+        
+        
+        return items
+    }
     
     func dictionaryForType(typeName: String) -> [String: AnyObject] {
         
