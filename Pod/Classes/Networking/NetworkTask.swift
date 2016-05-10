@@ -81,6 +81,27 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
     }
 }
 
+public struct DataDownloadTask: NetworkDownloadRequest {
+ 
+    public let urlRequest: NSURLRequest
+    
+    let taskCompletion: DataResponseCompletion
+    
+    public init(urlRequest: NSURLRequest, taskCompletion: DataResponseCompletion) {
+        
+        self.urlRequest = urlRequest
+        self.taskCompletion = taskCompletion
+        
+    }
+
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+     
+        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+        
+    }
+    
+}
+
 public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()

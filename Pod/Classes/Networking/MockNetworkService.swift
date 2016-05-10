@@ -61,6 +61,19 @@ class MockNetworkService : NetworkService {
         return operation
 
     }
+    
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+        
+        let operation = MockDownloadOperation(request: request.urlRequest)
+        
+        let completion = completionForRequest(request)
+        
+        operation.startConnection(completion)
+        
+        return operation
+        
+    }
+    
 }
 
 struct MockRequestOperation: UploadOperation {
@@ -113,6 +126,42 @@ struct MockRequestOperation: UploadOperation {
     }
     
     func registerProgressUpdate(progressUpdate: ProgressUpdate) {
+        
+    }
+}
+
+struct MockDownloadOperation: DownloadOperation {
+    
+    let request: NSURLRequest
+
+    func startConnection(completion: DataResponseCompletion) {
+        
+        print("Requesting url: \(request.URLString)")
+        
+        let fileURL = MockRequestQueue.dequeueResponeFileForRequestURL(request.URLString)
+        
+        print("Found file url: \(fileURL)")
+        
+        if let url = fileURL {
+            
+            print("Found file url for request: \(fileURL) \n")
+            
+            let data = NSData(contentsOfFile: url)
+            
+            completion(dataOptional: data, errorOptional: nil)
+            
+        } else {
+            
+            print("File url for request not found\n")
+            
+            let error = NSError(domain: "Network", code: 101, userInfo: nil)
+            
+            completion(dataOptional: nil, errorOptional: error)
+        }
+        
+    }
+
+    func cancel() {
         
     }
 }

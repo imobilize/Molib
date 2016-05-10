@@ -17,6 +17,11 @@ public protocol UploadOperation: Operation {
     func registerProgressUpdate(progressUpdate: ProgressUpdate)
 }
 
+public protocol DownloadOperation: Operation {
+    
+    
+}
+
 public protocol NetworkRequest {
     
     var urlRequest: NSURLRequest { get }
@@ -33,6 +38,10 @@ public protocol NetworkUploadRequest: NetworkRequest {
     var mimeType: String { get }
 }
 
+public protocol NetworkDownloadRequest: NetworkRequest {
+    
+}
+
 public protocol NetworkService {
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation?
@@ -40,6 +49,8 @@ public protocol NetworkService {
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation?
 
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation?
+    
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation?
     
 }
 

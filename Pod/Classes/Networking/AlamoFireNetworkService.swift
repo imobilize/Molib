@@ -10,6 +10,7 @@ class AlamoFireNetworkService : NetworkService {
     init() {
         
         self.manager = Manager.sharedInstance
+    
     }
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
@@ -33,6 +34,8 @@ class AlamoFireNetworkService : NetworkService {
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
+        manager.session.delegate
+        
         self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
             
             formData.appendBodyPart(data: data, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
@@ -41,7 +44,6 @@ class AlamoFireNetworkService : NetworkService {
         
         return alamoFireUploadOperation
     }
-    
     
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
         
@@ -59,6 +61,21 @@ class AlamoFireNetworkService : NetworkService {
         
         return alamoFireUploadOperation
     }
+    
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+        
+        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
+        
+        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { (temporaryFileUrl, urlResponse) -> NSURL in
+            
+            return NSURL()
+            
+        }
+        
+        return AlamoFireDownloadOperation()
+        
+    }
+    
 }
 
 struct AlamoFireRequestOperation: Operation {
@@ -84,8 +101,6 @@ struct AlamoFireRequestOperation: Operation {
         request.cancel()
     }
 }
-
-
 
 struct AlamoFireUploadOperation : UploadOperation {
     
@@ -156,6 +171,14 @@ struct AlamoFireUploadOperation : UploadOperation {
     func cancel() {
         uploadRequest?.cancel()
     }
+}
+
+struct AlamoFireDownloadOperation: DownloadOperation {
+ 
+    func cancel() {
+        
+    }
+    
 }
 
 

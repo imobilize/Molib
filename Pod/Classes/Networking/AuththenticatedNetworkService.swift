@@ -65,6 +65,17 @@ public class AuththenticatedNetworkService: NetworkService {
         return operation
     }
     
+    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+        
+        let taskCompletion = authenticatedCheckResponseHandler(request)
+        
+        let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
+        
+        let operation = networkService.enqueueNetworkDownloadRequest(authenticatedCheckTask)
+        
+        return operation
+        
+    }
     
     func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
         
