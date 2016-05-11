@@ -7,14 +7,10 @@ class AlamoFireNetworkService : NetworkService {
     
     private var manager: Manager!
     
-    private var fileManager: NSFileManager!
-    
     init() {
         
         self.manager = Manager.sharedInstance
         
-        self.fileManager = NSFileManager.defaultManager()
-    
     }
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
@@ -72,7 +68,7 @@ class AlamoFireNetworkService : NetworkService {
             
             var fileUrl: NSURL!
             
-            if let directoryURL = self!.fileManager.URLsForDirectory(.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask) as? NSURL {
+            if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
                 
                 let pathComponent = urlResponse.suggestedFilename
                 

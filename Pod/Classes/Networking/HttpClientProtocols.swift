@@ -40,6 +40,8 @@ public protocol NetworkUploadRequest: NetworkRequest {
 
 public protocol NetworkDownloadRequest: NetworkRequest {
     
+    var destinationFileName: String { get }
+    
 }
 
 public protocol NetworkService {

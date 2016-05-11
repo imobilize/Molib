@@ -85,12 +85,15 @@ public struct DataDownloadTask: NetworkDownloadRequest {
  
     public let urlRequest: NSURLRequest
     
+    public let destinationFileName: String
+    
     let taskCompletion: DataResponseCompletion
     
-    public init(urlRequest: NSURLRequest, taskCompletion: DataResponseCompletion) {
+    public init(urlRequest: NSURLRequest, destinationFileName: String, taskCompletion: DataResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
+        self.destinationFileName = destinationFileName
         
     }
 

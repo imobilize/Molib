@@ -69,7 +69,7 @@ public class AuththenticatedNetworkService: NetworkService {
         
         let taskCompletion = authenticatedCheckResponseHandler(request)
         
-        let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
+        let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, destinationFileName: request.destinationFileName, taskCompletion: taskCompletion)
         
         let operation = networkService.enqueueNetworkDownloadRequest(authenticatedCheckTask)
         
