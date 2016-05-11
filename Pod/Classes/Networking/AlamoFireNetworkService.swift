@@ -78,9 +78,21 @@ class AlamoFireNetworkService : NetworkService {
                 
             }
         
+            request.handleDownloadResponse(fileUrl, URLResponse: urlResponse)
             
             return fileUrl
             
+        }
+        
+            .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
+                
+                
+        }
+        
+            .response { downladRequest, downloadResponse, data, error in
+                
+                request.handleResponse(data, errorOptional: error)
+                
         }
         
         return AlamoFireDownloadOperation()
@@ -191,7 +203,6 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     }
     
 }
-
 
 extension Operation {
     

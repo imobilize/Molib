@@ -87,25 +87,38 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     
     public let destinationFileName: String
     
-    let taskCompletion: DownloadCompletion
+    let taskCompletion: DataResponseCompletion
+    let progressCompletion: DownloadProgressCompletion
+    let downloadCompletion: DownloadCompletion
     
-    public init(urlRequest: NSURLRequest, destinationFileName: String, taskCompletion: DownloadCompletion) {
+    public init(urlRequest: NSURLRequest, destinationFileName: String, downloadCompletion: DownloadCompletion) {
         
         self.urlRequest = urlRequest
-        self.taskCompletion = taskCompletion
+        self.downloadCompletion = downloadCompletion
         self.destinationFileName = destinationFileName
         
     }
 
     public func handleDownloadResponse(fileLocation: NSURL, URLResponse: NSURLResponse) {
         
-        self.taskCompletion(fileLocation: fileLocation, URLResponse: URLResponse)
+        self.downloadCompletion(fileLocation: fileLocation, URLResponse: URLResponse)
         
     }
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
+        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+        
     }
+    
+    public func handleProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExcpectedToBeRead: Int64) {
+        
+        print("Bytes Read = \(bytesRead)")
+        print("Total Bytes Read = \(totalBytesRead)")
+        print("Total Bytes Expected = \(totalBytesExcpectedToBeRead)")
+        
+    }
+    
     
 }
 
@@ -155,7 +168,6 @@ extension NetworkRequest {
         return (json, jsonError)
     }
 }
-
 
 public struct ImageRequestTask: ImageRequest {
     
