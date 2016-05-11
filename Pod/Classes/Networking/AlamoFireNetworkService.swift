@@ -7,9 +7,13 @@ class AlamoFireNetworkService : NetworkService {
     
     private var manager: Manager!
     
+    private var fileManager: NSFileManager!
+    
     init() {
         
         self.manager = Manager.sharedInstance
+        
+        self.fileManager = NSFileManager.defaultManager()
     
     }
     
@@ -33,8 +37,6 @@ class AlamoFireNetworkService : NetworkService {
         let dataResponseCompletion = completionForRequest(request)
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
-        
-        manager.session.delegate
         
         self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
             
@@ -66,9 +68,23 @@ class AlamoFireNetworkService : NetworkService {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
-        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { (temporaryFileUrl, urlResponse) -> NSURL in
+        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { [weak self] (temporaryURL, urlResponse) -> NSURL in
             
-            return NSURL()
+            var fileUrl: NSURL!
+            
+            if let directoryURL = self!.fileManager.URLsForDirectory(.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask) as? NSURL {
+                
+                let pathComponent = urlResponse.suggestedFilename
+                
+                fileUrl = directoryURL.URLByAppendingPathComponent(pathComponent!)
+                
+            } else {
+                
+                fileUrl = temporaryURL
+                
+            }
+            
+            return fileUrl
             
         }
         
