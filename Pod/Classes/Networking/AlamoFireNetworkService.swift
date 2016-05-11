@@ -64,21 +64,20 @@ class AlamoFireNetworkService : NetworkService {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
-        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { [weak self] (temporaryURL, urlResponse) -> NSURL in
+        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { (temporaryURL, urlResponse) -> NSURL in
             
             var fileUrl: NSURL!
             
             if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
                 
-                let pathComponent = urlResponse.suggestedFilename
-                
-                fileUrl = directoryURL.URLByAppendingPathComponent(pathComponent!)
+                fileUrl = directoryURL.URLByAppendingPathComponent(request.destinationFileName)
                 
             } else {
                 
                 fileUrl = temporaryURL
                 
             }
+        
             
             return fileUrl
             

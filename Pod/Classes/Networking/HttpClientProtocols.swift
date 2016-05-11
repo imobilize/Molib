@@ -42,6 +42,8 @@ public protocol NetworkDownloadRequest: NetworkRequest {
     
     var destinationFileName: String { get }
     
+    func handleDownloadResponse(fileLocaion: NSURL, URLResponse: NSURLResponse)
+    
 }
 
 public protocol NetworkService {
@@ -74,6 +76,17 @@ extension NetworkService {
                 
                 request.handleResponse(dataOptional, errorOptional: errorOptional)
             }
+        }
+        
+        return completion
+    }
+    
+    func completionForDownloadRequest(request: NetworkDownloadRequest) -> DownloadCompletion {
+        
+        let completion = { (fileLocaion: NSURL, URLResponse: NSURLResponse) -> Void in
+            
+            request.handleDownloadResponse(fileLocaion, URLResponse: URLResponse)
+            
         }
         
         return completion

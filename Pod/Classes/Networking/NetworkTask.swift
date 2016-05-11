@@ -87,9 +87,9 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     
     public let destinationFileName: String
     
-    let taskCompletion: DataResponseCompletion
+    let taskCompletion: DownloadCompletion
     
-    public init(urlRequest: NSURLRequest, destinationFileName: String, taskCompletion: DataResponseCompletion) {
+    public init(urlRequest: NSURLRequest, destinationFileName: String, taskCompletion: DownloadCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
@@ -97,9 +97,13 @@ public struct DataDownloadTask: NetworkDownloadRequest {
         
     }
 
+    public func handleDownloadResponse(fileLocation: NSURL, URLResponse: NSURLResponse) {
+        
+        self.taskCompletion(fileLocation: fileLocation, URLResponse: URLResponse)
+        
+    }
+    
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
-     
-        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
         
     }
     
