@@ -64,38 +64,21 @@ class AlamoFireNetworkService : NetworkService {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
-        self.manager.download(method!, request.urlRequest.URL!.absoluteString) { (temporaryURL, urlResponse) -> NSURL in
-            
-            var fileUrl: NSURL!
-            
-            if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
-                
-                fileUrl = directoryURL.URLByAppendingPathComponent(request.destinationFileName)
-                
-            } else {
-                
-                fileUrl = temporaryURL
-                
-            }
+        let dataResponseCompletion = completionForRequest(request)
         
-            request.handleDownloadResponse(fileUrl, URLResponse: urlResponse)
-            
-            return fileUrl
-            
-        }
+        let downloadDestinationCompletion = completionForDownloadDestination(request)
         
-            .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
-                
-                
-        }
+        let downloadProgressCompletion = completionForDownloadProgress(request)
         
-            .response { downladRequest, downloadResponse, data, error in
-                
-                request.handleResponse(data, errorOptional: error)
-                
-        }
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(dataResponseCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
         
-        return AlamoFireDownloadOperation()
+        self.manager.download(method!, request.urlRequest.URL!.absoluteString, destination: alamoFireDownloadOperation.handleDownloadDestination)
+        
+            .progress(alamoFireDownloadOperation.handleDownloadProgress)
+        
+            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+        
+        return alamoFireDownloadOperation
         
     }
     
@@ -179,8 +162,11 @@ struct AlamoFireUploadOperation : UploadOperation {
                 let progress = CGFloat(totalBytesExpectedToWrite)/CGFloat(totalBytesWritten)
             
                 progressUpdate(progress: progress)
+                
             }
+            
         }
+        
     }
     
     func pause() {
@@ -198,9 +184,56 @@ struct AlamoFireUploadOperation : UploadOperation {
 
 struct AlamoFireDownloadOperation: DownloadOperation {
  
+    private let dataResponseCompletion: DataResponseCompletion
+    private let downloadCompletion: DownloadCompletion
+    private let downloadProgressCompletion: DownloadProgressCompletion
+    
+    init(dataResponseCompletion: DataResponseCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+        
+        self.dataResponseCompletion = dataResponseCompletion
+        self.downloadCompletion = downloadCompletion
+        self.downloadProgressCompletion = downloadProgressCompletion
+        
+    }
+
+    private func handleDownloadProgress(bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        
+        downloadProgressCompletion(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
+        
+    }
+        
+    func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+        
+        //Check for pre existing file.
+        
+        var fileUrl: NSURL!
+        
+        if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+            
+            fileUrl = directoryURL.URLByAppendingPathComponent(urlResponse.suggestedFilename!)
+            
+        } else {
+            
+            fileUrl = temporaryURL
+            
+        }
+        
+        downloadCompletion(fileLocation: fileUrl)
+        
+        return fileUrl
+
+    }
+    
+    func handleDownloadCompletion(downladRequest: NSURLRequest?, downloadResponse: NSHTTPURLResponse?, data: NSData?, error: NSError?) {
+        
+        dataResponseCompletion(dataOptional: data, errorOptional: error)
+        
+    }
+    
     func cancel() {
         
     }
+
     
 }
 

@@ -40,9 +40,9 @@ public protocol NetworkUploadRequest: NetworkRequest {
 
 public protocol NetworkDownloadRequest: NetworkRequest {
     
-    var destinationFileName: String { get }
+    func handleDownloadFileLocation(fileLocation: NSURL)
     
-    func handleDownloadResponse(fileLocaion: NSURL, URLResponse: NSURLResponse)
+    func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)
     
 }
 
@@ -81,16 +81,33 @@ extension NetworkService {
         return completion
     }
     
-    func completionForDownloadRequest(request: NetworkDownloadRequest) -> DownloadCompletion {
+    func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadCompletion {
         
-        let completion = { (fileLocaion: NSURL, URLResponse: NSURLResponse) -> Void in
+        let completion = { (fileLocaion: NSURL) -> Void in
             
-            request.handleDownloadResponse(fileLocaion, URLResponse: URLResponse)
+            //TODO: Check that the file does not already exist, return saved file location to NetworkDownloadRequest
+            
+            request.handleDownloadFileLocation(fileLocaion)
             
         }
         
         return completion
     }
+    
+    func completionForDownloadProgress(request: NetworkDownloadRequest) -> DownloadProgressCompletion {
+        
+        let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
+            
+            //TODO: Convert the progress to relevant format, return to NetworkDownloadRequest
+            
+            request.handleDownloadProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpected)
+            
+        }
+        
+        return completion
+        
+    }
+    
 }
 
 public protocol ImageService {

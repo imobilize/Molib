@@ -85,40 +85,37 @@ public struct DataDownloadTask: NetworkDownloadRequest {
  
     public let urlRequest: NSURLRequest
     
-    public let destinationFileName: String
+    let taskCompletion: ErrorCompletion
     
-    let taskCompletion: DataResponseCompletion
-    let progressCompletion: DownloadProgressCompletion
     let downloadCompletion: DownloadCompletion
     
-    public init(urlRequest: NSURLRequest, destinationFileName: String, downloadCompletion: DownloadCompletion) {
+    let downloadProgressCompletion: DownloadProgressCompletion
+    
+    public init(urlRequest: NSURLRequest, taskCompletion: ErrorCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
         
         self.urlRequest = urlRequest
+        self.taskCompletion = taskCompletion
         self.downloadCompletion = downloadCompletion
-        self.destinationFileName = destinationFileName
-        
-    }
-
-    public func handleDownloadResponse(fileLocation: NSURL, URLResponse: NSURLResponse) {
-        
-        self.downloadCompletion(fileLocation: fileLocation, URLResponse: URLResponse)
+        self.downloadProgressCompletion = downloadProgressCompletion
         
     }
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
-        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+        taskCompletion(errorOptional: errorOptional)
         
     }
     
-    public func handleProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExcpectedToBeRead: Int64) {
+    public func handleDownloadFileLocation(fileLocation: NSURL) {
         
-        print("Bytes Read = \(bytesRead)")
-        print("Total Bytes Read = \(totalBytesRead)")
-        print("Total Bytes Expected = \(totalBytesExcpectedToBeRead)")
-        
+        downloadCompletion(fileLocation: fileLocation)
+    
     }
     
+    public func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
+        
+        downloadProgressCompletion(bytesRead: bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
+    }
     
 }
 
