@@ -81,6 +81,28 @@ extension NetworkService {
         return completion
     }
     
+    func completionForDownloadRequest(request: NetworkDownloadRequest) -> ErrorCompletion {
+        
+        let completion = { (errorOptional: NSError?) in
+        
+            var error: NSError?
+            
+            if errorOptional != nil {
+                
+                let userInfo = [NSLocalizedDescriptionKey: "Invalid response"]
+                
+                error = NSError(domain: "NetworkService", code: 101, userInfo: userInfo)
+                
+            }
+            
+            request.handleResponse(nil, errorOptional: error)
+
+        }
+        
+        return completion
+    
+    }
+    
     func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadCompletion {
         
         let completion = { (fileLocaion: NSURL) -> Void in

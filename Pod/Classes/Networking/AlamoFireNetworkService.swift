@@ -64,18 +64,18 @@ class AlamoFireNetworkService : NetworkService {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
-        let dataResponseCompletion = completionForRequest(request)
+        let dataResponseCompletion = completionForDownloadRequest(request)
         
         let downloadDestinationCompletion = completionForDownloadDestination(request)
         
         let downloadProgressCompletion = completionForDownloadProgress(request)
         
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(dataResponseCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadErrorCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
         
         self.manager.download(method!, request.urlRequest.URL!.absoluteString, destination: alamoFireDownloadOperation.handleDownloadDestination)
-        
+    
             .progress(alamoFireDownloadOperation.handleDownloadProgress)
-        
+            
             .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
         
         return alamoFireDownloadOperation
@@ -184,13 +184,13 @@ struct AlamoFireUploadOperation : UploadOperation {
 
 struct AlamoFireDownloadOperation: DownloadOperation {
  
-    private let dataResponseCompletion: DataResponseCompletion
+    private let downloadErrorCompletion: ErrorCompletion
     private let downloadCompletion: DownloadCompletion
     private let downloadProgressCompletion: DownloadProgressCompletion
     
-    init(dataResponseCompletion: DataResponseCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    init(downloadErrorCompletion: ErrorCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
         
-        self.dataResponseCompletion = dataResponseCompletion
+        self.downloadErrorCompletion = downloadErrorCompletion
         self.downloadCompletion = downloadCompletion
         self.downloadProgressCompletion = downloadProgressCompletion
         
@@ -202,7 +202,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
         
     }
         
-    func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+    private func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
         //Check for pre existing file.
         
@@ -224,9 +224,9 @@ struct AlamoFireDownloadOperation: DownloadOperation {
 
     }
     
-    func handleDownloadCompletion(downladRequest: NSURLRequest?, downloadResponse: NSHTTPURLResponse?, data: NSData?, error: NSError?) {
+    private func handleDownloadCompletion(downladRequest: NSURLRequest?, downloadResponse: NSHTTPURLResponse?, data: NSData?, error: NSError?) {
         
-        dataResponseCompletion(dataOptional: data, errorOptional: error)
+        downloadErrorCompletion(errorOptional: error)
         
     }
     
