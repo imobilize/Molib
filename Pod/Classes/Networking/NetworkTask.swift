@@ -119,6 +119,22 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     
 }
 
+public struct DownloadRequest: NetworkRequest {
+    
+    public var urlRequest: NSURLRequest
+    
+    init(urlRequest: NSURLRequest) {
+        
+        self.urlRequest = urlRequest
+        
+    }
+    
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+        
+    }
+    
+}
+
 public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()

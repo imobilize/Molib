@@ -157,3 +157,17 @@ public protocol MOConnectionHelper {
     func absoluteURLForKey(key: String) -> NSURL
 
 }
+
+public protocol MODownloadManager: NSURLSessionDelegate, NSURLSessionDataDelegate, NSURLSessionTaskDelegate {
+    
+    func startDownload(forResource: Resource)
+    
+    func pauseDownload()
+    
+    func cancelDownload()
+    
+    func deleteDownload()
+    
+    func resumeDownload()
+    
+}
