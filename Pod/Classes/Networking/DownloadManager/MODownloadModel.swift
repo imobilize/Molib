@@ -1,6 +1,6 @@
 import Foundation
 
-enum DownloadTaskStatus: String {
+public enum DownloadTaskStatus: String {
     
     case GettingInfo = "GettingInfo"
     case Downloading = "Downloading"
@@ -11,13 +11,13 @@ enum DownloadTaskStatus: String {
 
 public class MODownloadModel: NSObject {
     
-    var fileName: String!
-    var fileURL: String!
-    var status: String = DownloadTaskStatus.GettingInfo.rawValue
+    public var fileName: String!
+    public var fileURL: String!
+    public var status: String = DownloadTaskStatus.GettingInfo.rawValue
     
-    var request: NetworkDownloadRequest?
+    public var request: NetworkDownloadRequest?
     
-    var startTime: NSDate?
+    public var startTime: NSDate?
     
     init(fileName: String, fileURL: String) {
         

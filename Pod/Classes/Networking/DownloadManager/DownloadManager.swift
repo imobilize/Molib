@@ -1,13 +1,13 @@
 import Foundation
 
-class MODownloadManager: DownloadManager {
+public class MODownloadManager: DownloadManager {
     
-    private let delegate: MODownloadManagerDelegate?
-    private let networkService: NetworkService!
+    public let delegate: MODownloadManagerDelegate?
+    public let networkService: NetworkService!
     
-    var downloadQueue: [MODownloadModel] = []
+    public var downloadQueue: [MODownloadModel] = []
     
-    init(networkService: NetworkService, delegate: MODownloadManagerDelegate) {
+    public init(networkService: NetworkService, delegate: MODownloadManagerDelegate) {
         
         self.networkService = networkService
         
@@ -39,7 +39,7 @@ class MODownloadManager: DownloadManager {
         
     }
     
-    func startDownload(asset: Asset) {
+    public func startDownload(asset: Asset) {
         
         if let request = NSURLRequest.GETRequest(asset.fileURL) {
        
@@ -59,19 +59,19 @@ class MODownloadManager: DownloadManager {
         
     }
     
-    func pauseDownload(asset: Asset) {
+    public func pauseDownload(asset: Asset) {
         
     }
     
-    func cancelDownlaod(asset: Asset) {
+    public func cancelDownlaod(asset: Asset) {
         
     }
     
-    func deleteDownload(asset: Asset) {
+    public func deleteDownload(asset: Asset) {
         
     }
     
-    func resumeDownload(asset: Asset) {
+    public func resumeDownload(asset: Asset) {
         
     }
     

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MODownloadManagerDelegate {
+public protocol MODownloadManagerDelegate {
     
     func downloadRequestDidUpdateProgress()
     
@@ -20,7 +20,7 @@ protocol MODownloadManagerDelegate {
     
 }
 
-protocol DownloadManager {
+public protocol DownloadManager {
     
     func startDownload(asset: Asset)
     
@@ -34,7 +34,7 @@ protocol DownloadManager {
     
 }
 
-protocol Asset {
+public protocol Asset {
     
     var id: String { get }
     
