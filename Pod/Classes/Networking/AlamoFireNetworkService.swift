@@ -81,7 +81,7 @@ class AlamoFireNetworkService : NetworkService {
         return alamoFireDownloadOperation
         
     }
-    
+        
 }
 
 struct AlamoFireRequestOperation: Operation {
@@ -201,6 +201,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
         downloadProgressCompletion(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
         
     }
+    
         
     private func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
