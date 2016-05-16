@@ -65,27 +65,29 @@ public class AuththenticatedNetworkService: NetworkService {
         return operation
     }
     
-    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+    public func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
         
-        let taskCompletion: ErrorCompletion = { errorOptional in
-            
-        }
-        
-        let downloadCompletion: DownloadCompletion = { fileLocation in
-            
-        }
-        
-        let progressCompletion: DownloadProgressCompletion = {_,_,_ in
-            
-        }
-        
-        let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion, downloadCompletion: downloadCompletion, downloadProgressCompletion: progressCompletion)
-        
-        let operation = networkService.enqueueNetworkDownloadRequest(authenticatedCheckTask)
-        
-        return operation
+        return nil
         
     }
+    
+//    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+//        
+//        let taskCompletion: ErrorCompletion = { errorOptional in
+//            
+//        }
+//        
+//        let downloadCompletion: DownloadCompletion = { fileLocation in
+//            
+//        }
+//        
+//        let progressCompletion: DownloadProgressCompletion = {_,_,_ in
+//            
+//        }
+//        
+//        return nil
+//        
+//    }
     
     func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
         

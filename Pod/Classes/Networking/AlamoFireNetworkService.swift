@@ -60,28 +60,33 @@ class AlamoFireNetworkService : NetworkService {
         return alamoFireUploadOperation
     }
     
-    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
-        
-        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
-        
-        let dataResponseCompletion = completionForDownloadRequest(request)
-        
-        let downloadDestinationCompletion = completionForDownloadDestination(request)
-        
-        let downloadProgressCompletion = completionForDownloadProgress(request)
-        
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadErrorCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
-        
-        self.manager.download(method!, request.urlRequest.URL!.absoluteString, destination: alamoFireDownloadOperation.handleDownloadDestination)
+//    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+//        
+//        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
+//        
+//        let dataResponseCompletion = completionForDownloadRequest(request)
+//        
+//        let downloadDestinationCompletion = completionForDownloadDestination(request)
+//        
+//        let downloadProgressCompletion = completionForDownloadProgress(request)
+//        
+//        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadErrorCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
+//        
+//        self.manager.download(method!, request.urlRequest.URL!.absoluteString, destination: alamoFireDownloadOperation.handleDownloadDestination)
+//    
+//            .progress(alamoFireDownloadOperation.handleDownloadProgress)
+//            
+//            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+//        
+//        return alamoFireDownloadOperation
+//        
+//    }
     
-            .progress(alamoFireDownloadOperation.handleDownloadProgress)
-            
-            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+    func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
         
-        return alamoFireDownloadOperation
-        
+        return nil
     }
-        
+    
 }
 
 struct AlamoFireRequestOperation: Operation {

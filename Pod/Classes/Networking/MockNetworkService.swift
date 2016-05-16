@@ -62,15 +62,9 @@ class MockNetworkService : NetworkService {
 
     }
     
-    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+    func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
         
-        let operation = MockDownloadOperation(request: request.urlRequest)
-        
-        let completion = completionForRequest(request)
-        
-        operation.startConnection(completion)
-        
-        return operation
+        return nil
         
     }
     

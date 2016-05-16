@@ -85,36 +85,16 @@ public struct DataDownloadTask: NetworkDownloadRequest {
  
     public let urlRequest: NSURLRequest
     
-    let taskCompletion: ErrorCompletion
-    
-    let downloadCompletion: DownloadCompletion
-    
-    let downloadProgressCompletion: DownloadProgressCompletion
-    
-    public init(urlRequest: NSURLRequest, taskCompletion: ErrorCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    public init(urlRequest: NSURLRequest) {
         
         self.urlRequest = urlRequest
-        self.taskCompletion = taskCompletion
-        self.downloadCompletion = downloadCompletion
-        self.downloadProgressCompletion = downloadProgressCompletion
         
     }
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
-        taskCompletion(errorOptional: errorOptional)
+        //TODO: Handle the call to handleResponse
         
-    }
-    
-    public func handleDownloadFileLocation(fileLocation: NSURL) {
-        
-        downloadCompletion(fileLocation: fileLocation)
-    
-    }
-    
-    public func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
-        
-        downloadProgressCompletion(bytesRead: bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
     }
     
 }
