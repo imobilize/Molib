@@ -41,6 +41,8 @@ public protocol NetworkDownloadRequest: NetworkRequest {
     
     func handleDownloadLocation(fileLocation: NSURL) -> NSURL
     
+    func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
+    
 }
 
 public protocol NetworkService {
@@ -115,7 +117,7 @@ extension NetworkService {
         
         let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
             
-            //TODO: Convert the progress to relevant format, return to NetworkDownloadRequest
+
             
         }
         

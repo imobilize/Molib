@@ -84,14 +84,17 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
 public struct DataDownloadTask: NetworkDownloadRequest {
  
     public let urlRequest: NSURLRequest
-    public let downloadCompletion: ErrorCompletion
     public let downloadFileDestinationComplertionHandler: DownloadDestinationCompletion
+    public let downloadProgressCompletion: DownloadProgressCompletion
+    public let downloadCompletion: ErrorCompletion
     
-    public init(urlRequest: NSURLRequest, downloadFileDestinationComplertionHandler: DownloadDestinationCompletion, downloadCompletion: ErrorCompletion) {
+    public init(urlRequest: NSURLRequest, downloadFileDestinationComplertionHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion, downloadCompletion: ErrorCompletion) {
         
         self.urlRequest = urlRequest
         
         self.downloadFileDestinationComplertionHandler = downloadFileDestinationComplertionHandler
+        
+        self.downloadProgressCompletion = downloadProgressCompletion
 
         self.downloadCompletion = downloadCompletion
 
@@ -106,6 +109,12 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     public func handleDownloadLocation(fileLocation: NSURL) -> NSURL {
         
         return downloadFileDestinationComplertionHandler(donwloadFileTemporaryLocation: fileLocation)
+        
+    }
+    
+    public func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
+        
+        return downloadProgressCompletion(bytesRead: bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
         
     }
     

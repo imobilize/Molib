@@ -24,7 +24,7 @@ public class MODownloadManager: DownloadManager {
         
         if let request = NSURLRequest.GETRequest(asset.fileURL) {
             
-            let downloadTask = DataDownloadTask(urlRequest: request, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadCompletion: downloadCompletionHandler)
+            let downloadTask = DataDownloadTask(urlRequest: request, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadProgressCompletion: downloadProgressCompletionHandler, downloadCompletion: downloadCompletionHandler)
             
             let downloadModel = MODownloadModel(fileName: asset.fileName, fileURL: asset.fileURL)
             
@@ -79,6 +79,12 @@ public class MODownloadManager: DownloadManager {
         }
         
         return fileUrl
+        
+    }
+    
+    private func downloadProgressCompletionHandler(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
+        
+        delegate?.downloadRequestDidUpdateProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
         
     }
     

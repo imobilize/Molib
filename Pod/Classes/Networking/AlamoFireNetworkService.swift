@@ -90,7 +90,9 @@ class AlamoFireNetworkService : NetworkService {
         
         let downloadFileDestinationHandler = completionForDownloadDestination(request)
         
-//            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+        let downloadProgressCompletion = completionForDownloadProgress(request)
+        
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressCompletion: downloadProgressCompletion)
 
         return nil
         
@@ -198,14 +200,14 @@ struct AlamoFireUploadOperation : UploadOperation {
 
 struct AlamoFireDownloadOperation: DownloadOperation {
  
-    private let downloadErrorCompletion: ErrorCompletion
-    private let downloadDestinationCompletion: DownloadDestinationCompletion
+    private let downloadCompletion: ErrorCompletion
+    private let downloadFileDestinationHandler: DownloadDestinationCompletion
     private let downloadProgressCompletion: DownloadProgressCompletion
     
-    init(downloadErrorCompletion: ErrorCompletion, downloadDestinationCompletion: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    init(downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
         
-        self.downloadErrorCompletion = downloadErrorCompletion
-        self.downloadDestinationCompletion = downloadDestinationCompletion
+        self.downloadCompletion = downloadCompletion
+        self.downloadFileDestinationHandler = downloadFileDestinationHandler
         self.downloadProgressCompletion = downloadProgressCompletion
         
     }
@@ -218,13 +220,13 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     
     private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
-        return downloadDestinationCompletion(donwloadFileTemporaryLocation: temporaryURL)
+        return downloadFileDestinationHandler(donwloadFileTemporaryLocation: temporaryURL)
 
     }
     
     private func handleDownloadCompletion(downladRequest: NSURLRequest?, downloadResponse: NSHTTPURLResponse?, data: NSData?, error: NSError?) {
         
-        downloadErrorCompletion(errorOptional: error)
+        downloadCompletion(errorOptional: error)
         
     }
     

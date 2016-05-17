@@ -2,7 +2,7 @@ import Foundation
 
 public protocol MODownloadManagerDelegate {
     
-    func downloadRequestDidUpdateProgress()
+    func downloadRequestDidUpdateProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)
     
     func downloadRequestStarted(downloadModel: MODownloadModel, index: Int)
     
