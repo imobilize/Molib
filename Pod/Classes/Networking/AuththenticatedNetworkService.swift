@@ -65,7 +65,7 @@ public class AuththenticatedNetworkService: NetworkService {
         return operation
     }
     
-    public func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
+    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
         
         return nil
         

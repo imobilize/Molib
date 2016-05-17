@@ -82,9 +82,18 @@ class AlamoFireNetworkService : NetworkService {
 //        
 //    }
     
-    func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
         
+        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
+        
+        let downloadCompletion = completionForDownloadRequest(request)
+        
+        let downloadFileDestinationHandler = completionForDownloadDestination(request)
+        
+//            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+
         return nil
+        
     }
     
 }
@@ -190,13 +199,13 @@ struct AlamoFireUploadOperation : UploadOperation {
 struct AlamoFireDownloadOperation: DownloadOperation {
  
     private let downloadErrorCompletion: ErrorCompletion
-    private let downloadCompletion: DownloadCompletion
+    private let downloadDestinationCompletion: DownloadDestinationCompletion
     private let downloadProgressCompletion: DownloadProgressCompletion
     
-    init(downloadErrorCompletion: ErrorCompletion, downloadCompletion: DownloadCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    init(downloadErrorCompletion: ErrorCompletion, downloadDestinationCompletion: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
         
         self.downloadErrorCompletion = downloadErrorCompletion
-        self.downloadCompletion = downloadCompletion
+        self.downloadDestinationCompletion = downloadDestinationCompletion
         self.downloadProgressCompletion = downloadProgressCompletion
         
     }
@@ -207,8 +216,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
         
     }
     
-        
-    private func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+    private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
         //Check for pre existing file.
         
@@ -224,7 +232,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
             
         }
         
-        downloadCompletion(fileLocation: fileUrl)
+        downloadDestinationCompletion(fileLocation: fileUrl)
         
         return fileUrl
 
@@ -239,7 +247,6 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     func cancel() {
         
     }
-
     
 }
 

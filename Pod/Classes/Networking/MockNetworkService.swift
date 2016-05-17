@@ -62,7 +62,7 @@ class MockNetworkService : NetworkService {
 
     }
     
-    func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation? {
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
         
         return nil
         

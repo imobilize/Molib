@@ -6,6 +6,7 @@ public enum DownloadTaskStatus: String {
     case Downloading = "Downloading"
     case Paused = "Paused"
     case Failed = "Failed"
+    case Finished = "Finished"
     
 }
 
@@ -15,7 +16,8 @@ public class MODownloadModel: NSObject {
     public var fileURL: String!
     public var status: String = DownloadTaskStatus.GettingInfo.rawValue
     
-    public var request: NetworkDownloadRequest?
+    public var operation: Operation?
+    public var downloadTask: DataDownloadTask?
     
     public var startTime: NSDate?
     

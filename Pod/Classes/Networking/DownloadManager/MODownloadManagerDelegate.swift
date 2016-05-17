@@ -14,7 +14,7 @@ public protocol MODownloadManagerDelegate {
     
     func downloadRequestCancelled()
     
-    func downloadRequestFinished()
+    func downloadRequestFinished(errorOptional: NSError?)
     
     func downloadRequestFailed()
     

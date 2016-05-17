@@ -19,7 +19,6 @@ public protocol UploadOperation: Operation {
 
 public protocol DownloadOperation: Operation {
     
-    
 }
 
 public protocol NetworkRequest {
@@ -39,7 +38,9 @@ public protocol NetworkUploadRequest: NetworkRequest {
 }
 
 public protocol NetworkDownloadRequest: NetworkRequest {
-        
+    
+    func handleDownloadLocation(fileLocation: NSURL)
+    
 }
 
 public protocol NetworkService {
@@ -50,7 +51,7 @@ public protocol NetworkService {
 
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation?
     
-    func enqueueNetworkDownloadRequest(request: MODownloadModel) -> DownloadOperation?
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation?
     
 }
 
@@ -99,11 +100,11 @@ extension NetworkService {
     
     }
     
-    func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadCompletion {
+    func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadDestinationCompletion {
         
         let completion = { (fileLocaion: NSURL) -> Void in
             
-            //TODO: Check that the file does not already exist, return saved file location to NetworkDownloadRequest
+            request.handleDownloadLocation(fileLocaion)
                         
         }
         
