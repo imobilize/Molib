@@ -218,23 +218,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     
     private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
-        //Check for pre existing file.
-        
-        var fileUrl: NSURL!
-        
-        if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
-            
-            fileUrl = directoryURL.URLByAppendingPathComponent(urlResponse.suggestedFilename!)
-            
-        } else {
-            
-            fileUrl = temporaryURL
-            
-        }
-        
-        downloadDestinationCompletion(fileLocation: fileUrl)
-        
-        return fileUrl
+        return downloadDestinationCompletion(donwloadFileTemporaryLocation: temporaryURL)
 
     }
     

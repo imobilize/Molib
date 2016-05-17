@@ -24,17 +24,17 @@ public class MODownloadManager: DownloadManager {
         
         if let request = NSURLRequest.GETRequest(asset.fileURL) {
             
-            let downloadTask = DataDownloadTask(urlRequest: request, downloadFileName: asset.fileName, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadCompletion: downloadCompletionHandler)
+            let downloadTask = DataDownloadTask(urlRequest: request, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadCompletion: downloadCompletionHandler)
             
             let downloadModel = MODownloadModel(fileName: asset.fileName, fileURL: asset.fileURL)
             
             downloadModel.downloadTask = downloadTask
             
-            downloadModel.operation = networkService.enqueueNetworkDownloadRequest(downloadTask)
-            
             downloadModel.status = DownloadTaskStatus.Downloading.rawValue
-            
+
             downloadQueue.append(downloadModel)
+
+            downloadModel.operation = networkService.enqueueNetworkDownloadRequest(downloadTask)
 
             delegate?.downloadRequestStarted(downloadModel, index: downloadQueue.count - 1)
             
@@ -64,9 +64,21 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    private func downloadFileDestinationComplertionHandler(downloadLocation: NSURL) {
+    private func downloadFileDestinationComplertionHandler(donwloadFileTemporaryLocation: NSURL) -> NSURL {
         
-        //Take the file location and save it to the asset / downloadModel
+        var fileUrl: NSURL!
+        
+        if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+            
+            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].fileName)
+            
+        } else {
+            
+            fileUrl = donwloadFileTemporaryLocation
+            
+        }
+        
+        return fileUrl
         
     }
     

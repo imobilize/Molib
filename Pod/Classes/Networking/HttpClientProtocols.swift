@@ -39,7 +39,7 @@ public protocol NetworkUploadRequest: NetworkRequest {
 
 public protocol NetworkDownloadRequest: NetworkRequest {
     
-    func handleDownloadLocation(fileLocation: NSURL)
+    func handleDownloadLocation(fileLocation: NSURL) -> NSURL
     
 }
 
@@ -102,7 +102,7 @@ extension NetworkService {
     
     func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadDestinationCompletion {
         
-        let completion = { (fileLocaion: NSURL) -> Void in
+        let completion = { (fileLocaion: NSURL) -> NSURL in
             
             request.handleDownloadLocation(fileLocaion)
                         
