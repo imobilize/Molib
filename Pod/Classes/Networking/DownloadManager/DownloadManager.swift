@@ -30,7 +30,7 @@ public class MODownloadManager: DownloadManager {
 
             downloadModel.operation = networkService.enqueueNetworkDownloadRequest(downloadTask)
 
-            delegate?.downloadRequestStarted(downloadModel, index: downloadQueue.count - 1)
+            delegate?.downloadRequestStarted?(downloadModel, index: downloadQueue.count - 1)
             
         }
         
@@ -68,13 +68,13 @@ public class MODownloadManager: DownloadManager {
     
     private func downloadCompletionHandler(errorCompletion: NSError?) {
         
-        delegate?.downloadRequestFinished(errorCompletion)
+        delegate?.downloadRequestFinished?(errorCompletion)
         
     }
     
     private func downloadProgressCompletionHandler(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
         
-        delegate?.downloadRequestDidUpdateProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
+        delegate?.downloadRequestDidUpdateProgress?(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
         
     }
     
