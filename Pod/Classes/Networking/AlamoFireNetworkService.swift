@@ -59,29 +59,7 @@ class AlamoFireNetworkService : NetworkService {
         
         return alamoFireUploadOperation
     }
-    
-//    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
-//        
-//        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
-//        
-//        let dataResponseCompletion = completionForDownloadRequest(request)
-//        
-//        let downloadDestinationCompletion = completionForDownloadDestination(request)
-//        
-//        let downloadProgressCompletion = completionForDownloadProgress(request)
-//        
-//        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadErrorCompletion: dataResponseCompletion, downloadCompletion: downloadDestinationCompletion, downloadProgressCompletion: downloadProgressCompletion)
-//        
-//        self.manager.download(method!, request.urlRequest.URL!.absoluteString, destination: alamoFireDownloadOperation.handleDownloadDestination)
-//    
-//            .progress(alamoFireDownloadOperation.handleDownloadProgress)
-//            
-//            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
-//        
-//        return alamoFireDownloadOperation
-//        
-//    }
-    
+        
     func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
@@ -93,8 +71,14 @@ class AlamoFireNetworkService : NetworkService {
         let downloadProgressCompletion = completionForDownloadProgress(request)
         
         let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressCompletion: downloadProgressCompletion)
+        
+        self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadDestination)
+        
+            .progress(alamoFireDownloadOperation.handleDownloadProgress)
+        
+            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
 
-        return nil
+        return alamoFireDownloadOperation
         
     }
     
@@ -218,7 +202,7 @@ struct AlamoFireDownloadOperation: DownloadOperation {
         
     }
     
-    private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+    private func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
         return downloadFileDestinationHandler(donwloadFileTemporaryLocation: temporaryURL)
 

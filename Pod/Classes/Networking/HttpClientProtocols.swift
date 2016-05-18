@@ -117,7 +117,7 @@ extension NetworkService {
         
         let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
             
-
+            request.handleDownloadProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpected)
             
         }
         

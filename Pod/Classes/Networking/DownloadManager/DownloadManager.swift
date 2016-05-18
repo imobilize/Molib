@@ -2,22 +2,16 @@ import Foundation
 
 public class MODownloadManager: DownloadManager {
     
-    public let delegate: MODownloadManagerDelegate?
     public let networkService: NetworkService!
     
     public var downloadQueue: [MODownloadModel] = []
     
-    public init(networkService: NetworkService, delegate: MODownloadManagerDelegate) {
+    public var delegate: MODownloadManagerDelegate?
+    
+    public init(networkService: NetworkService) {
         
         self.networkService = networkService
-        
-        self.delegate = delegate
-        
-    }
-    
-    func pauseDownloadTaskAtIndex(index: Int) {
-        
-        
+
     }
     
     public func startDownload(asset: Asset) {
@@ -43,10 +37,14 @@ public class MODownloadManager: DownloadManager {
     }
     
     public func pauseDownload(asset: Asset) {
-        
+     
     }
     
     public func cancelDownlaod(asset: Asset) {
+     
+        let cancelOperation = fetchOperationForAsset(asset)
+        
+        cancelOperation?.cancel()
         
     }
     
@@ -58,9 +56,25 @@ public class MODownloadManager: DownloadManager {
         
     }
     
+    private func fetchOperationForAsset(asset: Asset) -> Operation? {
+        
+        let downloadQueueModelForAsset = downloadQueue.filter { $0.fileName == asset.fileName }.first
+        
+        let operationForAsset = downloadQueueModelForAsset?.operation
+        
+        return operationForAsset
+        
+    }
+    
     private func downloadCompletionHandler(errorCompletion: NSError?) {
         
         delegate?.downloadRequestFinished(errorCompletion)
+        
+    }
+    
+    private func downloadProgressCompletionHandler(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
+        
+        delegate?.downloadRequestDidUpdateProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
         
     }
     
@@ -79,12 +93,6 @@ public class MODownloadManager: DownloadManager {
         }
         
         return fileUrl
-        
-    }
-    
-    private func downloadProgressCompletionHandler(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
-        
-        delegate?.downloadRequestDidUpdateProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
         
     }
     
