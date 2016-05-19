@@ -70,7 +70,7 @@ class AlamoFireNetworkService : NetworkService {
         
         let downloadProgressCompletion = completionForDownloadProgress(request)
         
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressCompletion: downloadProgressCompletion)
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressCompletion: downloadProgressCompletion)
         
         self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadDestination)
         
@@ -184,12 +184,15 @@ struct AlamoFireUploadOperation : UploadOperation {
 
 struct AlamoFireDownloadOperation: DownloadOperation {
  
+    internal let downloadModel: MODownloadModel
+    
     private let downloadCompletion: ErrorCompletion
     private let downloadFileDestinationHandler: DownloadDestinationCompletion
     private let downloadProgressCompletion: DownloadProgressCompletion
     
-    init(downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    init(downloadModel: MODownloadModel, downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
         
+        self.downloadModel = downloadModel
         self.downloadCompletion = downloadCompletion
         self.downloadFileDestinationHandler = downloadFileDestinationHandler
         self.downloadProgressCompletion = downloadProgressCompletion

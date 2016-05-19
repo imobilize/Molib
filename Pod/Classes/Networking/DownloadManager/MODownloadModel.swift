@@ -16,8 +16,10 @@ public class MODownloadModel: NSObject {
     public var fileURL: String!
     public var status: String = DownloadTaskStatus.GettingInfo.rawValue
     
+    
     public var operation: Operation?
     public var downloadTask: DataDownloadTask?
+    public var request: NSURLRequest?
     
     public var startTime: NSDate?
     

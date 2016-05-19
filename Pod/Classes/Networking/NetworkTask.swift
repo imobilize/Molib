@@ -83,14 +83,17 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
 
 public struct DataDownloadTask: NetworkDownloadRequest {
  
-    public let urlRequest: NSURLRequest
+    public var urlRequest: NSURLRequest
+    public let downloadModel: MODownloadModel
     public let downloadFileDestinationComplertionHandler: DownloadDestinationCompletion
     public let downloadProgressCompletion: DownloadProgressCompletion
     public let downloadCompletion: ErrorCompletion
     
-    public init(urlRequest: NSURLRequest, downloadFileDestinationComplertionHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion, downloadCompletion: ErrorCompletion) {
+    public init(downloadModel: MODownloadModel, downloadFileDestinationComplertionHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion, downloadCompletion: ErrorCompletion) {
         
-        self.urlRequest = urlRequest
+        self.downloadModel = downloadModel
+        
+        self.urlRequest = downloadModel.request!
         
         self.downloadFileDestinationComplertionHandler = downloadFileDestinationComplertionHandler
         

@@ -126,6 +126,8 @@ struct MockRequestOperation: UploadOperation {
 
 struct MockDownloadOperation: DownloadOperation {
     
+    let downloadModel: MODownloadModel
+    
     let request: NSURLRequest
 
     func startConnection(completion: DataResponseCompletion) {
