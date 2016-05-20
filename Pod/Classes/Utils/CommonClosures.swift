@@ -13,5 +13,8 @@ public typealias ProgressUpdate = (progress: CGFloat) -> Void
 
 
 public typealias DownloadCompletion = (downloadModel: MODownloadModel, errorOptional: NSError?) -> Void
+
 public typealias DownloadDestinationCompletion = (donwloadFileTemporaryLocation: NSURL) -> NSURL
+
 public typealias DownloadProgressCompletion = (downloadModel: MODownloadModel) -> Void
+public typealias DownloadProgressUpdate = (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void

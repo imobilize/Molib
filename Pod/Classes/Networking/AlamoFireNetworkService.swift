@@ -68,9 +68,9 @@ class AlamoFireNetworkService : NetworkService {
         
         let downloadFileDestinationHandler = completionForDownloadDestination(request)
         
-        let downloadProgressCompletion = completionForDownloadProgress(request)
+        let downloadProgressUpdate = completionForDownloadProgressUpdate(request)
         
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressCompletion: downloadProgressCompletion)
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressUpdate: downloadProgressUpdate)
         
         self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadDestination)
         
@@ -188,20 +188,20 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     
     private let downloadCompletion: ErrorCompletion
     private let downloadFileDestinationHandler: DownloadDestinationCompletion
-    private let downloadProgressCompletion: DownloadProgressCompletion
+    private let downloadProgressUpdate: DownloadProgressUpdate
     
-    init(downloadModel: MODownloadModel, downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion) {
+    init(downloadModel: MODownloadModel, downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressUpdate: DownloadProgressUpdate) {
         
         self.downloadModel = downloadModel
         self.downloadCompletion = downloadCompletion
         self.downloadFileDestinationHandler = downloadFileDestinationHandler
-        self.downloadProgressCompletion = downloadProgressCompletion
+        self.downloadProgressUpdate = downloadProgressUpdate
         
     }
 
     private func handleDownloadProgress(bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         
-        downloadProgressCompletion(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
+        downloadProgressUpdate(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
         
     }
     

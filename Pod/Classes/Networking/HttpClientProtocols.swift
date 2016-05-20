@@ -117,7 +117,7 @@ extension NetworkService {
         return completion
     }
     
-    func completionForDownloadProgress(request: NetworkDownloadRequest) -> DownloadProgressCompletion {
+    func completionForDownloadProgressUpdate(request: NetworkDownloadRequest) -> DownloadProgressUpdate {
         
         let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
             

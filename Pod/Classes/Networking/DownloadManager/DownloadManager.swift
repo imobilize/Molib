@@ -14,6 +14,8 @@ public class MODownloadManager: DownloadManager {
 
     }
     
+    //MARK: DownloadManager Protocol
+    
     public func startDownload(asset: Asset) {
         
         if let request = NSURLRequest.GETRequest(asset.fileURL) {
@@ -43,10 +45,17 @@ public class MODownloadManager: DownloadManager {
     }
     
     public func pauseDownload(asset: Asset) {
+        
      
     }
     
     public func cancelDownlaod(asset: Asset) {
+        
+        if let operation = findDownloadOperationForAsset(asset) {
+            
+            operation.cancel()
+            
+        }
         
     }
     
@@ -58,11 +67,23 @@ public class MODownloadManager: DownloadManager {
         
     }
     
+    //MARK: Completions
+    
     private func downloadCompletionHandler(downloadModel: MODownloadModel, errorCompletion: NSError?) {
         
-        downloadModel.status = DownloadTaskStatus.Finished.rawValue
+        if let error = errorCompletion {
         
-        delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
+            downloadModel.status = DownloadTaskStatus.Failed.rawValue
+            
+            delegate?.downloadRequestFinished(downloadModel, errorOptional: error)
+            
+        } else {
+         
+            downloadModel.status = DownloadTaskStatus.Finished.rawValue
+            
+            delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
+            
+        }
         
     }
     
@@ -78,9 +99,9 @@ public class MODownloadManager: DownloadManager {
         
         if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
             
-//            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].downloadModel.fileName)
+            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].downloadModel.fileName)
             
-//            removeOldFileAtLocationIfExists(fileUrl)
+            removeOldFileAtLocationIfExists(fileUrl)
             
         } else {
             
@@ -95,6 +116,8 @@ public class MODownloadManager: DownloadManager {
         
     }
     
+    //MARK: Helpers
+    
     private func removeOldFileAtLocationIfExists(locationToCheck: NSURL) {
         
         do {
@@ -106,6 +129,12 @@ public class MODownloadManager: DownloadManager {
             
         }
         
+    }
+    
+    private func findDownloadOperationForAsset(asset: Asset) -> DownloadOperation? {
+        
+        return downloadQueue.filter { $0.downloadModel.fileName == asset.fileName && $0.downloadModel.fileURL == asset.fileURL }.first
+
     }
     
 }
