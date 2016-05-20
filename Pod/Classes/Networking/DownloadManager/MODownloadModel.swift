@@ -16,12 +16,22 @@ public class MODownloadModel: NSObject {
     public var fileURL: String!
     public var status: String = DownloadTaskStatus.GettingInfo.rawValue
     
-    
-    public var operation: Operation?
+    public var asset: Asset?
     public var downloadTask: DataDownloadTask?
     public var request: NSURLRequest?
     
     public var startTime: NSDate?
+    
+    public var progressFraction: Float?
+    public var progress: (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)? {
+        
+        didSet {
+        
+            progressFraction = (Float(progress!.totalBytesRead) / Float(progress!.totalBytesExpectedToRead))
+
+        }
+        
+    }
     
     init(fileName: String, fileURL: String) {
         

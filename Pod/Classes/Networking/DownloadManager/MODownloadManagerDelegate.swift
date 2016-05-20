@@ -1,22 +1,22 @@
 import Foundation
 
-@objc public protocol MODownloadManagerDelegate {
+public protocol MODownloadManagerDelegate {
     
-    optional func downloadRequestDidUpdateProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)
+    func downloadRequestDidUpdateProgress(downloadModel: MODownloadModel, index: Int)
     
-    optional func downloadRequestStarted(downloadModel: MODownloadModel, index: Int)
+    func downloadRequestStarted(downloadOperation: DownloadOperation, index: Int)
     
-    optional func downloadRequestPaused(downloadModel: MODownloadModel, index: Int)
+    func downloadRequestPaused(downloadModel: MODownloadModel, index: Int)
     
-    optional func downloadRequestedResumed()
+    func downloadRequestedResumed()
     
-    optional func downloadRequesteRetry()
+    func downloadRequesteRetry()
     
-    optional func downloadRequestCancelled()
+    func downloadRequestCancelled()
     
-    optional func downloadRequestFinished(errorOptional: NSError?)
+    func downloadRequestFinished(downloadModel: MODownloadModel, errorOptional: NSError?)
     
-    optional func downloadRequestFailed()
+    func downloadRequestFailed()
     
 }
 

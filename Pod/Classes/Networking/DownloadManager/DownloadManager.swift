@@ -25,6 +25,8 @@ public class MODownloadManager: DownloadManager {
             downloadModel.status = DownloadTaskStatus.Downloading.rawValue
             
             downloadModel.request = request
+            
+            downloadModel.asset = asset
 
             let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadProgressCompletion: downloadProgressCompletionHandler, downloadCompletion: downloadCompletionHandler)
             
@@ -32,7 +34,7 @@ public class MODownloadManager: DownloadManager {
             
                 downloadQueue.append(downloadOperation)
                 
-                delegate?.downloadRequestStarted?(downloadModel, index: downloadQueue.count - 1)
+                delegate?.downloadRequestStarted(downloadOperation, index: downloadQueue.count - 1)
 
             }
             
@@ -56,15 +58,17 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    private func downloadCompletionHandler(errorCompletion: NSError?) {
+    private func downloadCompletionHandler(downloadModel: MODownloadModel, errorCompletion: NSError?) {
         
-        delegate?.downloadRequestFinished?(errorCompletion)
+        downloadModel.status = DownloadTaskStatus.Finished.rawValue
+        
+        delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
         
     }
     
-    private func downloadProgressCompletionHandler(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
+    private func downloadProgressCompletionHandler(downloadModel: MODownloadModel) {
 
-        delegate?.downloadRequestDidUpdateProgress?(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpectedToRead)
+        delegate?.downloadRequestDidUpdateProgress(downloadModel, index: downloadQueue.count - 1)
         
     }
     
@@ -74,15 +78,18 @@ public class MODownloadManager: DownloadManager {
         
         if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
             
-            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].downloadModel.fileName)
+//            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].downloadModel.fileName)
             
-            removeOldFileAtLocationIfExists(fileUrl)
+//            removeOldFileAtLocationIfExists(fileUrl)
             
         } else {
             
             fileUrl = donwloadFileTemporaryLocation
             
         }
+
+        
+        fileUrl = donwloadFileTemporaryLocation
         
         return fileUrl
         
