@@ -33,7 +33,7 @@ public class MODownloadModel: NSObject {
         
     }
     
-    init(fileName: String, fileURL: String) {
+    public init(fileName: String, fileURL: String) {
         
         self.fileName = fileName
         

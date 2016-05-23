@@ -12,7 +12,7 @@ public protocol MODownloadManagerDelegate {
     
     func downloadRequesteRetry()
     
-    func downloadRequestCancelled()
+    func downloadRequestCancelled(downloadModel: MODownloadModel, index: Int)
     
     func downloadRequestFinished(downloadModel: MODownloadModel, errorOptional: NSError?)
     
@@ -28,7 +28,7 @@ public protocol DownloadManager {
     
     func pauseDownload(asset: Asset)
     
-    func cancelDownlaod(asset: Asset)
+    func cancelDownload(asset: Asset)
     
     func deleteDownload(asset: Asset)
     

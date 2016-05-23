@@ -32,6 +32,8 @@ public class MODownloadManager: DownloadManager {
 
             let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadProgressCompletion: downloadProgressCompletion, downloadCompletion: downloadCompletionHandler)
             
+            downloadModel.downloadTask = downloadTask
+            
             if let downloadOperation = networkService.enqueueNetworkDownloadRequest(downloadTask) {
             
                 downloadQueue.append(downloadOperation)
@@ -46,14 +48,29 @@ public class MODownloadManager: DownloadManager {
     
     public func pauseDownload(asset: Asset) {
         
+        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+            
+            operation.pause()
+            
+            operation.downloadModel.status = DownloadTaskStatus.Paused.rawValue
+            
+            delegate?.downloadRequestPaused(operation.downloadModel, index: index)
+            
+        }
      
     }
     
-    public func cancelDownlaod(asset: Asset) {
+    public func cancelDownload(asset: Asset) {
         
-        if let operation = findDownloadOperationForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
             
             operation.cancel()
+            
+            operation.downloadModel.status = DownloadTaskStatus.Failed.rawValue
+            
+            updateDownloadQueueOperationAtIndex(operation, atIndex: index)
+            
+            delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
             
         }
         
@@ -65,6 +82,14 @@ public class MODownloadManager: DownloadManager {
     
     public func resumeDownload(asset: Asset) {
         
+        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+            
+            operation.resume()
+            
+            operation.downloadModel.status = DownloadTaskStatus.Downloading.rawValue
+            
+        }
+
     }
     
     //MARK: Completions
@@ -128,10 +153,26 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    private func findDownloadOperationForAsset(asset: Asset) -> DownloadOperation? {
+    private func findDownloadOperationAndIndexForAsset(asset: Asset) -> (operation: DownloadOperation, index: Int)? {
         
-        return downloadQueue.filter { $0.downloadModel.fileName == asset.fileName && $0.downloadModel.fileURL == asset.fileURL }.first
+        var operationIndex: (DownloadOperation, Int)?
+        
+        if let index = downloadQueue.indexOf ({ $0.downloadModel.asset?.id == asset.id }) {
+         
+            let downloadOperation = downloadQueue[index]
+            
+            operationIndex = (downloadOperation, index)
+            
+        }
+        
+        return operationIndex
 
+    }
+    
+    private func updateDownloadQueueOperationAtIndex(operation: DownloadOperation, atIndex: Int) {
+        
+        self.downloadQueue[atIndex] = operation
+        
     }
     
 }

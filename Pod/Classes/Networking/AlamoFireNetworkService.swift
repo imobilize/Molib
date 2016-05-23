@@ -70,13 +70,15 @@ class AlamoFireNetworkService : NetworkService {
         
         let downloadCompletion = completionForDownloadRequest(request)
         
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadProgress: downloadProgress, downloadLocationCompletion: downloadLocationCompletion, downloadCompletion: downloadCompletion)
+        var alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadProgress: downloadProgress, downloadLocationCompletion: downloadLocationCompletion, downloadCompletion: downloadCompletion)
         
-        self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadLocation)
+        alamoFireDownloadOperation.request = self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadLocation)
         
             .progress(alamoFireDownloadOperation.handleDownloadProgress)
         
             .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+        
+        
 
         return alamoFireDownloadOperation
         
@@ -185,6 +187,7 @@ struct AlamoFireUploadOperation : UploadOperation {
 struct AlamoFireDownloadOperation: DownloadOperation {
  
     internal let downloadModel: MODownloadModel
+    private var request: Request?
     
     private let downloadLocationCompletion: DownloadLocationCompletion
     private let downloadProgress: DownloadProgress
@@ -218,6 +221,20 @@ struct AlamoFireDownloadOperation: DownloadOperation {
     }
     
     func cancel() {
+    
+        request?.cancel()
+        
+    }
+    
+    func resume() {
+        
+        request?.resume()
+        
+    }
+    
+    func pause() {
+        
+        request?.suspend()
         
     }
     
