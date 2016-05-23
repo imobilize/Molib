@@ -106,7 +106,7 @@ extension NetworkService {
     
     }
     
-    func completionForDownloadDestination(request: NetworkDownloadRequest) -> DownloadDestinationCompletion {
+    func completionForDownloadLocation(request: NetworkDownloadRequest) -> DownloadLocationCompletion {
         
         let completion = { (fileLocaion: NSURL) -> NSURL in
             
@@ -117,7 +117,7 @@ extension NetworkService {
         return completion
     }
     
-    func completionForDownloadProgressUpdate(request: NetworkDownloadRequest) -> DownloadProgressUpdate {
+    func completionForDownloadProgress(request: NetworkDownloadRequest) -> DownloadProgress {
         
         let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
             

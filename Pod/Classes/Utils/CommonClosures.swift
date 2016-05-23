@@ -12,9 +12,12 @@ public typealias ImageResponseCompletion = (imageURL: String, image: UIImage?, e
 public typealias ProgressUpdate = (progress: CGFloat) -> Void
 
 
+
 public typealias DownloadCompletion = (downloadModel: MODownloadModel, errorOptional: NSError?) -> Void
 
-public typealias DownloadDestinationCompletion = (donwloadFileTemporaryLocation: NSURL) -> NSURL
+public typealias DownloadLocation = (downloadModel: MODownloadModel, donwloadFileTemporaryLocation: NSURL) -> NSURL
+public typealias DownloadLocationCompletion = (fileLocation: NSURL) -> NSURL
 
+public typealias DownloadProgress = (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
 public typealias DownloadProgressCompletion = (downloadModel: MODownloadModel) -> Void
-public typealias DownloadProgressUpdate = (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
+

@@ -30,7 +30,7 @@ public class MODownloadManager: DownloadManager {
             
             downloadModel.asset = asset
 
-            let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadFileDestinationComplertionHandler: downloadFileDestinationComplertionHandler, downloadProgressCompletion: downloadProgressCompletionHandler, downloadCompletion: downloadCompletionHandler)
+            let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadProgressCompletion: downloadProgressCompletion, downloadCompletion: downloadCompletionHandler)
             
             if let downloadOperation = networkService.enqueueNetworkDownloadRequest(downloadTask) {
             
@@ -87,19 +87,19 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    private func downloadProgressCompletionHandler(downloadModel: MODownloadModel) {
+    private func downloadProgressCompletion(downloadModel: MODownloadModel) {
 
         delegate?.downloadRequestDidUpdateProgress(downloadModel, index: downloadQueue.count - 1)
         
     }
     
-    private func downloadFileDestinationComplertionHandler(donwloadFileTemporaryLocation: NSURL) -> NSURL {
+    private func provideDownloadLocation(downloadModel: MODownloadModel, donwloadFileTemporaryLocation: NSURL) -> NSURL {
         
         var fileUrl: NSURL!
         
         if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
             
-            fileUrl = directoryURL.URLByAppendingPathComponent(downloadQueue[0].downloadModel.fileName)
+            fileUrl = directoryURL.URLByAppendingPathComponent(downloadModel.fileName)
             
             removeOldFileAtLocationIfExists(fileUrl)
             
@@ -109,9 +109,6 @@ public class MODownloadManager: DownloadManager {
             
         }
 
-        
-        fileUrl = donwloadFileTemporaryLocation
-        
         return fileUrl
         
     }

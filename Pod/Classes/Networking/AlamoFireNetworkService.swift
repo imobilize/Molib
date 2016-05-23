@@ -64,15 +64,15 @@ class AlamoFireNetworkService : NetworkService {
         
         let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
         
+        let downloadProgress = completionForDownloadProgress(request)
+        
+        let downloadLocationCompletion = completionForDownloadLocation(request)
+        
         let downloadCompletion = completionForDownloadRequest(request)
         
-        let downloadFileDestinationHandler = completionForDownloadDestination(request)
+        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadProgress: downloadProgress, downloadLocationCompletion: downloadLocationCompletion, downloadCompletion: downloadCompletion)
         
-        let downloadProgressUpdate = completionForDownloadProgressUpdate(request)
-        
-        let alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadModel: request.downloadModel, downloadCompletion: downloadCompletion, downloadFileDestinationHandler: downloadFileDestinationHandler, downloadProgressUpdate: downloadProgressUpdate)
-        
-        self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadDestination)
+        self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadLocation)
         
             .progress(alamoFireDownloadOperation.handleDownloadProgress)
         
@@ -186,28 +186,28 @@ struct AlamoFireDownloadOperation: DownloadOperation {
  
     internal let downloadModel: MODownloadModel
     
+    private let downloadLocationCompletion: DownloadLocationCompletion
+    private let downloadProgress: DownloadProgress
     private let downloadCompletion: ErrorCompletion
-    private let downloadFileDestinationHandler: DownloadDestinationCompletion
-    private let downloadProgressUpdate: DownloadProgressUpdate
     
-    init(downloadModel: MODownloadModel, downloadCompletion: ErrorCompletion, downloadFileDestinationHandler: DownloadDestinationCompletion, downloadProgressUpdate: DownloadProgressUpdate) {
+    init(downloadModel: MODownloadModel, downloadProgress: DownloadProgress, downloadLocationCompletion: DownloadLocationCompletion, downloadCompletion: ErrorCompletion) {
         
         self.downloadModel = downloadModel
+        self.downloadProgress = downloadProgress
+        self.downloadLocationCompletion = downloadLocationCompletion
         self.downloadCompletion = downloadCompletion
-        self.downloadFileDestinationHandler = downloadFileDestinationHandler
-        self.downloadProgressUpdate = downloadProgressUpdate
         
     }
 
     private func handleDownloadProgress(bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         
-        downloadProgressUpdate(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
+        downloadProgress(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
         
     }
     
-    private func handleDownloadDestination(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+    private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
         
-        return downloadFileDestinationHandler(donwloadFileTemporaryLocation: temporaryURL)
+        return downloadLocationCompletion(fileLocation: temporaryURL)
 
     }
     

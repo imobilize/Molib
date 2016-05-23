@@ -85,17 +85,17 @@ public struct DataDownloadTask: NetworkDownloadRequest {
  
     public var urlRequest: NSURLRequest
     public let downloadModel: MODownloadModel
-    public let downloadFileDestinationComplertionHandler: DownloadDestinationCompletion
+    public let downloadLocation: DownloadLocation
     public let downloadProgressCompletion: DownloadProgressCompletion
     public let downloadCompletion: DownloadCompletion
     
-    public init(downloadModel: MODownloadModel, downloadFileDestinationComplertionHandler: DownloadDestinationCompletion, downloadProgressCompletion: DownloadProgressCompletion, downloadCompletion: DownloadCompletion) {
+    public init(downloadModel: MODownloadModel, downloadLocation: DownloadLocation, downloadProgressCompletion: DownloadProgressCompletion, downloadCompletion: DownloadCompletion) {
         
         self.downloadModel = downloadModel
         
         self.urlRequest = downloadModel.request!
         
-        self.downloadFileDestinationComplertionHandler = downloadFileDestinationComplertionHandler
+        self.downloadLocation = downloadLocation
         
         self.downloadProgressCompletion = downloadProgressCompletion
 
@@ -111,7 +111,7 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     
     public func handleDownloadLocation(fileLocation: NSURL) -> NSURL {
         
-        return downloadFileDestinationComplertionHandler(donwloadFileTemporaryLocation: fileLocation)
+        return downloadLocation(downloadModel: downloadModel, donwloadFileTemporaryLocation: fileLocation)
         
     }
     
@@ -119,7 +119,7 @@ public struct DataDownloadTask: NetworkDownloadRequest {
         
         downloadModel.progress = (bytesRead, totalBytesRead, totalBytesExpectedToRead)
         
-        return downloadProgressCompletion(downloadModel: downloadModel)
+        downloadProgressCompletion(downloadModel: downloadModel)
         
     }
     
