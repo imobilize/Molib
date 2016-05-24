@@ -24,6 +24,8 @@ public protocol DownloadManager {
     
     var delegate: MODownloadManagerDelegate? { get set }
     
+    var downloadQueue: [DownloadOperation] { get }
+    
     func startDownload(asset: Asset)
     
     func pauseDownload(asset: Asset)
