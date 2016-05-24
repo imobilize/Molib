@@ -8,15 +8,15 @@ public protocol MODownloadManagerDelegate {
     
     func downloadRequestPaused(downloadModel: MODownloadModel, index: Int)
     
-    func downloadRequestedResumed()
+    func downloadRequestedResumed(downloadModel: MODownloadModel, index: Int)
     
-    func downloadRequesteRetry()
+    func downloadRequesteDeleted(downloadModel: MODownloadModel, index: Int)
     
     func downloadRequestCancelled(downloadModel: MODownloadModel, index: Int)
     
     func downloadRequestFinished(downloadModel: MODownloadModel, errorOptional: NSError?)
     
-    func downloadRequestFailed()
+    func downloadRequestFailed(downloadModel: MODownloadModel, errorOptional: NSError?)
     
 }
 

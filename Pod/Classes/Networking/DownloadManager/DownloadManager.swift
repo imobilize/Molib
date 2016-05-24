@@ -68,8 +68,6 @@ public class MODownloadManager: DownloadManager {
             
             operation.downloadModel.status = DownloadTaskStatus.Failed.rawValue
             
-            updateDownloadQueueOperationAtIndex(operation, atIndex: index)
-            
             delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
             
         }
@@ -77,6 +75,16 @@ public class MODownloadManager: DownloadManager {
     }
     
     public func deleteDownload(asset: Asset) {
+        
+        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+
+            operation.cancel()
+            
+            downloadQueue.removeAtIndex(index)
+            
+            delegate?.downloadRequesteDeleted(operation.downloadModel, index: index)
+            
+        }
         
     }
     
@@ -87,6 +95,8 @@ public class MODownloadManager: DownloadManager {
             operation.resume()
             
             operation.downloadModel.status = DownloadTaskStatus.Downloading.rawValue
+            
+            delegate?.downloadRequestedResumed(operation.downloadModel, index: index)
             
         }
 
@@ -100,7 +110,7 @@ public class MODownloadManager: DownloadManager {
         
             downloadModel.status = DownloadTaskStatus.Failed.rawValue
             
-            delegate?.downloadRequestFinished(downloadModel, errorOptional: error)
+            delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
             
         } else {
          
@@ -167,12 +177,6 @@ public class MODownloadManager: DownloadManager {
         
         return operationIndex
 
-    }
-    
-    private func updateDownloadQueueOperationAtIndex(operation: DownloadOperation, atIndex: Int) {
-        
-        self.downloadQueue[atIndex] = operation
-        
     }
     
 }
