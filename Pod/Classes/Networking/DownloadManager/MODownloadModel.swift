@@ -14,8 +14,16 @@ public class MODownloadModel: NSObject {
     
     public var fileName: String!
     public var fileURL: String!
-    public var status: String = DownloadTaskStatus.GettingInfo.rawValue
-    public var startTime: NSDate?
+    public var startTime: NSDate!
+    public var status: String {
+    
+        didSet {
+        
+            delegate?.downloadStatusDidUpdate(status)
+            
+        }
+        
+    }
     
     public var asset: Asset?
     public var downloadTask: DataDownloadTask?
@@ -37,6 +45,8 @@ public class MODownloadModel: NSObject {
     }
     
     public init(fileName: String, fileURL: String) {
+        
+        self.status = DownloadTaskStatus.GettingInfo.rawValue
         
         self.fileName = fileName
         
