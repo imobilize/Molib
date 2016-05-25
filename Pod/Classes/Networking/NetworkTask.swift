@@ -119,7 +119,7 @@ public struct DataDownloadTask: NetworkDownloadRequest {
         
         downloadModel.progress = (bytesRead, totalBytesRead, totalBytesExpectedToRead)
         
-        downloadProgressCompletion(downloadModel: downloadModel)
+//        downloadProgressCompletion(downloadModel: downloadModel)
         
     }
     
