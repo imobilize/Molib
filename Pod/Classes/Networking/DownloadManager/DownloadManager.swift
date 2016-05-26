@@ -30,7 +30,7 @@ public class MODownloadManager: DownloadManager {
             
             downloadModel.asset = asset
 
-            let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadProgressCompletion: downloadProgressCompletion, downloadCompletion: downloadCompletionHandler)
+            let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadCompletion: downloadCompletionHandler)
             
             downloadModel.downloadTask = downloadTask
             
@@ -119,12 +119,6 @@ public class MODownloadManager: DownloadManager {
             delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
             
         }
-        
-    }
-    
-    private func downloadProgressCompletion(downloadModel: MODownloadModel) {
-
-        delegate?.downloadRequestDidUpdateProgress(downloadModel, index: downloadQueue.count - 1)
         
     }
     

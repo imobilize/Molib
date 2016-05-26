@@ -1,9 +1,7 @@
 import Foundation
 
 public protocol MODownloadManagerDelegate {
-    
-    func downloadRequestDidUpdateProgress(downloadModel: MODownloadModel, index: Int)
-    
+        
     func downloadRequestStarted(downloadOperation: DownloadOperation, index: Int)
     
     func downloadRequestPaused(downloadModel: MODownloadModel, index: Int)
