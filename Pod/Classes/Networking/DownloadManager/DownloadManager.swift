@@ -102,6 +102,20 @@ public class MODownloadManager: DownloadManager {
 
     }
     
+    public func getDownloadModelForAsset(asset: Asset) -> MODownloadModel? {
+        
+        var downloadModel: MODownloadModel?
+        
+        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+            
+            downloadModel = operation.downloadModel
+            
+        }
+        
+        return downloadModel
+        
+    }
+    
     //MARK: Completions
     
     private func downloadCompletionHandler(downloadModel: MODownloadModel, errorCompletion: NSError?) {

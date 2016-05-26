@@ -153,6 +153,12 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate whe
     public func titleForHeaderAtSection(section: Int) -> String? {
         return nil
     }
+    
+    public func itemsArray() -> [T] {
+        
+        return arrayItems
+        
+    }
 }
 
 

@@ -34,6 +34,8 @@ public protocol DownloadManager {
     
     func resumeDownload(asset: Asset)
     
+    func getDownloadModelForAsset(asset: Asset) -> MODownloadModel?
+    
 }
 
 public protocol Asset {
