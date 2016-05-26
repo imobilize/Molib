@@ -47,7 +47,7 @@ public class MODownloadManager: DownloadManager {
                     }
                     
                 }
-
+                
             }
             
         }
@@ -93,7 +93,7 @@ public class MODownloadManager: DownloadManager {
                 }
                 
             }
-            
+
         }
         
     }
@@ -115,6 +115,7 @@ public class MODownloadManager: DownloadManager {
                 }
                 
             }
+            
             
         }
         
@@ -138,7 +139,7 @@ public class MODownloadManager: DownloadManager {
                 }
                 
             }
-            
+
         }
 
     }
