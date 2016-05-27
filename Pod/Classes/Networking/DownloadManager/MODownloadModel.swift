@@ -19,18 +19,7 @@ public class MODownloadModel: NSObject {
     
         didSet {
             
-//            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-//                
-//                if let instance = self {
-//                    
-//                    instance.delegate?.downloadStatusDidUpdate(instance.status)
-//
-//                }
-//                
-//            }
-
             delegate?.downloadStatusDidUpdate(status)
-
             
         }
         
@@ -47,18 +36,6 @@ public class MODownloadModel: NSObject {
         
         didSet {
         
-//            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-//                
-//                if let instance = self {
-//                    
-//                    instance.progressFraction = (Float(instance.progress!.totalBytesRead) / Float(instance.progress!.totalBytesExpectedToRead))
-//                    
-//                    instance.delegate?.downloadRequestDidUpdateProgress(instance.progressFraction!)
-//                    
-//                }
-//                
-//            }
-            
             progressFraction = (Float(progress!.totalBytesRead) / Float(progress!.totalBytesExpectedToRead))
             
             delegate?.downloadRequestDidUpdateProgress(progressFraction!)

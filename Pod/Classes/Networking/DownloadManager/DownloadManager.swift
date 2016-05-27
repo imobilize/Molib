@@ -38,15 +38,7 @@ public class MODownloadManager: DownloadManager {
             
                 downloadQueue.append(downloadOperation)
                 
-                dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                    
-                    if let instance = self {
-                 
-                        instance.delegate?.downloadRequestStarted(downloadOperation, index: instance.downloadQueue.count - 1)
-                        
-                    }
-                    
-                }
+                delegate?.downloadRequestStarted(downloadOperation, index: downloadQueue.count - 1)
                 
             }
             
@@ -62,15 +54,7 @@ public class MODownloadManager: DownloadManager {
             
             operation.downloadModel.status = DownloadTaskStatus.Paused.rawValue
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequestPaused(operation.downloadModel, index: index)
-                    
-                }
-                
-            }
+            delegate?.downloadRequestPaused(operation.downloadModel, index: index)
             
         }
      
@@ -84,15 +68,7 @@ public class MODownloadManager: DownloadManager {
             
             operation.downloadModel.status = DownloadTaskStatus.Failed.rawValue
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
-                    
-                }
-                
-            }
+            delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
 
         }
         
@@ -106,16 +82,7 @@ public class MODownloadManager: DownloadManager {
             
             downloadQueue.removeAtIndex(index)
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequesteDeleted(operation.downloadModel, index: index)
-                    
-                }
-                
-            }
-            
+            delegate?.downloadRequesteDeleted(operation.downloadModel, index: index)
             
         }
         
@@ -129,16 +96,7 @@ public class MODownloadManager: DownloadManager {
             
             operation.downloadModel.status = DownloadTaskStatus.Downloading.rawValue
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequestedResumed(operation.downloadModel, index: index)
-
-                    
-                }
-                
-            }
+            delegate?.downloadRequestedResumed(operation.downloadModel, index: index)
 
         }
 
@@ -166,29 +124,13 @@ public class MODownloadManager: DownloadManager {
         
             downloadModel.status = DownloadTaskStatus.Failed.rawValue
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
-                    
-                }
-                
-            }
+            delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
             
         } else {
          
             downloadModel.status = DownloadTaskStatus.Finished.rawValue
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                
-                if let instance = self {
-                    
-                    instance.delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
-                    
-                }
-                
-            }
+            delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
             
         }
         
