@@ -161,10 +161,9 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate whe
     }
 }
 
-
-class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate where Delegate.ItemType == ObjectType> : DataSourceProvider {
+public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate where Delegate.ItemType == ObjectType> : DataSourceProvider {
     
-    var delegate: Delegate? { didSet {
+    public var delegate: Delegate? { didSet {
         
             fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<ObjectType, Delegate>(delegate: delegate!)
         
@@ -176,13 +175,13 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
     
     var fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<ObjectType, Delegate>?
     
-    init(fetchedResultsController: NSFetchedResultsController) {
+    public init(fetchedResultsController: NSFetchedResultsController) {
         
         self.fetchedResultsController = fetchedResultsController
     }
     
     
-    func isEmpty() -> Bool {
+    public func isEmpty() -> Bool {
         
         var empty = true
         
@@ -193,23 +192,23 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
         return empty
     }
     
-    func numberOfSections() -> Int {
+    public func numberOfSections() -> Int {
         
         return self.fetchedResultsController.sections?.count ?? 0
     }
     
-    func numberOfRowsInSection(section: Int) -> Int {
+    public func numberOfRowsInSection(section: Int) -> Int {
         
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
     
-    func itemAtIndexPath(indexPath: NSIndexPath) -> ObjectType {
+    public func itemAtIndexPath(indexPath: NSIndexPath) -> ObjectType {
         
         return self.fetchedResultsController.objectAtIndexPath(indexPath) as! ObjectType
     }
     
-    func deleteItemAtIndexPath(indexPath: NSIndexPath) {
+    public func deleteItemAtIndexPath(indexPath: NSIndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
@@ -221,7 +220,7 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
         }
     }
     
-    func insertItem(item: ObjectType, atIndexPath: NSIndexPath) {
+    public func insertItem(item: ObjectType, atIndexPath: NSIndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
@@ -233,7 +232,7 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
         }
     }
     
-    func updateItem(item: ObjectType, atIndexPath: NSIndexPath) {
+    public func updateItem(item: ObjectType, atIndexPath: NSIndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
@@ -244,7 +243,7 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
         }
     }
     
-    func deleteAllInSection(section: Int) {
+    public func deleteAllInSection(section: Int) {
         
         let context = self.fetchedResultsController.managedObjectContext
 
@@ -259,12 +258,17 @@ class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: Da
         }
     }
     
-    func titleForHeaderAtSection(section: Int) -> String? {
+    public func titleForHeaderAtSection(section: Int) -> String? {
         
         return self.fetchedResultsController.sections?[section].name
     }
-
     
+    public func managedObjectContext() -> NSManagedObjectContext {
+        
+        return self.fetchedResultsController.managedObjectContext
+        
+    }
+
     deinit {
         print("FetchedResultsDataSourceProvider dying")
     }

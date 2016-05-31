@@ -16,7 +16,9 @@ public protocol Storable {
     init(dictionary: StorableDictionary)
 }
 
-public protocol Downloadable: Storable {
+public protocol Downloadable {
+    
+    var id: String? { get }
     
     var fileName: String? { get }
     

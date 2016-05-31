@@ -162,7 +162,7 @@ extension NSManagedObject {
         return controller
     }
     
-    class func fetchAllInContext(context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllInContext(context:NSManagedObjectContext) -> NSFetchedResultsController {
         
         let request = requestAllInContext(context)
         
@@ -198,7 +198,7 @@ extension NSManagedObject {
         return controller
     }
 
-    class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
         
         let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
         
