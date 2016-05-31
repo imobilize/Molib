@@ -16,11 +16,11 @@ public class MODownloadManager: DownloadManager {
     
     //MARK: DownloadManager Protocol
     
-    public func startDownload(asset: Asset) {
+    public func startDownload(downloadable: Downloadable) {
         
-        if let request = NSURLRequest.GETRequest(asset.fileURL) {
+        if let request = NSURLRequest.GETRequest(downloadable.fileURL!) {
             
-            let downloadModel = MODownloadModel(fileName: asset.fileName, fileURL: asset.fileURL)
+            let downloadModel = MODownloadModel(fileName: downloadable.fileName!, fileURL: downloadable.fileURL!)
             
             downloadModel.startTime = NSDate()
             
@@ -28,7 +28,7 @@ public class MODownloadManager: DownloadManager {
             
             downloadModel.request = request
             
-            downloadModel.asset = asset
+            downloadModel.downloadable = downloadable
 
             let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadCompletion: downloadCompletionHandler)
             
@@ -46,9 +46,9 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    public func pauseDownload(asset: Asset) {
+    public func pauseDownload(downloadable: Downloadable) {
         
-        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
             operation.pause()
             
@@ -60,9 +60,9 @@ public class MODownloadManager: DownloadManager {
      
     }
     
-    public func cancelDownload(asset: Asset) {
+    public func cancelDownload(downloadable: Downloadable) {
         
-        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
             operation.cancel()
             
@@ -74,9 +74,9 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    public func deleteDownload(asset: Asset) {
+    public func deleteDownload(downloadable: Downloadable) {
         
-        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
 
             operation.cancel()
             
@@ -88,9 +88,9 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    public func resumeDownload(asset: Asset) {
+    public func resumeDownload(downloadable: Downloadable) {
         
-        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
             operation.resume()
             
@@ -102,11 +102,11 @@ public class MODownloadManager: DownloadManager {
 
     }
     
-    public func getDownloadModelForAsset(asset: Asset) -> MODownloadModel? {
+    public func getDownloadModelForDownloadable(downloadable: Downloadable) -> MODownloadModel? {
         
         var downloadModel: MODownloadModel?
         
-        if let (operation, index) = findDownloadOperationAndIndexForAsset(asset) {
+        if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
             downloadModel = operation.downloadModel
             
@@ -171,11 +171,11 @@ public class MODownloadManager: DownloadManager {
         
     }
     
-    private func findDownloadOperationAndIndexForAsset(asset: Asset) -> (operation: DownloadOperation, index: Int)? {
+    private func findDownloadOperationAndIndexForDownloadable(downloadable: Downloadable) -> (operation: DownloadOperation, index: Int)? {
         
         var operationIndex: (DownloadOperation, Int)?
         
-        if let index = downloadQueue.indexOf ({ $0.downloadModel.asset?.id == asset.id }) {
+        if let index = downloadQueue.indexOf ({ $0.downloadModel.downloadable?.id == downloadable.id }) {
          
             let downloadOperation = downloadQueue[index]
             

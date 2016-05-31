@@ -25,7 +25,7 @@ public class MODownloadModel: NSObject {
         
     }
     
-    public var asset: Asset?
+    public var downloadable: Downloadable?
     public var downloadTask: DataDownloadTask?
     public var request: NSURLRequest?
     

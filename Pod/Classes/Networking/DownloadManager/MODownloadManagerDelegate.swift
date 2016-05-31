@@ -24,26 +24,16 @@ public protocol DownloadManager {
     
     var downloadQueue: [DownloadOperation] { get }
     
-    func startDownload(asset: Asset)
+    func startDownload(downloadable: Downloadable)
     
-    func pauseDownload(asset: Asset)
+    func pauseDownload(downloadable: Downloadable)
     
-    func cancelDownload(asset: Asset)
+    func cancelDownload(downloadable: Downloadable)
     
-    func deleteDownload(asset: Asset)
+    func deleteDownload(downloadable: Downloadable)
     
-    func resumeDownload(asset: Asset)
+    func resumeDownload(downloadable: Downloadable)
     
-    func getDownloadModelForAsset(asset: Asset) -> MODownloadModel?
-    
-}
-
-public protocol Asset {
-    
-    var id: String { get }
-    
-    var fileName: String { get }
-    
-    var fileURL: String { get }
+    func getDownloadModelForDownloadable(downloadable: Downloadable) -> MODownloadModel?
     
 }
