@@ -4,13 +4,17 @@ public class MODownloadManager: DownloadManager {
     
     public let networkService: NetworkService!
     
-    public var downloadQueue: [DownloadOperation] = []
+    public let dataStore: DataStore!
+    
+    public var downloadQueue: [String: (MODownloadModel, Operation?)] = [:]
     
     public var delegate: MODownloadManagerDelegate?
     
-    public init(networkService: NetworkService) {
+    public init(networkService: NetworkService, dataStore: DataStore) {
         
         self.networkService = networkService
+        
+        self.dataStore = dataStore
 
     }
     
@@ -20,27 +24,19 @@ public class MODownloadManager: DownloadManager {
         
         if let request = NSURLRequest.GETRequest(downloadable.fileURL!) {
             
-            let downloadModel = MODownloadModel(fileName: downloadable.fileName!, fileURL: downloadable.fileURL!)
+            let downloadTask = DataDownloadTask(urlRequest: request, downloadProgress: downloadProgressCompletion, downloadLocation: provideDownloadLocation, downloadCompletion: downloadCompletionHandler)
             
-            downloadModel.startTime = NSDate()
+            let downloadOperation = networkService.enqueueNetworkDownloadRequest(downloadTask)
             
-            downloadModel.status = DownloadTaskStatus.Downloading.rawValue
-            
-            downloadModel.request = request
-            
-            downloadModel.downloadable = downloadable
+            let downloadModelAttributes = provideDownloadModelAttributes(downloadable)
 
+<<<<<<< Updated upstream
             let downloadTask = DataDownloadTask(downloadModel: downloadModel, downloadLocation: provideDownloadLocation, downloadCompletion: downloadCompletionHandler)
+=======
+            let downloadModel = MODownloadModel(dictionary: downloadModelAttributes)
+>>>>>>> Stashed changes
             
-            downloadModel.downloadTask = downloadTask
-            
-            if let downloadOperation = networkService.enqueueNetworkDownloadRequest(downloadTask) {
-            
-                downloadQueue.append(downloadOperation)
-                
-                delegate?.downloadRequestStarted(downloadOperation, index: downloadQueue.count - 1)
-                
-            }
+            downloadQueue.updateValue((downloadModel, downloadOperation), forKey: downloadable.id!)
             
         }
         
@@ -50,11 +46,11 @@ public class MODownloadManager: DownloadManager {
         
         if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
-            operation.pause()
-            
-            operation.downloadModel.status = DownloadTaskStatus.Paused.rawValue
-            
-            delegate?.downloadRequestPaused(operation.downloadModel, index: index)
+//            operation.pause()
+//            
+//            operation.downloadModel.status = DownloadTaskStatus.Paused.rawValue
+//            
+//            delegate?.downloadRequestPaused(operation.downloadModel, index: index)
             
         }
      
@@ -64,11 +60,11 @@ public class MODownloadManager: DownloadManager {
         
         if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
-            operation.cancel()
-            
-            operation.downloadModel.status = DownloadTaskStatus.Failed.rawValue
-            
-            delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
+//            operation.cancel()
+//            
+//            operation.downloadModel.status = DownloadTaskStatus.Failed.rawValue
+//            
+//            delegate?.downloadRequestCancelled(operation.downloadModel, index: index)
 
         }
         
@@ -78,11 +74,11 @@ public class MODownloadManager: DownloadManager {
         
         if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
 
-            operation.cancel()
-            
-            downloadQueue.removeAtIndex(index)
-            
-            delegate?.downloadRequesteDeleted(operation.downloadModel, index: index)
+//            operation.cancel()
+//            
+//            downloadQueue.removeAtIndex(index)
+//            
+//            delegate?.downloadRequesteDeleted(operation.downloadModel, index: index)
             
         }
         
@@ -92,11 +88,11 @@ public class MODownloadManager: DownloadManager {
         
         if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
-            operation.resume()
-            
-            operation.downloadModel.status = DownloadTaskStatus.Downloading.rawValue
-            
-            delegate?.downloadRequestedResumed(operation.downloadModel, index: index)
+//            operation.resume()
+//            
+//            operation.downloadModel.status = DownloadTaskStatus.Downloading.rawValue
+//            
+//            delegate?.downloadRequestedResumed(operation.downloadModel, index: index)
 
         }
 
@@ -108,7 +104,7 @@ public class MODownloadManager: DownloadManager {
         
         if let (operation, index) = findDownloadOperationAndIndexForDownloadable(downloadable) {
             
-            downloadModel = operation.downloadModel
+//            downloadModel = operation.downloadModel
             
         }
         
@@ -122,15 +118,15 @@ public class MODownloadManager: DownloadManager {
         
         if let error = errorCompletion {
         
-            downloadModel.status = DownloadTaskStatus.Failed.rawValue
-            
-            delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
+//            downloadModel.status = DownloadTaskStatus.Failed.rawValue
+//            
+//            delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
             
         } else {
          
-            downloadModel.status = DownloadTaskStatus.Finished.rawValue
-            
-            delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
+//            downloadModel.status = DownloadTaskStatus.Finished.rawValue
+//            
+//            delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
             
         }
         
@@ -142,7 +138,7 @@ public class MODownloadManager: DownloadManager {
         
         if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
             
-            fileUrl = directoryURL.URLByAppendingPathComponent(downloadModel.fileName)
+//            fileUrl = directoryURL.URLByAppendingPathComponent(downloadModel.fileName)
             
             removeOldFileAtLocationIfExists(fileUrl)
             
@@ -157,6 +153,19 @@ public class MODownloadManager: DownloadManager {
     }
     
     //MARK: Helpers
+    
+    private func provideDownloadModelAttributes(downloadable: Downloadable) -> StorableDictionary {
+        
+        var downloadAttributeDictionary: StorableDictionary = [:]
+        
+        downloadAttributeDictionary[DownloadModelAttributes.id.rawValue] = downloadable.id
+        
+        downloadAttributeDictionary[DownloadModelAttributes.fileName.rawValue] = downloadable.fileName
+        
+        downloadAttributeDictionary[DownloadModelAttributes.fileURL.rawValue] = downloadable.fileURL
+        
+        return downloadAttributeDictionary
+    }
     
     private func removeOldFileAtLocationIfExists(locationToCheck: NSURL) {
         
@@ -175,13 +184,13 @@ public class MODownloadManager: DownloadManager {
         
         var operationIndex: (DownloadOperation, Int)?
         
-        if let index = downloadQueue.indexOf ({ $0.downloadModel.downloadable?.id == downloadable.id }) {
-         
-            let downloadOperation = downloadQueue[index]
-            
-            operationIndex = (downloadOperation, index)
-            
-        }
+//        if let index = downloadQueue.indexOf ({ $0.downloadModel.downloadable?.id == downloadable.id }) {
+//         
+//            let downloadOperation = downloadQueue[index]
+//            
+//            operationIndex = (downloadOperation, index)
+//            
+//        }
         
         return operationIndex
 

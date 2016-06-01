@@ -1,4 +1,5 @@
 import Foundation
+import CoreData
 
 public enum DownloadTaskStatus: String {
     
@@ -10,49 +11,56 @@ public enum DownloadTaskStatus: String {
     
 }
 
-public class MODownloadModel: NSObject {
+public struct MODownloadModel: Storable {
     
-    public var fileName: String!
-    public var fileURL: String!
-    public var startTime: NSDate!
-    public var status: String {
+    public let fileName: String?
+    public let fileURL: String?
+    public var downloadOperation: DownloadOperation?
     
-        didSet {
-            
-            delegate?.downloadStatusDidUpdate(status)
-            
-        }
+    //MARK: Storable Protocol
+    
+    public var id: String?
+    
+    public static var typeName = "MODownloadModel"
+    
+    public init(dictionary: StorableDictionary) {
+        
+        self.id = dictionary[DownloadModelAttributes.id.rawValue] as? String
+        
+        self.fileName = dictionary[DownloadModelAttributes.fileName.rawValue] as? String
+        
+        self.fileURL = dictionary[DownloadModelAttributes.fileURL.rawValue] as? String
+                
+    }
+    
+    public func toDictionary() -> [String : AnyObject] {
+        
+        var dictionary: StorableDictionary = [:]
+        
+        dictionary[DownloadModelAttributes.id.rawValue] = self.id
+        
+        dictionary[DownloadModelAttributes.fileName.rawValue] = self.fileName
+        
+        dictionary[DownloadModelAttributes.fileURL.rawValue] = self.fileURL
+        
+        return dictionary
         
     }
     
-    public var downloadable: Downloadable?
-    public var downloadTask: DataDownloadTask?
-    public var request: NSURLRequest?
     
-    public var delegate: MODownloadModelDelegate?
+//    public var downloadable: Downloadable?
+//    public var downloadTask: DataDownloadTask?
+//    public var request: NSURLRequest?
+//    public var progressFraction: Float?
+//    public var progress: (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)?
     
-    public var progressFraction: Float?
-    public var progress: (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64)? {
-        
-        didSet {
-        
-            progressFraction = (Float(progress!.totalBytesRead) / Float(progress!.totalBytesExpectedToRead))
-            
-            delegate?.downloadRequestDidUpdateProgress(progressFraction!)
+}
 
-            
-        }
-        
-    }
+enum DownloadModelAttributes: String {
     
-    public init(fileName: String, fileURL: String) {
-        
-        self.status = DownloadTaskStatus.GettingInfo.rawValue
-        
-        self.fileName = fileName
-        
-        self.fileURL = fileURL
-        
-    }
+    case id = "id"
+    case fileName = "fileName"
+    case fileURL = "fileURL"
+    case operation = "operation"
     
 }

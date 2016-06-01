@@ -22,7 +22,7 @@ public protocol DownloadManager {
     
     var delegate: MODownloadManagerDelegate? { get set }
     
-    var downloadQueue: [DownloadOperation] { get }
+    var downloadQueue: [String: (MODownloadModel, Operation?)] { get }
     
     func startDownload(downloadable: Downloadable)
     

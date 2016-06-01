@@ -18,6 +18,7 @@ public typealias DownloadCompletion = (downloadModel: MODownloadModel, errorOpti
 public typealias DownloadLocation = (downloadModel: MODownloadModel, donwloadFileTemporaryLocation: NSURL) -> NSURL
 public typealias DownloadLocationCompletion = (fileLocation: NSURL) -> NSURL
 
+public typealias DownloadOperationCompletion = (request: NetworkDownloadRequest) -> DownloadOperation?
 public typealias DownloadProgress = (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
 public typealias DownloadProgressCompletion = (downloadModel: MODownloadModel) -> Void
 

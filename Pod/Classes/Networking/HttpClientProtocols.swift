@@ -19,7 +19,7 @@ public protocol UploadOperation: Operation {
 
 public protocol DownloadOperation: Operation {
     
-    var downloadModel: MODownloadModel { get }
+//    var downloadModel: MODownloadModel { get }
     
     func pause()
     
@@ -45,7 +45,7 @@ public protocol NetworkUploadRequest: NetworkRequest {
 
 public protocol NetworkDownloadRequest: NetworkRequest {
     
-    var downloadModel: MODownloadModel { get }
+    var downloadModel: MODownloadModel? { get }
     
     func handleDownloadLocation(fileLocation: NSURL) -> NSURL
     

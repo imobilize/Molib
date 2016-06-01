@@ -84,15 +84,16 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
 public struct DataDownloadTask: NetworkDownloadRequest {
  
     public var urlRequest: NSURLRequest
-    public let downloadModel: MODownloadModel
+    public let downloadModel: MODownloadModel? = nil
+    public let downloadProgress: DownloadProgressCompletion
     public let downloadLocation: DownloadLocation
     public let downloadCompletion: DownloadCompletion
     
-    public init(downloadModel: MODownloadModel, downloadLocation: DownloadLocation, downloadCompletion: DownloadCompletion) {
+    public init(urlRequest: NSURLRequest, downloadProgress: DownloadProgressCompletion, downloadLocation: DownloadLocation, downloadCompletion: DownloadCompletion) {
         
-        self.downloadModel = downloadModel
+        self.urlRequest = urlRequest
         
-        self.urlRequest = downloadModel.request!
+        self.urlRequest = NSURLRequest()
         
         self.downloadLocation = downloadLocation
         
@@ -102,20 +103,24 @@ public struct DataDownloadTask: NetworkDownloadRequest {
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
-        downloadCompletion(downloadModel: downloadModel, errorOptional: errorOptional)
+//        downloadCompletion(downloadModel: downloadModel!, errorOptional: errorOptional)
         
     }
     
     public func handleDownloadLocation(fileLocation: NSURL) -> NSURL {
         
-        return downloadLocation(downloadModel: downloadModel, donwloadFileTemporaryLocation: fileLocation)
+//        return downloadLocation(downloadModel: downloadModel!, donwloadFileTemporaryLocation: fileLocation)
+        
+        return NSURL()
         
     }
     
     public func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) {
         
-        downloadModel.progress = (bytesRead, totalBytesRead, totalBytesExpectedToRead)
-                
+        let progressFraction = (Float(totalBytesRead) / Float(totalBytesExpectedToRead))
+        
+//        downloadProgress(downloadModel: downloadModel!, downloadProgress: progressFraction)
+        
     }
     
 }
