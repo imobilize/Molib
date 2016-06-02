@@ -112,7 +112,7 @@ public class AuththenticatedNetworkService: NetworkService {
         
         let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
         
-        if let request = NSURLRequest.POSTRequest(refreshTokenURL, bodyParameters: refreshTokenParameters) {
+        if let request = NSURLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
         
             let taskCompletion = refreshTokenResponseHandler(networkRequest)
 
