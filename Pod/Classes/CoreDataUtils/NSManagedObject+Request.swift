@@ -3,7 +3,7 @@ import Foundation
 import CoreData
 
 let kMagicalRecordDefaultBatchSize = 20
-let kEntityNameSelector: Selector = "entityName"
+let kEntityNameSelector: Selector = Selector("entityName")
 
 
 extension NSManagedObject {

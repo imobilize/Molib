@@ -33,7 +33,7 @@ public class AsyncImageLoader: ImageLoader {
         
         dequeueImageView(imageView)
         
-        currentTag++
+        currentTag = currentTag + 1
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
         
         imageView.tag = self.currentTag

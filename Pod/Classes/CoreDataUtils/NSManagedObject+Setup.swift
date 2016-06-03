@@ -227,7 +227,7 @@ public class CoreDataUtils {
         
         var error: NSError? = nil
         
-        var failureReason = "There was an error creating or loading the application's saved data."
+        var _ = "There was an error creating or loading the application's saved data."
         
         let store:NSPersistentStore?
         do {

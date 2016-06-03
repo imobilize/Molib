@@ -130,9 +130,9 @@ public class DataStoreImpl: DataStore {
     
     public func removeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
-        var typeDictionary = dictionaryForType(T.typeName)
+        var _  = dictionaryForType(T.typeName)
         
-        if let id = entity.id {
+        if let _ = entity.id {
             
 //            typeDictionary[id] = nil
             

@@ -5,9 +5,9 @@ import CoreData
 
 public protocol DataSourceProvider {
     
-    typealias DataSourceDelegate: DataSourceProviderDelegate
+    associatedtype DataSourceDelegate: DataSourceProviderDelegate
     
-    typealias ItemType
+    associatedtype ItemType
     
     
     var delegate: DataSourceDelegate? { get set }
@@ -36,7 +36,7 @@ public protocol DataSourceProvider {
 
 public protocol DataSourceProviderDelegate {
     
-    typealias ItemType
+    associatedtype ItemType
     
     
     mutating func providerWillChangeContent()
