@@ -11,7 +11,7 @@ enum DataSourceChangeType {
 }
 
 
-class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
+public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
     
     var collectionView: UICollectionView?
   
@@ -28,11 +28,11 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
     }
     
     //MARK:  conformance to the DataSourceProviderDelegate
-    func providerWillChangeContent() {
+    public func providerWillChangeContent() {
         
     }
     
-    func providerDidEndChangeContent() {
+    public func providerDidEndChangeContent() {
         
         if sectionChanges.count > 0 {
             
@@ -120,14 +120,14 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
     }
     
     
-    func providerDidInsertSectionAtIndex(index: Int) {
+    public func providerDidInsertSectionAtIndex(index: Int) {
         
         let change = (DataSourceChangeType.Insert, index)
         
         sectionChanges.append(change)
     }
     
-    func providerDidDeleteSectionAtIndex(index: Int) {
+    public func providerDidDeleteSectionAtIndex(index: Int) {
         
         let change = (DataSourceChangeType.Delete, index)
         
@@ -135,28 +135,28 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
     }
     
     
-    func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
+    public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
 
         updateWithItemChange(.Insert, indexPaths: atIndexPaths)
     }
     
-    func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
+    public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
 
         
         updateWithItemChange(.Delete, indexPaths: atIndexPaths)
     }
     
-    func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [NSIndexPath]) {
+    public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [NSIndexPath]) {
         
         updateWithItemChange(.Update, indexPaths: indexPaths)
     }
     
-    func providerDidMoveItem(item: ItemType, atIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+    public func providerDidMoveItem(item: ItemType, atIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
         
         self.collectionView?.moveItemAtIndexPath(atIndexPath, toIndexPath: toIndexPath)
     }
     
-    func providerDidDeleteAllItemsInSection(section: Int) {
+    public func providerDidDeleteAllItemsInSection(section: Int) {
         
         let indexSet = NSIndexSet(index: section)
         
@@ -224,7 +224,7 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
         self.objectChanges.removeAll(keepCapacity: true)
     }
     
-    func shouldReloadCollectionViewToPreventKnownIssue() -> Bool {
+    public func shouldReloadCollectionViewToPreventKnownIssue() -> Bool {
         
         var shouldReload: Bool = false
         
@@ -276,7 +276,7 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
     }
 }
 
-@objc protocol CollectionViewCellProvider {
+@objc public protocol CollectionViewCellProvider {
     
     func collectionView(collectionView: UICollectionView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
     
@@ -288,7 +288,7 @@ class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDeleg
 }
 
 
-class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType>> : NSObject, UICollectionViewDataSource {
+public class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType>> : NSObject, UICollectionViewDataSource {
     
     let collectionView: UICollectionView
     
@@ -299,7 +299,7 @@ class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider w
     let collectionViewCellProvider: CollectionViewCellProvider
     
     
-    init(collectionView: UICollectionView, dataSource: DataSource, cellProvider: CollectionViewCellProvider) {
+    public init(collectionView: UICollectionView, dataSource: DataSource, cellProvider: CollectionViewCellProvider) {
         
         self.collectionView = collectionView
         self.dataSource = dataSource
@@ -313,33 +313,33 @@ class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider w
     }
     
     // MARK: - Collection View Datasource
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
         return self.dataSource.numberOfSections() ?? 0
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return self.dataSource.numberOfRowsInSection(section) ?? 0
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         return collectionViewCellProvider.collectionView(collectionView, cellForRowAtIndexPath: indexPath)
     }
     
     
-    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+    public func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         
         return (collectionViewCellProvider.collectionView?(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath))!
     }
     
-    func collectionView(collectionView: UICollectionView, canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    public func collectionView(collectionView: UICollectionView, canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         
         return (collectionViewCellProvider.collectionView?(collectionView, canMoveItemAtIndexPath: indexPath))!
     }
  
-    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    public func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         
         let item = self.dataSource.itemAtIndexPath(sourceIndexPath)
         
