@@ -2,38 +2,34 @@ import Foundation
 
 public protocol MODownloadManagerDelegate {
         
-    func downloadRequestStarted(downloadOperation: DownloadOperation, index: Int)
+    func downloadRequestStarted(downloadable: Downloadable)
     
-    func downloadRequestPaused(downloadModel: MODownloadModel, index: Int)
+    func downloadRequestPaused(downloadable: Downloadable)
     
-    func downloadRequestedResumed(downloadModel: MODownloadModel, index: Int)
+    func downloadRequestedResumed(downloadable: Downloadable)
     
-    func downloadRequesteDeleted(downloadModel: MODownloadModel, index: Int)
+    func downloadRequesteDeleted(downloadable: Downloadable)
     
-    func downloadRequestCancelled(downloadModel: MODownloadModel, index: Int)
+    func downloadRequestCancelled(downloadable: Downloadable)
     
-    func downloadRequestFinished(downloadModel: MODownloadModel, errorOptional: NSError?)
+    func downloadRequestFinished(downloadable: Downloadable)
     
-    func downloadRequestFailed(downloadModel: MODownloadModel, errorOptional: NSError?)
+    func downloadRequestFailed(downloadable: Downloadable, error: NSError)
     
+    /* This should really return a model that has speed, remaining time, total bytes etc Just doing the simplest thing for now */
+    func downloadDidUpdateProgress(downloadable: Downloadable, progress: Float)
 }
 
 public protocol DownloadManager {
     
     var delegate: MODownloadManagerDelegate? { get set }
     
-    var downloadQueue: [String: (MODownloadModel, Operation?)] { get }
-    
     func startDownload(downloadable: Downloadable)
     
     func pauseDownload(downloadable: Downloadable)
     
     func cancelDownload(downloadable: Downloadable)
-    
-    func deleteDownload(downloadable: Downloadable)
-    
+        
     func resumeDownload(downloadable: Downloadable)
-    
-    func getDownloadModelForDownloadable(downloadable: Downloadable) -> MODownloadModel?
     
 }

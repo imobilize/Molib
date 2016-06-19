@@ -18,11 +18,11 @@ public protocol Storable {
 
 public protocol Downloadable {
     
-    var id: String? { get }
+    var id: String! { get }
 
-    var fileName: String? { get }
+    var fileName: String! { get }
     
-    var fileURL: String? { get }
+    var fileURL: String! { get }
     
 }
 
