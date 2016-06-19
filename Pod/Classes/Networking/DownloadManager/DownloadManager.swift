@@ -43,7 +43,7 @@ public class MODownloadManagerImpl: DownloadManager {
         
         if let fileName = downloadable.fileURL, fileURL = downloadable.fileURL {
             
-            self.downloader.addDownloadTask(fileName, fileURL: fileURL)
+            self.downloader.addDownloadTask(downloadable.id, fileName: fileName, fileURL: fileURL)
             
         } else {
             

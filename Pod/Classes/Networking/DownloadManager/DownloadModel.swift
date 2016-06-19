@@ -41,11 +41,11 @@ public class DownloadModel: NSObject, Downloadable {
     
     public var startTime: NSDate?
     
-    init(fileName: String, fileURL: String) {
+    init(id: String, fileName: String, fileURL: String) {
      
         super.init()
         
-        self.id = fileURL
+        self.id = id
         self.fileName = fileName
         self.fileURL = fileURL
     }

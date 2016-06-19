@@ -6,7 +6,7 @@ extension NSManagedObject {
 
     //pragma mark - Finding Data
     
-    class func findAllInContext(context: NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func findAllInContext(context: NSManagedObjectContext) -> [NSManagedObject]? {
     
         let request = requestAllInContext(context)
         
@@ -14,7 +14,7 @@ extension NSManagedObject {
     }
     
     
-    class func findAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func findAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
     
         let request = requestAllSortedBy(sortTerm, ascending: ascending, inContext: context)
     
@@ -22,7 +22,7 @@ extension NSManagedObject {
     }
     
 
-    class func findAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func findAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
@@ -30,7 +30,7 @@ extension NSManagedObject {
     }
     
     
-    class func findAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext)  -> [NSManagedObject]? {
+    public class func findAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext)  -> [NSManagedObject]? {
         
         let request = createFetchRequestInContext(context)
         
@@ -39,14 +39,14 @@ extension NSManagedObject {
         return executeFetchRequest(request, inContext:context)
     }
     
-    class func findFirstInContext(context:NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstInContext(context:NSManagedObjectContext) -> NSManagedObject? {
         
         let request = createFetchRequestInContext(context)
     
         return executeFetchRequestAndReturnFirstObject(request, inContext:context)
     }
     
-    class func findFirstByAttribute(attribute: String, withValue searchValue:AnyObject, inContext context:NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstByAttribute(attribute: String, withValue searchValue:AnyObject, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
         let request = requestFirstByAttribute(attribute, withValue:searchValue, inContext:context)
         
@@ -54,7 +54,7 @@ extension NSManagedObject {
     }
 
     
-    class func findFirstOrderedByAttribute(attribute: String, ascending: Bool, inContext context: NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstOrderedByAttribute(attribute: String, ascending: Bool, inContext context: NSManagedObjectContext) -> NSManagedObject? {
         
         let request = requestAllSortedBy(attribute, ascending:ascending, inContext:context)
 
@@ -63,7 +63,7 @@ extension NSManagedObject {
         return executeFetchRequestAndReturnFirstObject(request, inContext:context)
     }
     
-    class func findFirstOrCreateByPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstOrCreateByPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSManagedObject? {
 
         let request = createFetchRequestInContext(context)
 
@@ -87,7 +87,7 @@ extension NSManagedObject {
     }
     
     
-    class func findFirstOrCreateByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context: NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstOrCreateByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context: NSManagedObjectContext) -> NSManagedObject? {
 
         var result: NSManagedObject? = findFirstByAttribute(attribute, withValue:searchValue, inContext:context)
     
@@ -101,14 +101,14 @@ extension NSManagedObject {
         return result
     }
     
-    class func findFirstWithPredicate(searchTerm: NSPredicate, inContext context:NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstWithPredicate(searchTerm: NSPredicate, inContext context:NSManagedObjectContext) -> NSManagedObject? {
     
         let request = requestFirstWithPredicate(searchTerm, inContext:context)
     
         return executeFetchRequestAndReturnFirstObject(request, inContext:context)
     }
     
-    class func findFirstWithPredicate(searchTerm: NSPredicate, sortedBy property: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstWithPredicate(searchTerm: NSPredicate, sortedBy property: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
         let request = requestAllSortedBy(property, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
@@ -116,7 +116,7 @@ extension NSManagedObject {
     }
     
     
-    class func findFirstWithPredicate(searchTerm: NSPredicate, andRetrieveAttributes attributes:Array<String>, inContext context:NSManagedObjectContext) -> NSManagedObject? {
+    public class func findFirstWithPredicate(searchTerm: NSPredicate, andRetrieveAttributes attributes:Array<String>, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
         let request = createFetchRequestInContext(context)
         request.predicate =  searchTerm
@@ -125,14 +125,14 @@ extension NSManagedObject {
         return executeFetchRequestAndReturnFirstObject(request, inContext:context)
     }
     
-    class func findByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func findByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         let request = requestAllWhere(attribute, isEqualTo:searchValue, inContext:context)
     
         return executeFetchRequest(request, inContext:context)
     }
     
-    class func findByAttribute(attribute: String, withValue searchValue: NSManagedObject, andOrderBy sortTerm:String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func findByAttribute(attribute: String, withValue searchValue: NSManagedObject, andOrderBy sortTerm:String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         let searchTerm = NSPredicate(format: "%K = %@", [attribute, searchValue])
         
@@ -176,7 +176,7 @@ extension NSManagedObject {
     }
 
     
-    class func fetchAllWithDelegate(delegate: NSFetchedResultsControllerDelegate, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllWithDelegate(delegate: NSFetchedResultsControllerDelegate, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
     
         let request = requestAllInContext(context)
     
@@ -187,7 +187,7 @@ extension NSManagedObject {
         return controller
     }
     
-    class func fetchAllGroupedBy(group: String, withPredicate searchTerm:NSPredicate, sortedBy sortTerm:String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllGroupedBy(group: String, withPredicate searchTerm:NSPredicate, sortedBy sortTerm:String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
     
         let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
@@ -209,13 +209,13 @@ extension NSManagedObject {
         return controller
     }
     
-    class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, groupBy groupingKeyPath:String, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, groupBy groupingKeyPath:String, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
     
         return fetchAllGroupedBy(groupingKeyPath, withPredicate:searchTerm, sortedBy:sortTerm, ascending:ascending, delegate:delegate, inContext:context)
     }
     
     
-    class func fetchAllSortedBy(sortTerm: String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
         
         let request = requestAllSortedBy(sortTerm, ascending: ascending, inContext: context)
         
@@ -226,7 +226,7 @@ extension NSManagedObject {
         return controller
     }
     
-    class func executeFetchRequest(request: NSFetchRequest, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func executeFetchRequest(request: NSFetchRequest, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         var results: [NSManagedObject]?
         
@@ -270,7 +270,7 @@ extension NSManagedObject {
     }
 
 
-    class func performFetch(controller: NSFetchedResultsController) -> Bool {
+    public class func performFetch(controller: NSFetchedResultsController) -> Bool {
 
         var error: NSError? = nil
 
@@ -291,7 +291,7 @@ extension NSManagedObject {
         return success
     }
 //    
-//    class func handleErrors(error: NSError ) {
+//    public class func handleErrors(error: NSError ) {
 //
 //    // If a custom error handler is set, call that
 //        if (errorHandlerTarget != nil && errorHandlerAction != nil) {
@@ -309,7 +309,7 @@ extension NSManagedObject {
 //    }
 //    }
 //
-//    class func defaultErrorHandler(error: NSError ) {
+//    public class func defaultErrorHandler(error: NSError ) {
 //    
 //    let userInfo = error.userInfo
 //    

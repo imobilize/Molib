@@ -38,7 +38,7 @@ public protocol Downloader {
     
     var delegate: DownloaderDelegate? { get set }
     
-    func addDownloadTask(fileName: String, fileURL: String)
+    func addDownloadTask(id: String, fileName: String, fileURL: String)
     
     func pauseDownloadTaskAtIndex(index: Int)
     
@@ -127,12 +127,15 @@ extension DownloaderImpl {
         let downloadTasks = self.downloadTasks()
         
         for object in downloadTasks {
+            
             let downloadTask = object as! NSURLSessionDownloadTask
             let taskDescComponents: [String] = downloadTask.taskDescription!.componentsSeparatedByString(",")
-            let fileName = taskDescComponents.first!
+           
+            let id = taskDescComponents.first!
+            let fileName = taskDescComponents[1]
             let fileURL = taskDescComponents.last!
             
-            let downloadModel = DownloadModel.init(fileName: fileName, fileURL: fileURL)
+            let downloadModel = DownloadModel.init(id: id, fileName: fileName, fileURL: fileURL)
             downloadModel.task = downloadTask
             downloadModel.startTime = NSDate()
             
@@ -258,10 +261,11 @@ extension DownloaderImpl: NSURLSessionDelegate {
             
             let downloadTask = task as! NSURLSessionDownloadTask
             let taskDescComponents: [String] = downloadTask.taskDescription!.componentsSeparatedByString(",")
-            let fileName = taskDescComponents.first!
+            let id = taskDescComponents.first!
+            let fileName = taskDescComponents[1]
             let fileURL = taskDescComponents.last!
             
-            let downloadModel = DownloadModel.init(fileName: fileName, fileURL: fileURL)
+            let downloadModel = DownloadModel.init(id: id, fileName: fileName, fileURL: fileURL)
             downloadModel.status = TaskStatus.Failed.description()
             downloadModel.task = downloadTask
             
@@ -349,18 +353,18 @@ extension DownloaderImpl: NSURLSessionDelegate {
 
 extension DownloaderImpl : Downloader {
     
-    public func addDownloadTask(fileName: String, fileURL: String) {
+    public func addDownloadTask(id: String, fileName: String, fileURL: String) {
         
         let url = NSURL(string: fileURL as String)!
         let request = NSURLRequest(URL: url)
         
         let downloadTask = sessionManager.downloadTaskWithRequest(request)
-        downloadTask.taskDescription = [fileName, fileURL].joinWithSeparator(",")
+        downloadTask.taskDescription = [id, fileName, fileURL].joinWithSeparator(",")
         downloadTask.resume()
         
         debugPrint("session manager:\(sessionManager) url:\(url) request:\(request)")
         
-        let downloadModel = DownloadModel.init(fileName: fileName, fileURL: fileURL)
+        let downloadModel = DownloadModel.init(id: id, fileName: fileName, fileURL: fileURL)
         downloadModel.startTime = NSDate()
         downloadModel.status = TaskStatus.Downloading.description()
         downloadModel.task = downloadTask
