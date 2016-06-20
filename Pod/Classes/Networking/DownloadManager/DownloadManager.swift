@@ -184,6 +184,7 @@ extension MODownloadManagerImpl: DownloaderDelegate {
     public func downloadRequestStarted(downloadModel: DownloadModel, index: Int) {
         
         self.downloadQueue[downloadModel.fileURL] = (downloadModel, index)
+        self.delegate?.downloadRequestStarted(downloadModel)
     }
     
     /**A delegate method called each time whenever running download task is paused. If task is already paused the action will be ignored
