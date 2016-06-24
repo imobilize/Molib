@@ -41,7 +41,7 @@ public class MODownloadManagerImpl: DownloadManager {
     
     public func startDownload(downloadable: Downloadable) {
         
-        if let fileName = downloadable.fileURL, fileURL = downloadable.fileURL {
+        if let fileName = downloadable.fileName, fileURL = downloadable.fileURL {
             
             self.downloader.addDownloadTask(downloadable.id, fileName: fileName, fileURL: fileURL)
             
