@@ -262,12 +262,6 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         
         return self.fetchedResultsController.sections?[section].name
     }
-    
-    public func managedObjectContext() -> NSManagedObjectContext {
-        
-        return self.fetchedResultsController.managedObjectContext
-        
-    }
 
     deinit {
         print("FetchedResultsDataSourceProvider dying")
