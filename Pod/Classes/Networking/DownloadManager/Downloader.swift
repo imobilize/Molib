@@ -243,6 +243,7 @@ extension DownloaderImpl: NSURLSessionDelegate {
                     try fileManager.moveItemAtURL(location, toURL: fileURL)
                 } catch let error as NSError {
                 
+                    //TODO: handle errors like file already exists
                     debugPrint("Error while moving downloaded file to destination path:\(error)")
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.delegate?.downloadRequestDidFailedWithError(error, downloadModel: downloadModel, index: index)
@@ -289,21 +290,35 @@ extension DownloaderImpl: NSURLSessionDelegate {
             
         } else {
             for(index, object) in self.downloadingArray.enumerate() {
+              
                 let downloadModel = object
+                
                 if task.isEqual(downloadModel.task) {
+                   
                     if error?.code == NSURLErrorCancelled || error == nil {
+                    
                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
                             
                             self.downloadingArray.removeAtIndex(index)
                             
                             if error == nil {
+                                
+                                let fileName = downloadModel.fileName as NSString
+                                let destinationPath = (DownloadUtility.baseFilePath as NSString).stringByAppendingPathComponent(fileName as String)
+                                
+                                downloadModel.localFileURL = destinationPath
+                                
                                 self.delegate?.downloadRequestFinished(downloadModel, index: index)
+                                
                             } else {
+                                
                                 self.delegate?.downloadRequestCanceled(downloadModel, index: index)
                             }
                             
                         })
+                        
                     } else {
+                        
                         let resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
                         
                         dispatch_async(dispatch_get_main_queue(), { () -> Void in

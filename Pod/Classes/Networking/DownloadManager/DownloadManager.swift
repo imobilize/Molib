@@ -77,92 +77,11 @@ public class MODownloadManagerImpl: DownloadManager {
         if let (_, index) = downloadQueue[downloadable.fileURL] {
             
             downloader.resumeDownloadTaskAtIndex(index)
+        } else {
+            
+            startDownload(downloadable)
         }
     }
-//    
-//    //MARK: Completions
-//    
-//    private func downloadCompletionHandler(downloadModel: MODownloadModel, errorCompletion: NSError?) {
-//        
-//        if let error = errorCompletion {
-//        
-////            downloadModel.status = DownloadTaskStatus.Failed.rawValue
-////            
-////            delegate?.downloadRequestFailed(downloadModel, errorOptional: error)
-//            
-//        } else {
-//         
-////            downloadModel.status = DownloadTaskStatus.Finished.rawValue
-////            
-////            delegate?.downloadRequestFinished(downloadModel, errorOptional: errorCompletion)
-//            
-//        }
-//        
-//    }
-//    
-//    private func provideDownloadLocation(downloadModel: MODownloadModel, donwloadFileTemporaryLocation: NSURL) -> NSURL {
-//        
-//        var fileUrl: NSURL!
-//        
-//        if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
-//            
-////            fileUrl = directoryURL.URLByAppendingPathComponent(downloadModel.fileName)
-//            
-//            removeOldFileAtLocationIfExists(fileUrl)
-//            
-//        } else {
-//            
-//            fileUrl = donwloadFileTemporaryLocation
-//            
-//        }
-//
-//        return fileUrl
-//        
-//    }
-//    
-//    //MARK: Helpers
-//    
-//    private func provideDownloadModelAttributes(downloadable: Downloadable) -> StorableDictionary {
-//        
-//        var downloadAttributeDictionary: StorableDictionary = [:]
-//        
-//        downloadAttributeDictionary[DownloadModelAttributes.id.rawValue] = downloadable.id
-//        
-//        downloadAttributeDictionary[DownloadModelAttributes.fileName.rawValue] = downloadable.fileName
-//        
-//        downloadAttributeDictionary[DownloadModelAttributes.fileURL.rawValue] = downloadable.fileURL
-//        
-//        return downloadAttributeDictionary
-//    }
-//    
-//    private func removeOldFileAtLocationIfExists(locationToCheck: NSURL) {
-//        
-//        do {
-//         
-//            try NSFileManager.defaultManager().removeItemAtURL(locationToCheck)
-//            
-//        } catch let error as NSError {
-//            
-//            
-//        }
-//        
-//    }
-//    
-//    private func findDownloadOperationAndIndexForDownloadable(downloadable: Downloadable) -> (operation: DownloadOperation, index: Int)? {
-//        
-//        var operationIndex: (DownloadOperation, Int)?
-//        
-////        if let index = downloadQueue.indexOf ({ $0.downloadModel.downloadable?.id == downloadable.id }) {
-////         
-////            let downloadOperation = downloadQueue[index]
-////            
-////            operationIndex = (downloadOperation, index)
-////            
-////        }
-//        
-//        return operationIndex
-//
-//    }
     
 }
 
@@ -218,6 +137,8 @@ extension MODownloadManagerImpl: DownloaderDelegate {
     /**A delegate method called each time whenever any download task is finished successfully
      */
     public func downloadRequestFinished(downloadModel: DownloadModel, index: Int) {
+        
+        self.downloadQueue.removeValueForKey(downloadModel.fileURL)
         
         self.delegate?.downloadRequestFinished(downloadModel)
     }

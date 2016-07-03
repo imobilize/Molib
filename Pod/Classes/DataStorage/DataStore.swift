@@ -24,6 +24,8 @@ public protocol Downloadable {
     
     var fileURL: String! { get }
     
+    var localFileURL: String? { get }
+    
 }
 
 

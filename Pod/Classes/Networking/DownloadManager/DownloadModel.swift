@@ -26,6 +26,8 @@ public class DownloadModel: NSObject, Downloadable {
     public var id: String!
     public var fileName: String!
     public var fileURL: String!
+    public var localFileURL: String?
+    
     public var status: String = TaskStatus.GettingInfo.description()
     
     public var file: (size: Float, unit: String)?
