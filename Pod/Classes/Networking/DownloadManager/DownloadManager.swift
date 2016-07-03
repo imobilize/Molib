@@ -6,18 +6,24 @@ let MODownloadManagerImplDomain = "DownloadManager"
 enum MODownloadManagerErrorCode: Int {
     
     case InvalidURL = 301;
+    case InvalidState = 302;
 }
 
 
 public class DownloadManagerFactory {
     
+    private static var manager: DownloadManager!
+    
     public class func downloadManager() -> DownloadManager {
         
-        let downloader = DownloaderImpl(session:  MODownloadManagerImplDomain)
+        if manager == nil {
         
-        let downloadManager = MODownloadManagerImpl(downloader: downloader)
+            let downloader = DownloaderImpl(session:  MODownloadManagerImplDomain)
+            
+            manager = MODownloadManagerImpl(downloader: downloader)
+        }
         
-        return downloadManager
+        return manager
     }
 }
 
@@ -26,7 +32,7 @@ public class MODownloadManagerImpl: DownloadManager {
     
     let downloader: Downloader
     
-    var downloadQueue: [String: (Downloadable, Int)] = [:]
+    static var downloadQueue: [String: (Downloadable, Int)] = [:]
     
     public var delegate: MODownloadManagerDelegate?
     
@@ -47,6 +53,8 @@ public class MODownloadManagerImpl: DownloadManager {
             
         } else {
             
+            let userInfo = [NSLocalizedDescriptionKey: "The download failed due to some unknown error"]
+
             let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidURL.rawValue, userInfo: nil)
             
             self.delegate?.downloadRequestFailed(downloadable, error: error)
@@ -56,17 +64,26 @@ public class MODownloadManagerImpl: DownloadManager {
     
     public func pauseDownload(downloadable: Downloadable) {
         
-        if let (_, index) = downloadQueue[downloadable.fileURL] {
+        if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
              downloader.pauseDownloadTaskAtIndex(index)
+        } else {
+            
+            let userInfo = [NSLocalizedDescriptionKey: "The download failed due to some unknown error"]
+            
+            let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidState.rawValue, userInfo: userInfo)
+            self.delegate?.downloadRequestFailed(downloadable, error: error)
         }
     }
     
     public func cancelDownload(downloadable: Downloadable) {
         
-        if let (_, index) = downloadQueue[downloadable.fileURL] {
+        if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
             downloader.cancelTaskAtIndex(index)
+        } else {
+            
+            self.delegate?.downloadRequestCancelled(downloadable)
         }
         
     }
@@ -74,7 +91,7 @@ public class MODownloadManagerImpl: DownloadManager {
     
     public func resumeDownload(downloadable: Downloadable) {
         
-        if let (_, index) = downloadQueue[downloadable.fileURL] {
+        if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
             downloader.resumeDownloadTaskAtIndex(index)
         } else {
@@ -102,7 +119,7 @@ extension MODownloadManagerImpl: DownloaderDelegate {
      */
     public func downloadRequestStarted(downloadModel: DownloadModel, index: Int) {
         
-        self.downloadQueue[downloadModel.fileURL] = (downloadModel, index)
+        MODownloadManagerImpl.downloadQueue[downloadModel.fileURL] = (downloadModel, index)
         self.delegate?.downloadRequestStarted(downloadModel)
     }
     
@@ -138,7 +155,7 @@ extension MODownloadManagerImpl: DownloaderDelegate {
      */
     public func downloadRequestFinished(downloadModel: DownloadModel, index: Int) {
         
-        self.downloadQueue.removeValueForKey(downloadModel.fileURL)
+        MODownloadManagerImpl.downloadQueue.removeValueForKey(downloadModel.fileURL)
         
         self.delegate?.downloadRequestFinished(downloadModel)
     }
