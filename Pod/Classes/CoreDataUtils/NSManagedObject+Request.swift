@@ -2,7 +2,7 @@
 import Foundation
 import CoreData
 
-let kMagicalRecordDefaultBatchSize = 20
+let kMagicalRecordDefaultBatchSize = 20000
 let kEntityNameSelector: Selector = "entityName"
 
 
