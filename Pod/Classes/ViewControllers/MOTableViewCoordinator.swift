@@ -122,3 +122,23 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
     }
 }
 
+public class PlaceholderTableViewCoordinator<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType>>:TableViewCoordinator<CollectionType, DataSource> {
+    
+    let placeholderCells: Int
+    
+    public init(tableView: UITableView, dataSource: DataSource, placeholderCells: Int, cellProvider: TableViewCellProvider) {
+        
+        self.placeholderCells = placeholderCells
+        
+        super.init(tableView: tableView, dataSource: dataSource, cellProvider: cellProvider)
+        
+    }
+    
+    public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+        return dataSource.isEmpty() ? placeholderCells : dataSource.numberOfRowsInSection(section)
+        
+    }
+    
+}
+
