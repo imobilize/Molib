@@ -2,6 +2,8 @@
 import Foundation
 import UIKit
 
+#if os(iOS)
+
 extension UIAlertView {
     
     class func showErrorWithMessage(message: String) {
@@ -15,4 +17,7 @@ extension UIAlertView {
         
         alert.show()
     }
+    
 }
+    
+#endif

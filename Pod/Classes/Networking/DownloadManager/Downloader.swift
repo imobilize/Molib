@@ -452,12 +452,17 @@ extension DownloaderImpl : Downloader {
         let applicationState = application.applicationState
         
         if applicationState == UIApplicationState.Background {
+            
+            #if os(iOS)
+                
             let localNotification = UILocalNotification()
             localNotification.alertBody = notifBody
             localNotification.alertAction = notifAction
             localNotification.soundName = UILocalNotificationDefaultSoundName
             localNotification.applicationIconBadgeNumber += 1
             application.presentLocalNotificationNow(localNotification)
+            
+            #endif
         }
     }
 }

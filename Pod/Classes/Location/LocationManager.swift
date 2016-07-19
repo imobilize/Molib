@@ -3,8 +3,9 @@ import Foundation
 import CoreLocation
 import MapKit
 
-let kLocationErrorCode = 901
+#if os(iOS)
 
+let kLocationErrorCode = 901
 
 @objc public protocol LocationManagerDelegate: NSObjectProtocol {
 
@@ -183,3 +184,5 @@ let kLocationErrorCode = 901
 //    }
     
 }
+
+#endif
