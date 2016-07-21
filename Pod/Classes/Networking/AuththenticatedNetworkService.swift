@@ -2,6 +2,7 @@
 import Foundation
 
 public let kRefreshTokenKey = "refreshToken"
+public let kProfileID = "profileId"
 
 
 public protocol AuththenticatedNetworkServiceDelegate {
@@ -98,7 +99,7 @@ public class AuththenticatedNetworkService: NetworkService {
             if let error = errorOptional {
                 
                 let refreshToken = self.userDefaults.secureStringForKey(kRefreshTokenKey)
-
+                
                 if error.code == 401 {
                     
                     let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(self)
@@ -131,7 +132,9 @@ public class AuththenticatedNetworkService: NetworkService {
         
         let refreshToken = userDefaults.secureStringForKey(kRefreshTokenKey)
         
-        let refreshTokenParameters = [ kRefreshTokenKey: refreshToken!]
+        let profileID = userDefaults.secureStringForKey(kProfileID)
+        
+        let refreshTokenParameters = [kRefreshTokenKey: refreshToken!, kProfileID: profileID!]
         
         let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
         
