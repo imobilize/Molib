@@ -126,7 +126,6 @@ public class AuththenticatedNetworkService: NetworkService {
 
         return taskCompletion
     }
-    
 
     func handleAuthtenticationErrorForTask(networkRequest: NetworkRequest) {
         
@@ -138,7 +137,7 @@ public class AuththenticatedNetworkService: NetworkService {
         
         let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
         
-        if let request = NSURLRequest.POSTRequest(refreshTokenURL, bodyParameters: refreshTokenParameters) {
+        if let request = NSURLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
         
             let taskCompletion = refreshTokenResponseHandler(networkRequest)
 
@@ -147,7 +146,6 @@ public class AuththenticatedNetworkService: NetworkService {
             networkService.enqueueNetworkRequest(authenticationTask)
         }
     }
-    
     
     func refreshTokenResponseHandler(initialNetworkRequest: NetworkRequest) -> JSONResponseCompletion {
         
@@ -173,4 +171,5 @@ public class AuththenticatedNetworkService: NetworkService {
         
         return taskCompletion
     }
+
 }
