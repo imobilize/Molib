@@ -350,3 +350,22 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
 
 }
 
+public class CollectionViewCoordinatorWithItemCountLimit<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType>>: CollectionViewCoordinator<CollectionType, DataSource> {
+    
+    let itemCountLimit: Int
+    
+    public init(collectionView: UICollectionView, dataSource: DataSource, itemCountLimit: Int, cellProvider: CollectionViewCellProvider) {
+        
+        self.itemCountLimit = itemCountLimit
+
+        super.init(collectionView: collectionView, dataSource: dataSource, cellProvider: cellProvider)
+        
+    }
+    
+    public override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return dataSource.numberOfRowsInSection(section) > itemCountLimit ? itemCountLimit : dataSource.numberOfRowsInSection(section)
+
+    }
+    
+}

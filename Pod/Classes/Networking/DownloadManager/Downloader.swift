@@ -366,6 +366,8 @@ extension DownloaderImpl: NSURLSessionDelegate {
 
 //MARK: Public Helper Functions
 
+#if os(iOS)
+
 extension DownloaderImpl : Downloader {
     
     public func addDownloadTask(id: String, fileName: String, fileURL: String) {
@@ -466,3 +468,5 @@ extension DownloaderImpl : Downloader {
         }
     }
 }
+
+#endif

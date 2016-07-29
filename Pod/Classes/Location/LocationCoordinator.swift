@@ -4,7 +4,6 @@ import UIKit
 import MapKit
 
 #if os(iOS)
-
 public protocol LocationCoordinatorDelegate {
     
     func locationCoordinatorDidFindCurrentLocation(coordinator: LocationCoordinator, location: MOGeoLocation)

@@ -1,5 +1,6 @@
 import Foundation
 
+#if os(iOS)
 
 let MODownloadManagerImplDomain = "DownloadManager"
 
@@ -168,3 +169,5 @@ extension MODownloadManagerImpl: DownloaderDelegate {
     }
 
 }
+
+#endif
