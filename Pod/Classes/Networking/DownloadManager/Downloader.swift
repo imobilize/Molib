@@ -189,7 +189,7 @@ extension DownloaderImpl: NSURLSessionDelegate {
                     let totalBytesCount = Double(downloadTask.countOfBytesExpectedToReceive)
                     let progress = Float(receivedBytesCount / totalBytesCount)
                     
-                    let taskStartedDate = downloadModel.startTime!
+                    let taskStartedDate = downloadModel.startTime != nil ? downloadModel.startTime! : NSDate()
                     let timeInterval = taskStartedDate.timeIntervalSinceNow
                     let downloadTime = NSTimeInterval(-1 * timeInterval)
                     
@@ -418,6 +418,7 @@ extension DownloaderImpl : Downloader {
         
         let downloadTask = downloadModel.task
         downloadTask!.resume()
+        downloadModel.startTime = NSDate()
         downloadModel.status = TaskStatus.Downloading.description()
         
         downloadingArray[index] = downloadModel
