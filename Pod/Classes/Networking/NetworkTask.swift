@@ -3,6 +3,8 @@ import Foundation
 import UIKit
 import AVFoundation
 
+
+
 public struct DataRequestTask: NetworkRequest {
     
     public let urlRequest: NSURLRequest
@@ -207,7 +209,7 @@ struct VideoThumbnailRequestOperation: Operation {
             
             let userInfo = [NSLocalizedDescriptionKey: "Invalid media url supplied"]
             
-            let error = NSError(domain: "VideoThumbnailRequest", code: 101, userInfo: userInfo)
+            let error = NSError(domain: "VideoThumbnailRequest", code: ServiceFailure.GeneralError.code, userInfo: userInfo)
             
             completion(imageURL: mediaURL, image: nil, error: error)
         }

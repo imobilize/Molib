@@ -2,6 +2,21 @@
 import Foundation
 import UIKit
 
+public enum ServiceFailure: Int {
+    
+    case GeneralError = 101
+    
+    public var code: Int {
+        
+        switch self {
+        case .GeneralError:
+            return 101
+        default:
+            100
+        }
+        
+    }
+}
 
 public protocol Operation {
     
