@@ -19,8 +19,6 @@ public protocol UploadOperation: Operation {
 
 public protocol DownloadOperation: Operation {
     
-//    var downloadModel: MODownloadModel { get }
-    
     func pause()
     
     func resume()
