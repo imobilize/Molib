@@ -62,18 +62,32 @@ let kLocationErrorCode = 901
             if manager.respondsToSelector("requestWhenInUseAuthorization") {
                 
                 manager.requestWhenInUseAuthorization()
+           
             } else {
                 
                 manager.startUpdatingLocation()
+           
             }
             
             break
+        
         case .AuthorizedAlways:
+            
             manager.startUpdatingLocation()
             
         case .AuthorizedWhenInUse:
+            
             manager.startUpdatingLocation()
             
+            
+        case .Denied:
+            
+            let userInfo = [NSLocalizedDescriptionKey: "You currently have all location services for this app disabled. You will need to enable them to get your current location"]
+            
+            let error = NSError(domain: "LocationManager", code: kLocationErrorCode, userInfo: userInfo)
+            
+            delegate?.locationServiceFailed(error)
+
         default:
             break
             
