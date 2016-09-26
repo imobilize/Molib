@@ -57,7 +57,7 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
         self.activityIndicatorView.stopAnimating()
     }
     
-    public func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+    public func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
         
         self.activityIndicatorView.stopAnimating()
         self.failureMessageContainer.hidden = false

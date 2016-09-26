@@ -34,7 +34,7 @@ class AlamoFireNetworkService : NetworkService {
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
-        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString!, multipartFormData: { (formData: MultipartFormData) in
             
             formData.appendBodyPart(data: data, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
             
@@ -51,7 +51,7 @@ class AlamoFireNetworkService : NetworkService {
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
-        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString!, multipartFormData: { (formData: MultipartFormData) in
             
             formData.appendBodyPart(fileURL: fileURL, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
             

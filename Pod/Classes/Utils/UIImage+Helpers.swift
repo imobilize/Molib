@@ -9,9 +9,9 @@ extension UIImage {
         
         let imgRef = imageSource.CGImage;
         
-        let width = CGFloat(CGImageGetWidth(imgRef));
+        let width = CGFloat(CGImageGetWidth(imgRef!));
         
-        let height = CGFloat(CGImageGetHeight(imgRef));
+        let height = CGFloat(CGImageGetHeight(imgRef!));
         
         var bounds = CGRectMake(0, 0, width, height)
         
@@ -31,7 +31,7 @@ extension UIImage {
         
         let orient = imageSource.imageOrientation
         
-        let imageSize = CGSizeMake(CGFloat(CGImageGetWidth(imgRef)), CGFloat(CGImageGetHeight(imgRef)))
+        let imageSize = CGSizeMake(CGFloat(CGImageGetWidth(imgRef!)), CGFloat(CGImageGetHeight(imgRef!)))
         
         switch(imageSource.imageOrientation) {
             
@@ -115,26 +115,26 @@ extension UIImage {
         
         if orient == .Right || orient == .Left {
             
-            CGContextScaleCTM(context, -scaleRatio, scaleRatio);
+            CGContextScaleCTM(context!, -scaleRatio, scaleRatio);
             
-            CGContextTranslateCTM(context, -height, 0);
+            CGContextTranslateCTM(context!, -height, 0);
             
         } else {
             
-            CGContextScaleCTM(context, scaleRatio, -scaleRatio);
+            CGContextScaleCTM(context!, scaleRatio, -scaleRatio);
             
-            CGContextTranslateCTM(context, 0, -height);
+            CGContextTranslateCTM(context!, 0, -height);
         }
         
-        CGContextConcatCTM(context, transform);
+        CGContextConcatCTM(context!, transform);
         
-        CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);
+        CGContextDrawImage(UIGraphicsGetCurrentContext()!, CGRectMake(0, 0, width, height), imgRef!);
         
         let imageCopy = UIGraphicsGetImageFromCurrentImageContext();
         
         UIGraphicsEndImageContext();
         
-        return imageCopy;
+        return imageCopy!;
         
     }
 

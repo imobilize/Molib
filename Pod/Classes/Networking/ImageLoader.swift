@@ -41,7 +41,7 @@ public class AsyncImageLoader: ImageLoader {
         
         dequeueImageView(imageView)
         
-        currentTag++
+        currentTag += 1
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
         
         imageView.tag = self.currentTag
@@ -67,7 +67,7 @@ public class AsyncImageLoader: ImageLoader {
         
         dequeueImageView(imageView)
         
-        currentTag++
+        currentTag += 1
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
         
         imageView.tag = self.currentTag
@@ -99,7 +99,7 @@ public class AsyncImageLoader: ImageLoader {
     
     public func loadVideoThumbnialImage(src: String, completion: ImageResponseCompletion) -> Operation {
     
-        var operation = VideoThumbnailRequestOperation(mediaURL: src)
+        let operation = VideoThumbnailRequestOperation(mediaURL: src)
         
         operation.start(completion)
         

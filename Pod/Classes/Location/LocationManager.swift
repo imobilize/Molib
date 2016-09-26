@@ -59,7 +59,7 @@ let kLocationErrorCode = 901
             
         case .NotDetermined:
             
-            if manager.respondsToSelector("requestWhenInUseAuthorization") {
+            if manager.respondsToSelector(#selector(CLLocationManager.requestWhenInUseAuthorization)) {
                 
                 manager.requestWhenInUseAuthorization()
            
