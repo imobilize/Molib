@@ -69,6 +69,11 @@ public struct UserDefaultsImpl: UserDefaults {
         return number?.boolValue
     }
     
+    public func integerForKey(key: String) -> Int? {
+        
+        return defaultsDictionary.objectForKey(key) as? Int
+        
+    }
     
     //MARK: Setting methods
 
@@ -109,6 +114,12 @@ public struct UserDefaultsImpl: UserDefaults {
         let number = NSNumber(bool: value)
     
         setItem(number, forKey:key)
+    }
+    
+    public func setInteger(value: Int, forKey key: String) {
+        
+        setItem(value, forKey: key)
+        
     }
     
     public func synchronize() -> Bool {

@@ -14,6 +14,8 @@ public protocol UserDefaults {
     
     func boolForKey(key: String) -> Bool?
     
+    func integerForKey(key: String) -> Int?
+    
     //MARK: Setting methods
     
     func setString(value: String?, forKey key: String)
@@ -25,6 +27,8 @@ public protocol UserDefaults {
     func setData(value: NSData?, forKey key: String)
     
     func setBool(value: Bool, forKey key: String)
+    
+    func setInteger(value: Int, forKey key: String)
     
     func synchronize() -> Bool
 }
