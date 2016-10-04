@@ -113,11 +113,13 @@ let kLocationErrorCode = 901
             if (abs(howRecent) < 15.0 || self.currentLocation == nil) {
             // If the event is recent, do something with it.
                 currentLocation = location
+                
+                delegate?.locationFound(currentLocation!)
+                
+                reverseGeocodeLocation(currentLocation!)
             }
 
             manager.stopUpdatingLocation()
-    
-            delegate?.locationFound(currentLocation!)
             
         } else {
             
@@ -175,27 +177,32 @@ let kLocationErrorCode = 901
         return MKMetersBetweenMapPoints(start, finish) * 1000
     }
     
-//    func reverseGeocodeCurrentLocation() {
-//        
-//        let currentLocation = manager.location
-//        
-//        if let location = currentLocation {
-//            
-//            let reverseGeocoder = CLGeocoder()
-//
-//            reverseGeocoder.reverseGeocodeLocation(location) { (placeMark: CLPlacemark?, errorOptional: NSError?) -> Void in
-//                
-//                if placemark != nil {
-//                    
-//                    delegate.geoCodeFound(placemark!)
-//                } else {
-//                    
-//                    delegate.geoCodeFailed(error!)
-//                }
-//            }
-//            
-//        }
-//    }
+    func reverseGeocodeLocation(geoLocation: CLLocation) {
+        
+        let reverseGeocoder = CLGeocoder()
+            
+        reverseGeocoder.reverseGeocodeLocation(geoLocation) { (placeMarks: [CLPlacemark]?, error:NSError?) in
+            
+                if placeMarks != nil {
+                    
+                    if let placeMark = placeMarks?.first {
+                        self.delegate?.geoCodeFound(placeMark)
+                    }
+                } else {
+                    
+                    self.delegate?.geoCodeFailed(error!)
+                }
+            }
+        
+    }
+    
+    func reverseGeocodeCurrentLocation() {
+        
+        if let location = self.currentLocation {
+            
+            self.reverseGeocodeLocation(location)
+        }
+    }
     
 }
 
