@@ -261,13 +261,19 @@ extension Operation {
                 
                 self.log.info("Received error response \(response.statusCode)")
                 
-                let userInfo = ["response": response, NSUnderlyingErrorKey: error]
+                let errorMessage = NSLocalizedString("The service is currently unable to satisfy your request. Please try again later", comment: "Bad service response text")
+
+                let userInfo = ["response": response, NSUnderlyingErrorKey: error, ]
                 
                 errorOptional = NSError(domain: "RequestOperation", code: response.statusCode, userInfo: userInfo)
                 
             } else {
                 
-                let userInfo = [NSUnderlyingErrorKey: error]
+                self.log.info("Service is currently down. Received no data")
+
+                let errorMessage = NSLocalizedString("The service is currently unavailable. Please try again later", comment: "Service unavailable text")
+                
+                let userInfo = [NSUnderlyingErrorKey: error, NSLocalizedDescriptionKey: errorMessage]
                 
                 errorOptional = NSError(domain: "RequestOperation", code: kServiceErrorCode, userInfo: userInfo)
             }

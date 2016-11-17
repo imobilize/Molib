@@ -118,11 +118,18 @@ public struct JSONRequestTask: NetworkRequest {
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
-        let (json, jsonError) = convertResponseToJson(dataOptional)
-        
-        let error: NSError? = jsonError == nil ? errorOptional : jsonError
-
-        self.taskCompletion(responseOptional: json, errorOptional: error)
+        if errorOptional == nil {
+            
+            let (json, jsonError) = convertResponseToJson(dataOptional)
+            
+            let error: NSError? = jsonError == nil ? errorOptional : jsonError
+            
+            self.taskCompletion(responseOptional: json, errorOptional: error)
+        } else {
+            
+            self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
+        }
+ 
     }
 }
 

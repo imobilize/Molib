@@ -72,23 +72,6 @@ public class AuththenticatedNetworkService: NetworkService {
         
     }
     
-    //    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
-    //
-    //        let taskCompletion: ErrorCompletion = { errorOptional in
-    //
-    //        }
-    //
-    //        let downloadCompletion: DownloadCompletion = { fileLocation in
-    //
-    //        }
-    //
-    //        let progressCompletion: DownloadProgressCompletion = {_,_,_ in
-    //
-    //        }
-    //
-    //        return nil
-    //
-    //    }
     
     func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
         
@@ -184,5 +167,5 @@ public class AuththenticatedNetworkService: NetworkService {
         
         return taskCompletion
     }
-    
+
 }
