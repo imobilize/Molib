@@ -44,7 +44,15 @@ extension UIViewController {
     
     public func pushViewController(viewController: UIViewController) {
         
-        self.navController.pushViewController(viewController, animated: true)
+        if self is UINavigationController {
+            
+            let controller = self as! UINavigationController
+            controller.pushViewController(viewController, animated: true)
+        } else {
+            
+            self.navController.pushViewController(viewController, animated: true)
+
+        }
     }
     
     
