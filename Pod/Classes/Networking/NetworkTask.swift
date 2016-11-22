@@ -127,7 +127,16 @@ public struct JSONRequestTask: NetworkRequest {
             self.taskCompletion(responseOptional: json, errorOptional: error)
         } else {
             
-            self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
+            let (json, jsonError) = convertResponseToJson(dataOptional)
+            
+            if jsonError == nil {
+                
+                self.taskCompletion(responseOptional: json, errorOptional: errorOptional)
+
+            } else {
+
+                self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
+            }
         }
  
     }
