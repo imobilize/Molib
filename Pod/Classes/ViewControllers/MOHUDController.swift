@@ -48,6 +48,8 @@ struct MOHUDController: ProgressHUD {
     
     func showLoading() {
         
+        SVProgressHUD.setDefaultMaskType(.Black)
+        
         SVProgressHUD.show()
     }
  

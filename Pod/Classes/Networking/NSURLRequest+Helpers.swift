@@ -11,7 +11,7 @@ extension NSURLRequest {
         
         if url != nil {
             
-            self.init(URL: url!, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 15)
+            self.init(URL: url!, cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15)
         } else {
             return nil
         }

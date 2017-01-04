@@ -59,21 +59,35 @@ let kLocationErrorCode = 901
             
         case .NotDetermined:
             
-            if manager.respondsToSelector("requestWhenInUseAuthorization") {
+            if manager.respondsToSelector(#selector(CLLocationManager.requestWhenInUseAuthorization)) {
                 
                 manager.requestWhenInUseAuthorization()
+           
             } else {
                 
                 manager.startUpdatingLocation()
+           
             }
             
             break
+        
         case .AuthorizedAlways:
+            
             manager.startUpdatingLocation()
             
         case .AuthorizedWhenInUse:
+            
             manager.startUpdatingLocation()
             
+            
+        case .Denied:
+            
+            let userInfo = [NSLocalizedDescriptionKey: "You currently have all location services for this app disabled. You will need to enable them to get your current location"]
+            
+            let error = NSError(domain: "LocationManager", code: kLocationErrorCode, userInfo: userInfo)
+            
+            delegate?.locationServiceFailed(error)
+
         default:
             break
             
@@ -99,11 +113,13 @@ let kLocationErrorCode = 901
             if (abs(howRecent) < 15.0 || self.currentLocation == nil) {
             // If the event is recent, do something with it.
                 currentLocation = location
+                
+                delegate?.locationFound(currentLocation!)
+                
+                reverseGeocodeLocation(currentLocation!)
             }
 
             manager.stopUpdatingLocation()
-    
-            delegate?.locationFound(currentLocation!)
             
         } else {
             
@@ -161,27 +177,32 @@ let kLocationErrorCode = 901
         return MKMetersBetweenMapPoints(start, finish) * 1000
     }
     
-//    func reverseGeocodeCurrentLocation() {
-//        
-//        let currentLocation = manager.location
-//        
-//        if let location = currentLocation {
-//            
-//            let reverseGeocoder = CLGeocoder()
-//
-//            reverseGeocoder.reverseGeocodeLocation(location) { (placeMark: CLPlacemark?, errorOptional: NSError?) -> Void in
-//                
-//                if placemark != nil {
-//                    
-//                    delegate.geoCodeFound(placemark!)
-//                } else {
-//                    
-//                    delegate.geoCodeFailed(error!)
-//                }
-//            }
-//            
-//        }
-//    }
+    func reverseGeocodeLocation(geoLocation: CLLocation) {
+        
+        let reverseGeocoder = CLGeocoder()
+            
+        reverseGeocoder.reverseGeocodeLocation(geoLocation) { (placeMarks: [CLPlacemark]?, error:NSError?) in
+            
+                if placeMarks != nil {
+                    
+                    if let placeMark = placeMarks?.first {
+                        self.delegate?.geoCodeFound(placeMark)
+                    }
+                } else {
+                    
+                    self.delegate?.geoCodeFailed(error!)
+                }
+            }
+        
+    }
+    
+    func reverseGeocodeCurrentLocation() {
+        
+        if let location = self.currentLocation {
+            
+            self.reverseGeocodeLocation(location)
+        }
+    }
     
 }
 

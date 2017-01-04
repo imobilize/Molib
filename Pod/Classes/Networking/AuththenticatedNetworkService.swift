@@ -2,6 +2,7 @@
 import Foundation
 
 public let kRefreshTokenKey = "refreshToken"
+public let kProfileID = "profileId"
 
 
 public protocol AuththenticatedNetworkServiceDelegate {
@@ -13,7 +14,7 @@ public protocol AuththenticatedNetworkServiceDelegate {
     func authenticatedNetworkService(service: AuththenticatedNetworkService, didReauthenticateWithToken: String)
     
     func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithToken: String)
-
+    
 }
 
 public class AuththenticatedNetworkService: NetworkService {
@@ -51,7 +52,7 @@ public class AuththenticatedNetworkService: NetworkService {
         let operation = networkService.enqueueNetworkUploadRequest(authenticatedCheckTask, fileURL: fileURL)
         
         return operation
-
+        
     }
     
     public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
@@ -71,23 +72,6 @@ public class AuththenticatedNetworkService: NetworkService {
         
     }
     
-//    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
-//        
-//        let taskCompletion: ErrorCompletion = { errorOptional in
-//            
-//        }
-//        
-//        let downloadCompletion: DownloadCompletion = { fileLocation in
-//            
-//        }
-//        
-//        let progressCompletion: DownloadProgressCompletion = {_,_,_ in
-//            
-//        }
-//        
-//        return nil
-//        
-//    }
     
     func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
         
@@ -98,7 +82,7 @@ public class AuththenticatedNetworkService: NetworkService {
             if let error = errorOptional {
                 
                 let refreshToken = self.userDefaults.secureStringForKey(kRefreshTokenKey)
-
+                
                 if error.code == 401 {
                     
                     let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(self)
@@ -122,34 +106,47 @@ public class AuththenticatedNetworkService: NetworkService {
                 request.handleResponse(dataOptional, errorOptional: errorOptional)
             }
         }
-
+        
         return taskCompletion
     }
     
-
     func handleAuthtenticationErrorForTask(networkRequest: NetworkRequest) {
         
         let refreshToken = userDefaults.secureStringForKey(kRefreshTokenKey)
+        let profileID = userDefaults.secureStringForKey(kProfileID)
         
-        let refreshTokenParameters = [ kRefreshTokenKey: refreshToken!]
-        
-        let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
-        
-        if let request = NSURLRequest.POSTRequest(refreshTokenURL, bodyParameters: refreshTokenParameters) {
-        
-            let taskCompletion = refreshTokenResponseHandler(networkRequest)
-
-            let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
-        
-            networkService.enqueueNetworkRequest(authenticationTask)
+        if let token = refreshToken {
+            
+            var refreshTokenParameters = [kRefreshTokenKey: token]
+            
+            if profileID != nil {
+                refreshTokenParameters[kProfileID] = profileID
+            }
+            
+            let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
+            
+            if let request = NSURLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
+                
+                let taskCompletion = refreshTokenResponseHandler(networkRequest)
+                
+                let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
+                
+                networkService.enqueueNetworkRequest(authenticationTask)
+            }
+        } else {
+            
+            let userInfo = [NSLocalizedDescriptionKey: "User not authenticated to use this service"]
+            
+            let error = NSError(domain: "Authenticated Service", code: 101, userInfo: userInfo)
+            
+            networkRequest.handleResponse(nil, errorOptional: error)
         }
     }
-    
     
     func refreshTokenResponseHandler(initialNetworkRequest: NetworkRequest) -> JSONResponseCompletion {
         
         let refreshToken = userDefaults.secureStringForKey(kRefreshTokenKey)
-
+        
         let taskCompletion: JSONResponseCompletion = {
             
             (responseOptional: AnyObject?, errorOptional: NSError?) in
@@ -170,4 +167,5 @@ public class AuththenticatedNetworkService: NetworkService {
         
         return taskCompletion
     }
+
 }
