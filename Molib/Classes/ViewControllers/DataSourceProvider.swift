@@ -5,9 +5,9 @@ import CoreData
 
 public protocol DataSourceProvider {
     
-    typealias DataSourceDelegate: DataSourceProviderDelegate
+    associatedtype DataSourceDelegate: DataSourceProviderDelegate
     
-    typealias ItemType
+    associatedtype ItemType
     
     
     var delegate: DataSourceDelegate? { get set }
@@ -36,7 +36,7 @@ public protocol DataSourceProvider {
 
 public protocol DataSourceProviderDelegate {
     
-    typealias ItemType
+    associatedtype ItemType
     
     
     mutating func providerWillChangeContent()
@@ -61,12 +61,12 @@ public protocol DataSourceProviderDelegate {
 }
 
 
-public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate where Delegate.ItemType == T>: DataSourceProvider {
+public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: DataSourceProvider where Delegate.ItemType == T {
     
     public var delegate: Delegate?
 
     private var arrayItems: [T]
-    
+
     private var objectChanges: Array<(DataSourceChangeType,[NSIndexPath], [T])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
     
@@ -161,7 +161,7 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate whe
     }
 }
 
-public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate where Delegate.ItemType == ObjectType> : DataSourceProvider {
+public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate> : DataSourceProvider where Delegate.ItemType == ObjectType {
     
     public var delegate: Delegate? { didSet {
         
@@ -269,7 +269,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
 }
 
 
-class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate where Delegate.ItemType == ObjectType>: NSObject, NSFetchedResultsControllerDelegate {
+class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate>: NSObject, NSFetchedResultsControllerDelegate where Delegate.ItemType == ObjectType {
     
     var delegate: Delegate
     
@@ -321,7 +321,7 @@ class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: Da
             
         case .Move:
             
-            if let initiaIndexPath = indexPath, finalIndexPath = newIndexPath {
+            if let initiaIndexPath = indexPath, let finalIndexPath = newIndexPath {
             
                 if initiaIndexPath != finalIndexPath {
                

@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-               BuildableName = "MolibExample_Example.app"
-               BlueprintName = "MolibExample_Example"
-               ReferencedContainer = "container:MolibExample.xcodeproj">
+               BlueprintIdentifier = "650BBBC41F2F7AEA007A8B49"
+               BuildableName = "Molib.framework"
+               BlueprintName = "Molib_iOS"
+               ReferencedContainer = "container:Molib.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,26 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "MolibExample_Tests.xctest"
-               BlueprintName = "MolibExample_Tests"
-               ReferencedContainer = "container:MolibExample.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "MolibExample_Example.app"
-            BlueprintName = "MolibExample_Example"
-            ReferencedContainer = "container:MolibExample.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -61,16 +42,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "MolibExample_Example.app"
-            BlueprintName = "MolibExample_Example"
-            ReferencedContainer = "container:MolibExample.xcodeproj">
+            BlueprintIdentifier = "650BBBC41F2F7AEA007A8B49"
+            BuildableName = "Molib.framework"
+            BlueprintName = "Molib_iOS"
+            ReferencedContainer = "container:Molib.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -80,16 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "MolibExample_Example.app"
-            BlueprintName = "MolibExample_Example"
-            ReferencedContainer = "container:MolibExample.xcodeproj">
+            BlueprintIdentifier = "650BBBC41F2F7AEA007A8B49"
+            BuildableName = "Molib.framework"
+            BlueprintName = "Molib_iOS"
+            ReferencedContainer = "container:Molib.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

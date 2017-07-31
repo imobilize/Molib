@@ -18,7 +18,8 @@
 		650BBB611F2F73F6007A8B49 /* TestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BBB561F2F73F6007A8B49 /* TestModel.swift */; };
 		650BBB621F2F73F6007A8B49 /* Molib.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 650BBB571F2F73F6007A8B49 /* Molib.xcdatamodeld */; };
 		650BBB631F2F73F6007A8B49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BBB591F2F73F6007A8B49 /* ViewController.swift */; };
-		650BBBD11F2F7EFD007A8B49 /* Molib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 650BBBD01F2F7EFD007A8B49 /* Molib.framework */; };
+		650BBBDA1F2F8961007A8B49 /* Molib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 650BBBD01F2F7EFD007A8B49 /* Molib.framework */; };
+		650BBBDC1F2F899D007A8B49 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 650BBBDB1F2F899D007A8B49 /* Default-568h@2x.png */; };
 		651B0F821BA72F280011E344 /* libcommonCrypto.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 651B0F811BA72F280011E344 /* libcommonCrypto.tbd */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		650BBBAB1F2F7815007A8B49 /* Molib-iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Molib-iOS.framework"; path = "../build/Debug-iphoneos/Molib-iOS.framework"; sourceTree = "<group>"; };
 		650BBBCD1F2F7B0E007A8B49 /* Molib_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Molib_iOS.framework; path = "../build/Debug-iphoneos/Molib_iOS.framework"; sourceTree = "<group>"; };
 		650BBBD01F2F7EFD007A8B49 /* Molib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Molib.framework; path = "../../../../../../../../../Volumes/RAMDisk/Molib-crwkhnhcpxvafnebbntivubiujcf/Build/Products/Debug-iphonesimulator/Molib.framework"; sourceTree = "<group>"; };
+		650BBBDB1F2F899D007A8B49 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		651B0F811BA72F280011E344 /* libcommonCrypto.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcommonCrypto.tbd; path = usr/lib/system/libcommonCrypto.tbd; sourceTree = SDKROOT; };
 		6C1756A159EEA7AA24CEE0ED /* Molib.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Molib.podspec; path = ../Molib.podspec; sourceTree = "<group>"; };
 		769F0895350C72014A1D8633 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -68,7 +70,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				651B0F821BA72F280011E344 /* libcommonCrypto.tbd in Frameworks */,
-				650BBBD11F2F7EFD007A8B49 /* Molib.framework in Frameworks */,
+				650BBBDA1F2F8961007A8B49 /* Molib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +111,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				650BBBDB1F2F899D007A8B49 /* Default-568h@2x.png */,
 				650BBB4B1F2F73F6007A8B49 /* MolibExample */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -228,7 +231,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
@@ -269,6 +272,7 @@
 				650BBB5B1F2F73F6007A8B49 /* LaunchScreen.xib in Resources */,
 				650BBB5C1F2F73F6007A8B49 /* Main.storyboard in Resources */,
 				650BBB5E1F2F73F6007A8B49 /* Images.xcassets in Resources */,
+				650BBBDC1F2F899D007A8B49 /* Default-568h@2x.png in Resources */,
 				650BBB5F1F2F73F6007A8B49 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,8 +399,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -440,8 +446,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -460,6 +468,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
