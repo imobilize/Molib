@@ -6,7 +6,7 @@
 //  Copyright © 2017 iMobilize. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Foundation;
 
 //! Project version number for Molib_iOS.
 FOUNDATION_EXPORT double Molib_iOSVersionNumber;
