@@ -1,6 +1,0 @@
-framework module Molib {
-  umbrella header "Pods-Molib_Tests-Molib-umbrella.h"
-
-  export *
-  module * { export * }
-}
