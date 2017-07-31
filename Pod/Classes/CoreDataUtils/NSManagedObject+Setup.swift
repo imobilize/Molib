@@ -93,13 +93,13 @@ public class CoreDataUtils {
                 
                 var deleteStoreError: NSError?
                 // Could not open the database, so... kill it! (AND WAL bits)
-                let rawURL = url.absoluteString
+                let rawURL = url!.absoluteString
                 
-                let shmSidecar = NSURL(string: rawURL + "-shm")!
-                let walSidecar = NSURL(string:rawURL + "-wal")!
+                let shmSidecar = NSURL(string: rawURL! + "-shm")!
+                let walSidecar = NSURL(string:rawURL! + "-wal")!
                 
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(url)
+                    try NSFileManager.defaultManager().removeItemAtURL(url!)
                 } catch var error as NSError {
                     deleteStoreError = error
                 } catch {
@@ -114,7 +114,7 @@ public class CoreDataUtils {
                 } catch _ {
                 }
                 
-                print("Removed incompatible model version: %", url.lastPathComponent, terminator: "")
+                print("Removed incompatible model version: %", url!.lastPathComponent, terminator: "")
                 
                 if(deleteStoreError != nil) {
                     
@@ -239,7 +239,7 @@ public class CoreDataUtils {
             
         if store == nil {
     
-            success = recoverFromFailureWithCoordinator(coordinator!, withURL: url, error: error!)
+            success = recoverFromFailureWithCoordinator(coordinator!, withURL: url!, error: error!)
             
             if success == false {
                 
@@ -277,8 +277,8 @@ public class CoreDataUtils {
                 // Could not open the database, so... kill it! (AND WAL bits)
                 let rawURL = url.absoluteString
                 
-                let shmSidecar = NSURL(string: rawURL + "-shm")!
-                let walSidecar = NSURL(string:rawURL + "-wal")!
+                let shmSidecar = NSURL(string: rawURL! + "-shm")!
+                let walSidecar = NSURL(string:rawURL! + "-wal")!
                 
                 do {
                     try NSFileManager.defaultManager().removeItemAtURL(url)

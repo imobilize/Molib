@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MOWebViewController" customModule="Molib" customModuleProvider="target">
+            <connections>
+                <outlet property="activityIndicatorView" destination="knd-Ic-qI6" id="W1n-ew-pjj"/>
+                <outlet property="failureMessageContainer" destination="Tjx-Rj-a5t" id="TdN-ah-9ac"/>
+                <outlet property="view" destination="iN0-l3-epB" id="lBd-zN-4Q7"/>
+                <outlet property="webView" destination="uzL-6a-jj2" id="hRM-Dj-Gio"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uzL-6a-jj2">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                </webView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Failed to load" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tjx-Rj-a5t">
+                    <rect key="frame" x="249" y="289" width="102" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="knd-Ic-qI6">
+                    <rect key="frame" x="282" y="280" width="37" height="37"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Tjx-Rj-a5t" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="00F-fv-PwL"/>
+                <constraint firstAttribute="bottom" secondItem="uzL-6a-jj2" secondAttribute="bottom" id="9qp-Br-zzI"/>
+                <constraint firstAttribute="trailing" secondItem="uzL-6a-jj2" secondAttribute="trailing" id="EO8-4z-OcS"/>
+                <constraint firstItem="uzL-6a-jj2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="c6A-ad-Nk1"/>
+                <constraint firstItem="Tjx-Rj-a5t" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="dJd-IX-8MU"/>
+                <constraint firstItem="uzL-6a-jj2" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gOD-ef-4M7"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

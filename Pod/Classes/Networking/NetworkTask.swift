@@ -1,6 +1,9 @@
 
 import Foundation
 import UIKit
+import AVFoundation
+
+
 
 public struct DataRequestTask: NetworkRequest {
     
@@ -81,6 +84,23 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
     }
 }
 
+
+public struct DownloadRequest: NetworkRequest {
+    
+    public var urlRequest: NSURLRequest
+    
+    init(urlRequest: NSURLRequest) {
+        
+        self.urlRequest = urlRequest
+        
+    }
+    
+    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+        
+    }
+    
+}
+
 public struct JSONRequestTask: NetworkRequest {
     
     let log = LoggerFactory.logger()
@@ -98,11 +118,27 @@ public struct JSONRequestTask: NetworkRequest {
     
     public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
         
-        let (json, jsonError) = convertResponseToJson(dataOptional)
-        
-        let error: NSError? = jsonError == nil ? errorOptional : jsonError
+        if errorOptional == nil {
+            
+            let (json, jsonError) = convertResponseToJson(dataOptional)
+            
+            let error: NSError? = jsonError == nil ? errorOptional : jsonError
+            
+            self.taskCompletion(responseOptional: json, errorOptional: error)
+        } else {
+            
+            let (json, jsonError) = convertResponseToJson(dataOptional)
+            
+            if jsonError == nil {
+                
+                self.taskCompletion(responseOptional: json, errorOptional: errorOptional)
 
-        self.taskCompletion(responseOptional: json, errorOptional: error)
+            } else {
+
+                self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
+            }
+        }
+ 
     }
 }
 
@@ -128,7 +164,6 @@ extension NetworkRequest {
     }
 }
 
-
 public struct ImageRequestTask: ImageRequest {
     
     public let urlRequest: NSURLRequest
@@ -146,5 +181,58 @@ public struct ImageRequestTask: ImageRequest {
     public func handleResponse(imageURL: String, image: UIImage?, error: NSError?) {
     
         self.taskCompletion(imageURL: imageURL, image: image, error: error)
+    }
+}
+
+
+struct VideoThumbnailRequestOperation: Operation {
+    
+    var imageGenerator: AVAssetImageGenerator?
+    let mediaURL: String
+    
+    init(mediaURL: String) {
+        
+        self.mediaURL = mediaURL
+        
+        if let assetURL = NSURL(string: mediaURL) {
+            
+            let avAsset = AVURLAsset(URL: assetURL)
+            
+            imageGenerator = AVAssetImageGenerator(asset: avAsset)
+        }
+    }
+    
+    
+    func start(completion: ImageResponseCompletion) {
+        
+        if let generator = imageGenerator {
+            
+            generator.generateCGImagesAsynchronouslyForTimes([1], completionHandler: { (requestedTime, cgImage, actualTime, AVAssetImageGeneratorResult, error) in
+                
+                if cgImage != nil {
+                    
+                    let image = UIImage(CGImage: cgImage!)
+                    
+                    completion(imageURL: self.mediaURL, image: image, error: error)
+                } else {
+                    
+                    completion(imageURL: self.mediaURL, image: nil, error: error)
+                }
+                
+            })
+            
+        } else {
+            
+            let userInfo = [NSLocalizedDescriptionKey: "Invalid media url supplied"]
+            
+            let error = NSError(domain: "VideoThumbnailRequest", code: ServiceFailure.GeneralError.code, userInfo: userInfo)
+            
+            completion(imageURL: mediaURL, image: nil, error: error)
+        }
+    }
+    
+    func cancel() {
+        
+        imageGenerator?.cancelAllCGImageGeneration()
     }
 }

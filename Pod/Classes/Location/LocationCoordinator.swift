@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import MapKit
 
+#if os(iOS)
 public protocol LocationCoordinatorDelegate {
     
     func locationCoordinatorDidFindCurrentLocation(coordinator: LocationCoordinator, location: MOGeoLocation)
@@ -87,7 +88,7 @@ public protocol LocationCoordinatorDelegate {
     
     public func locationFound(location: CLLocation) {
         
-        let geoLocation = MOGeoLocation(name: NSLocalizedString("Current location", comment: ""), coords: location.coordinate)
+        let geoLocation = MOGeoLocation(name: NSLocalizedString("Unknown Location", comment: ""), coords: location.coordinate)
 
         setCurrentLocation(geoLocation)
     }
@@ -122,6 +123,12 @@ public protocol LocationCoordinatorDelegate {
     
     public func geoCodeFound(placeMark: CLPlacemark) {
         
+        if let name = placeMark.name {
+            
+            let geoLocation = MOGeoLocation(name: name, coords: placeMark.location!.coordinate)
+            
+            setCurrentLocation(geoLocation)
+        }
     }
     
     public func geoCodeFailed(error: NSError) {
@@ -130,3 +137,5 @@ public protocol LocationCoordinatorDelegate {
     
 
 }
+
+#endif

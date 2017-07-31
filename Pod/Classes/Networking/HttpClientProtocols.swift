@@ -2,6 +2,21 @@
 import Foundation
 import UIKit
 
+public enum ServiceFailure: Int {
+    
+    case GeneralError = 101
+    
+    public var code: Int {
+        
+        switch self {
+        case .GeneralError:
+            return 101
+        default:
+            100
+        }
+        
+    }
+}
 
 public protocol Operation {
     
@@ -15,6 +30,14 @@ public protocol UploadOperation: Operation {
     func resume()
     
     func registerProgressUpdate(progressUpdate: ProgressUpdate)
+}
+
+public protocol DownloadOperation: Operation {
+    
+    func pause()
+    
+    func resume()
+    
 }
 
 public protocol NetworkRequest {
@@ -33,6 +56,16 @@ public protocol NetworkUploadRequest: NetworkRequest {
     var mimeType: String { get }
 }
 
+public protocol NetworkDownloadRequest: NetworkRequest {
+    
+    var downloadModel: MODownloadModel? { get }
+    
+    func handleDownloadLocation(fileLocation: NSURL) -> NSURL
+    
+    func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
+    
+}
+
 public protocol NetworkService {
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation?
@@ -40,6 +73,8 @@ public protocol NetworkService {
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation?
 
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation?
+    
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation?
     
 }
 
@@ -65,6 +100,52 @@ extension NetworkService {
         
         return completion
     }
+    
+    func completionForDownloadRequest(request: NetworkDownloadRequest) -> ErrorCompletion {
+        
+        let completion = { (errorOptional: NSError?) in
+        
+            var error: NSError?
+            
+            if errorOptional != nil {
+                
+                let userInfo = [NSLocalizedDescriptionKey: "Invalid response"]
+                
+                error = NSError(domain: "NetworkService", code: 101, userInfo: userInfo)
+                
+            }
+            
+            request.handleResponse(nil, errorOptional: error)
+
+        }
+        
+        return completion
+    
+    }
+    
+    func completionForDownloadLocation(request: NetworkDownloadRequest) -> DownloadLocationCompletion {
+        
+        let completion = { (fileLocaion: NSURL) -> NSURL in
+            
+            request.handleDownloadLocation(fileLocaion)
+                        
+        }
+        
+        return completion
+    }
+    
+    func completionForDownloadProgress(request: NetworkDownloadRequest) -> DownloadProgress {
+        
+        let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
+            
+            request.handleDownloadProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpected)
+            
+        }
+        
+        return completion
+        
+    }
+    
 }
 
 public protocol ImageService {

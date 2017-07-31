@@ -16,6 +16,19 @@ public protocol Storable {
     init(dictionary: StorableDictionary)
 }
 
+public protocol Downloadable {
+    
+    var id: String! { get }
+
+    var fileName: String! { get }
+    
+    var fileURL: String! { get }
+    
+    var localFileURL: String? { get }
+    
+}
+
+
 public protocol DataStore {
     
     func fetchEntity<T: Storable>(type: T.Type, id: String) -> Storable?

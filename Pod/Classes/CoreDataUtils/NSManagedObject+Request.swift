@@ -38,7 +38,7 @@ extension NSManagedObject {
         return entity
     }
     
-    func inContext(context: NSManagedObjectContext) -> NSManagedObject? {
+    public func inContext(context: NSManagedObjectContext) -> NSManagedObject? {
         
         var object: NSManagedObject?
         
@@ -52,12 +52,12 @@ extension NSManagedObject {
         return object
     }
     
-    class func insertInContext(context: NSManagedObjectContext) -> NSManagedObject? {
+    public class func insertInContext(context: NSManagedObjectContext) -> NSManagedObject? {
     
         return createEntityInContext(context)
     }
     
-    class func createFetchRequestInContext(context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func createFetchRequestInContext(context: NSManagedObjectContext) -> NSFetchRequest {
         
         let request = NSFetchRequest()
         
@@ -66,7 +66,7 @@ extension NSManagedObject {
         return request
     }
 
-    class func truncateAllInContext(context: NSManagedObjectContext) {
+    public class func truncateAllInContext(context: NSManagedObjectContext) {
         
         let allEntities = self.findAllInContext(context)
         
@@ -80,7 +80,7 @@ extension NSManagedObject {
 
     }
     
-    class func deleteAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) {
+    public class func deleteAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) {
         
         let itemsToDelete = findAllWithPredicate(searchTerm, inContext: context)
         
@@ -93,17 +93,17 @@ extension NSManagedObject {
         }
     }
     
-    func deleteInContext(context: NSManagedObjectContext) {
+    public func deleteInContext(context: NSManagedObjectContext) {
         
         context.deleteObject(self)
     }
     
-    class func requestAllInContext(context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllInContext(context: NSManagedObjectContext) -> NSFetchRequest {
         
         return createFetchRequestInContext(context)
     }
     
-    class func requestAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
     
         let request = createFetchRequestInContext(context)
     
@@ -112,7 +112,7 @@ extension NSManagedObject {
         return request
     }
     
-    class func requestAllWhere(property: String, isEqualTo value: AnyObject, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllWhere(property: String, isEqualTo value: AnyObject, inContext context: NSManagedObjectContext) -> NSFetchRequest {
     
         let request = createFetchRequestInContext(context)
         
@@ -124,7 +124,7 @@ extension NSManagedObject {
     }
     
 
-    class func requestFirstWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestFirstWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
 
         let request = createFetchRequestInContext(context)
         
@@ -135,7 +135,7 @@ extension NSManagedObject {
         return request
     }
     
-    class func requestFirstByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestFirstByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> NSFetchRequest {
 
         let request = requestAllWhere(attribute, isEqualTo: searchValue, inContext:context)
 
@@ -144,12 +144,12 @@ extension NSManagedObject {
         return request
     }
     
-    class func requestAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSFetchRequest {
 
         return requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:nil, inContext:context)
     }
     
-    class func requestAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm: NSPredicate?, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm: NSPredicate?, inContext context:NSManagedObjectContext) -> NSFetchRequest {
 
         let request = requestAllInContext(context)
 

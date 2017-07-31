@@ -2,7 +2,7 @@
 import Foundation
 import CoreData
 
-extension NSManagedObject {
+public extension NSManagedObject {
     
     public override func valueForUndefinedKey(key: String) -> AnyObject? {
         
@@ -19,9 +19,9 @@ extension NSManagedObject {
 }
 
 
-extension NSManagedObject {
+public extension NSManagedObject {
     
-    func configureWithDictionary(dictionary: [NSObject: AnyObject]) {
+    public func configureWithDictionary(dictionary: [NSObject: AnyObject]) {
         
         safeSetValuesForKeysWithDictionary(dictionary)
     }

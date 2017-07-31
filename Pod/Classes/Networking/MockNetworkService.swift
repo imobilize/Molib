@@ -61,6 +61,13 @@ class MockNetworkService : NetworkService {
         return operation
 
     }
+    
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+        
+        return nil
+        
+    }
+    
 }
 
 struct MockRequestOperation: UploadOperation {

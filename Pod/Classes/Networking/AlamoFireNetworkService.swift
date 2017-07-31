@@ -10,6 +10,7 @@ class AlamoFireNetworkService : NetworkService {
     init() {
         
         self.manager = Manager.sharedInstance
+        
     }
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
@@ -33,7 +34,7 @@ class AlamoFireNetworkService : NetworkService {
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
-        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString!, multipartFormData: { (formData: MultipartFormData) in
             
             formData.appendBodyPart(data: data, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
             
@@ -41,7 +42,6 @@ class AlamoFireNetworkService : NetworkService {
         
         return alamoFireUploadOperation
     }
-    
     
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
         
@@ -51,7 +51,7 @@ class AlamoFireNetworkService : NetworkService {
         
         var alamoFireUploadOperation = AlamoFireUploadOperation(dataCompletion: dataResponseCompletion)
         
-        self.manager.upload(method!, request.urlRequest.URL!.absoluteString, multipartFormData: { (formData: MultipartFormData) in
+        self.manager.upload(method!, request.urlRequest.URL!.absoluteString!, multipartFormData: { (formData: MultipartFormData) in
             
             formData.appendBodyPart(fileURL: fileURL, name: request.name, fileName: request.fileName, mimeType: request.mimeType)
             
@@ -59,6 +59,31 @@ class AlamoFireNetworkService : NetworkService {
         
         return alamoFireUploadOperation
     }
+        
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+        
+        let method = Method(rawValue: request.urlRequest.HTTPMethod!.uppercaseString)
+        
+        let downloadProgress = completionForDownloadProgress(request)
+        
+        let downloadLocationCompletion = completionForDownloadLocation(request)
+        
+        let downloadCompletion = completionForDownloadRequest(request)
+        
+        var alamoFireDownloadOperation = AlamoFireDownloadOperation(downloadProgress: downloadProgress, downloadLocationCompletion: downloadLocationCompletion, downloadCompletion: downloadCompletion)
+        
+        alamoFireDownloadOperation.request = self.manager.download(method!, request.urlRequest.URLString, destination: alamoFireDownloadOperation.handleDownloadLocation)
+        
+            .progress(alamoFireDownloadOperation.handleDownloadProgress)
+        
+            .response(completionHandler: alamoFireDownloadOperation.handleDownloadCompletion)
+        
+        
+
+        return alamoFireDownloadOperation
+        
+    }
+    
 }
 
 struct AlamoFireRequestOperation: Operation {
@@ -84,8 +109,6 @@ struct AlamoFireRequestOperation: Operation {
         request.cancel()
     }
 }
-
-
 
 struct AlamoFireUploadOperation : UploadOperation {
     
@@ -141,8 +164,11 @@ struct AlamoFireUploadOperation : UploadOperation {
                 let progress = CGFloat(totalBytesExpectedToWrite)/CGFloat(totalBytesWritten)
             
                 progressUpdate(progress: progress)
+                
             }
+            
         }
+        
     }
     
     func pause() {
@@ -158,6 +184,60 @@ struct AlamoFireUploadOperation : UploadOperation {
     }
 }
 
+struct AlamoFireDownloadOperation: DownloadOperation {
+ 
+//    internal let downloadModel: MODownloadModel
+    private var request: Request?
+    
+    private let downloadLocationCompletion: DownloadLocationCompletion
+    private let downloadProgress: DownloadProgress
+    private let downloadCompletion: ErrorCompletion
+    
+    init(downloadProgress: DownloadProgress, downloadLocationCompletion: DownloadLocationCompletion, downloadCompletion: ErrorCompletion) {
+        
+        self.downloadProgress = downloadProgress
+        self.downloadLocationCompletion = downloadLocationCompletion
+        self.downloadCompletion = downloadCompletion
+        
+    }
+
+    private func handleDownloadProgress(bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        
+        downloadProgress(bytesRead: bytesWritten, totalBytesRead: totalBytesWritten, totalBytesExpectedToRead: totalBytesExpectedToWrite)
+        
+    }
+    
+    private func handleDownloadLocation(temporaryURL: NSURL, urlResponse: NSHTTPURLResponse) -> NSURL {
+        
+        return downloadLocationCompletion(fileLocation: temporaryURL)
+
+    }
+    
+    private func handleDownloadCompletion(downladRequest: NSURLRequest?, downloadResponse: NSHTTPURLResponse?, data: NSData?, error: NSError?) {
+        
+        downloadCompletion(errorOptional: error)
+        
+    }
+    
+    func cancel() {
+    
+        request?.cancel()
+        
+    }
+    
+    func resume() {
+        
+        request?.resume()
+        
+    }
+    
+    func pause() {
+        
+        request?.suspend()
+        
+    }
+    
+}
 
 extension Operation {
     
@@ -181,13 +261,19 @@ extension Operation {
                 
                 self.log.info("Received error response \(response.statusCode)")
                 
-                let userInfo = ["response": response, NSUnderlyingErrorKey: error]
+                let errorMessage = NSLocalizedString("The service is currently unable to satisfy your request. Please try again later", comment: "Bad service response text")
+
+                let userInfo = ["response": response, NSUnderlyingErrorKey: error, ]
                 
                 errorOptional = NSError(domain: "RequestOperation", code: response.statusCode, userInfo: userInfo)
                 
             } else {
                 
-                let userInfo = [NSUnderlyingErrorKey: error]
+                self.log.info("Service is currently down. Received no data")
+
+                let errorMessage = NSLocalizedString("The service is currently unavailable. Please try again later", comment: "Service unavailable text")
+                
+                let userInfo = [NSUnderlyingErrorKey: error, NSLocalizedDescriptionKey: errorMessage]
                 
                 errorOptional = NSError(domain: "RequestOperation", code: kServiceErrorCode, userInfo: userInfo)
             }
