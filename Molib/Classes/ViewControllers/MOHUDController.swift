@@ -28,27 +28,27 @@ struct MOHUDController: ProgressHUD {
     
     func showSuccessWithMessage(message: String) {
      
-        SVProgressHUD.showSuccessWithStatus(message)
+        SVProgressHUD.showSuccess(withStatus: message)
     }
     
     func showSuccess() {
         
-        SVProgressHUD.showSuccessWithStatus("Success")
+        SVProgressHUD.showSuccess(withStatus: "Success")
     }
     
     func showError() {
         
-        SVProgressHUD.showErrorWithStatus("Error")
+        SVProgressHUD.showError(withStatus: "Error")
     }
     
     func showErrorWithMessage(message: String) {
         
-        SVProgressHUD.showErrorWithStatus(message)
+        SVProgressHUD.showError(withStatus: message)
     }
     
     func showLoading() {
         
-        SVProgressHUD.setDefaultMaskType(.Black)
+        SVProgressHUD.setDefaultMaskType(.black)
         
         SVProgressHUD.show()
     }
@@ -82,10 +82,10 @@ extension UIViewController {
     
     public func showOkAlertWithTitle(title: String, message: String) {
         
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         
-        self.presentViewController(alertController)
+        self.presentViewController(viewController: alertController)
     }
 }

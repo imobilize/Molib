@@ -51,8 +51,9 @@ public protocol Downloader {
 
 
 class DownloaderImpl: NSObject {
-    
-    private var sessionManager: NSURLSession!
+
+    private lazy var onceToken: Bool = true
+    private var sessionManager: URLSession!
     private var downloadingArray: [DownloadModel] = []
     private var backgroundSessionCompletionHandler: (() -> Void)?
 
@@ -62,7 +63,7 @@ class DownloaderImpl: NSObject {
         
         super.init()
         
-        self.sessionManager = self.backgroundSession(sessionIdentifer)
+        self.sessionManager = self.backgroundSession(sessionIdentifer: sessionIdentifer)
         self.populateOtherDownloadTasks()
     }
     
@@ -80,19 +81,45 @@ class DownloaderImpl: NSObject {
         self.backgroundSessionCompletionHandler = completion
     }
     
-    private func backgroundSession(sessionIdentifer: String) -> NSURLSession {
-        struct sessionStruct {
-            static var onceToken : dispatch_once_t = 0;
-            static var session   : NSURLSession? = nil
-        }
-        
-        dispatch_once(&sessionStruct.onceToken, { () -> Void in
+    private func backgroundSession(sessionIdentifer: String) -> URLSession {
+        var session: URLSession? = nil
+
+        dispatch_once(&onceToken, { () -> Void in
             let sessionConfiguration : NSURLSessionConfiguration
             
             sessionConfiguration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(sessionIdentifer)
-            sessionStruct.session = NSURLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
+            session = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
         })
         return sessionStruct.session!
+    }
+
+    private func populateOtherDownloadTasks() {
+
+        let downloadTasks = self.downloadTasks()
+
+        for object in downloadTasks {
+
+            let downloadTask = object as! NSURLSessionDownloadTask
+            let taskDescComponents: [String] = downloadTask.taskDescription!.componentsSeparatedByString(",")
+
+            let id = taskDescComponents.first!
+            let fileName = taskDescComponents[1]
+            let fileURL = taskDescComponents.last!
+
+            let downloadModel = DownloadModel.init(id: id, fileName: fileName, fileURL: fileURL)
+            downloadModel.task = downloadTask
+            downloadModel.startTime = NSDate()
+
+            if downloadTask.state == .Running {
+                downloadModel.status = TaskStatus.Downloading.description()
+                downloadingArray.append(downloadModel)
+            } else if(downloadTask.state == .Suspended) {
+                downloadModel.status = TaskStatus.Paused.description()
+                downloadingArray.append(downloadModel)
+            } else {
+                downloadModel.status = TaskStatus.Failed.description()
+            }
+        }
     }
 }
 
@@ -101,7 +128,7 @@ class DownloaderImpl: NSObject {
 extension DownloaderImpl {
     
     private func downloadTasks() -> NSArray {
-        return self.tasksForKeyPath("downloadTasks")
+        return self.tasksForKeyPath(keyPath: "downloadTasks")
     }
     
     private func tasksForKeyPath(keyPath: NSString) -> NSArray {
@@ -120,35 +147,6 @@ extension DownloaderImpl {
         
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         return tasks
-    }
-    
-    private func populateOtherDownloadTasks() {
-        
-        let downloadTasks = self.downloadTasks()
-        
-        for object in downloadTasks {
-            
-            let downloadTask = object as! NSURLSessionDownloadTask
-            let taskDescComponents: [String] = downloadTask.taskDescription!.componentsSeparatedByString(",")
-           
-            let id = taskDescComponents.first!
-            let fileName = taskDescComponents[1]
-            let fileURL = taskDescComponents.last!
-            
-            let downloadModel = DownloadModel.init(id: id, fileName: fileName, fileURL: fileURL)
-            downloadModel.task = downloadTask
-            downloadModel.startTime = NSDate()
-            
-            if downloadTask.state == .Running {
-                downloadModel.status = TaskStatus.Downloading.description()
-                downloadingArray.append(downloadModel)
-            } else if(downloadTask.state == .Suspended) {
-                downloadModel.status = TaskStatus.Paused.description()
-                downloadingArray.append(downloadModel)
-            } else {
-                downloadModel.status = TaskStatus.Failed.description()
-            }
-        }
     }
     
     private func isValidResumeData(resumeData: NSData?) -> Bool {
@@ -176,9 +174,9 @@ extension DownloaderImpl {
     }
 }
 
-extension DownloaderImpl: NSURLSessionDelegate {
+extension DownloaderImpl: URLSessionDelegate {
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    func URLSession(session: URLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         
         for (index, downloadModel) in self.downloadingArray.enumerate() {
           
@@ -226,7 +224,7 @@ extension DownloaderImpl: NSURLSessionDelegate {
         }
     }
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+    func URLSession(session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
       
         for (index, downloadModel) in downloadingArray.enumerate() {
         
@@ -255,12 +253,12 @@ extension DownloaderImpl: NSURLSessionDelegate {
         }
     }
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+    func URLSession(session: URLSession, task: URLSessionTask, didCompleteWithError error: NSError?) {
         debugPrint("task id: \(task.taskIdentifier)")
         /***** Any interrupted tasks due to any reason will be populated in failed state after init *****/
-        if error?.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey]?.integerValue == NSURLErrorCancelledReasonUserForceQuitApplication || error?.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey]?.integerValue == NSURLErrorCancelledReasonBackgroundUpdatesDisabled {
+        if (error?.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey] as AnyObject).integerValue == NSURLErrorCancelledReasonUserForceQuitApplication || (error?.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey] as AnyObject).integerValue == NSURLErrorCancelledReasonBackgroundUpdatesDisabled {
             
-            let downloadTask = task as! NSURLSessionDownloadTask
+            let downloadTask = task as! URLSessionDownloadTask
             let taskDescComponents: [String] = downloadTask.taskDescription!.componentsSeparatedByString(",")
             let id = taskDescComponents.first!
             let fileName = taskDescComponents[1]
@@ -281,11 +279,11 @@ extension DownloaderImpl: NSURLSessionDelegate {
                 }
                 
                 newTask.taskDescription = task.taskDescription
-                downloadModel.task = newTask as? NSURLSessionDownloadTask
+                downloadModel.task = newTask as? URLSessionDownloadTask
                 
                 self.downloadingArray.append(downloadModel)
                 
-                self.delegate?.downloadRequestDidPopulatedInterruptedTasks(self.downloadingArray)
+                self.delegate?.downloadRequestDidPopulatedInterruptedTasks(downloadModel: self.downloadingArray)
             })
             
         } else {

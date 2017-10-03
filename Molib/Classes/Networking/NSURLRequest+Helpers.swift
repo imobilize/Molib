@@ -7,11 +7,11 @@ extension NSURLRequest {
     
     public convenience init?(urlString: String) {
         
-        let url = NSURL(string: urlString)
+        let url = URL(string: urlString)
         
         if url != nil {
-            
-            self.init(URL: url!, cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15)
+
+            self.init(url: url!, cachePolicy: NSURLRequest.CachePolicy.reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15)
         } else {
             return nil
         }
@@ -21,13 +21,13 @@ extension NSURLRequest {
         
         if let url = NSURL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url as URL)
             
-            request.HTTPMethod = RequestMethod.POST.rawValue
+            request.httpMethod = RequestMethod.POST.rawValue
             
             let encoder: URLRequestEncoding = .JSON
             
-            let tuple = encoder.encode(request, parameters: bodyParameters)
+            let tuple = encoder.encode(URLRequest: request as! URLRequestConvertible, parameters: bodyParameters as AnyObject)
             
             return tuple.0
         } else {
@@ -38,15 +38,15 @@ extension NSURLRequest {
     
     public class func PUTRequestJSON(urlString: String, bodyParameters: [String: AnyObject]) -> NSURLRequest? {
         
-        if let url = NSURL(string: urlString) {
+        if let url = URL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url)
             
-            request.HTTPMethod = RequestMethod.PUT.rawValue
+            request.httpMethod = RequestMethod.PUT.rawValue
             
             let encoder: URLRequestEncoding = .JSON
             
-            let tuple = encoder.encode(request, parameters: bodyParameters)
+            let tuple = encoder.encode(URLRequest: request as! URLRequestConvertible, parameters: bodyParameters as AnyObject)
             
             return tuple.0
         } else {
@@ -55,17 +55,17 @@ extension NSURLRequest {
         }
     }
     
-    public class func PUTRequest(urlString: String, bodyData: NSData?) -> NSURLRequest? {
+    public class func PUTRequest(urlString: String, bodyData: Data?) -> NSURLRequest? {
         
-        if let url = NSURL(string: urlString) {
+        if let url = URL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url)
             
-            request.HTTPMethod = RequestMethod.PUT.rawValue
+            request.httpMethod = RequestMethod.PUT.rawValue
             
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             
-            request.HTTPBody = bodyData
+            request.httpBody = bodyData
             
             return request
             
@@ -77,15 +77,15 @@ extension NSURLRequest {
     
     public class func POSTRequest(urlString: String, bodyParameters: AnyObject) -> NSURLRequest? {
         
-        if let url = NSURL(string: urlString) {
+        if let url = URL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url)
             
-            request.HTTPMethod = RequestMethod.POST.rawValue
+            request.httpMethod = RequestMethod.POST.rawValue
             
             let encoder: URLRequestEncoding = .URL
             
-            let tuple = encoder.encode(request, parameters: bodyParameters)
+            let tuple = encoder.encode(URLRequest: request, parameters: bodyParameters)
             
             return tuple.0
         } else {
@@ -94,17 +94,17 @@ extension NSURLRequest {
         }
     }
     
-    public class func POSTRequest(urlString: String, bodyData: NSData? = nil) -> NSURLRequest? {
+    public class func POSTRequest(urlString: String, bodyData: Data? = nil) -> NSURLRequest? {
         
-        if let url = NSURL(string: urlString) {
+        if let url = URL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url)
             
-            request.HTTPMethod = RequestMethod.POST.rawValue
+            request.httpMethod = RequestMethod.POST.rawValue
             
             request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
             
-            request.HTTPBody = bodyData
+            request.httpBody = bodyData
             
             return request
             
@@ -121,15 +121,15 @@ extension NSURLRequest {
     
     public class func GETRequest(urlString: String, parameters: [String: AnyObject]) -> NSURLRequest? {
         
-        if let url = NSURL(string: urlString) {
+        if let url = URL(string: urlString) {
             
-            let request = NSMutableURLRequest(URL: url)
+            let request = NSMutableURLRequest(url: url)
             
-            request.HTTPMethod = RequestMethod.GET.rawValue
+            request.httpMethod = RequestMethod.GET.rawValue
             
             let encoder: ParameterEncoding = .URLEncodedInURL
             
-            let tuple = encoder.encode(request, parameters: parameters)
+            let tuple = encoder.encode(request, with: parameters)
             
             return tuple.0
             
@@ -143,7 +143,7 @@ extension NSURLRequest {
         
         let request = NSMutableURLRequest.init(urlString: urlString)
         
-        request?.HTTPMethod = "DELETE"
+        request?.httpMethod = "DELETE"
         
         return request
     }
@@ -159,7 +159,7 @@ public enum URLRequestEncoding {
     case URL
     case URLEncodedInURL
     case JSON
-    case PropertyList(NSPropertyListFormat, NSPropertyListWriteOptions)
+    case PropertyList(PropertyListSerialization.PropertyListFormat, PropertyListSerialization.WriteOptions)
     case Custom((URLRequestConvertible, AnyObject?) -> (NSMutableURLRequest, NSError?))
     
     /**
@@ -217,12 +217,12 @@ public enum URLRequestEncoding {
         func query(parameters: [String: AnyObject]) -> String {
             var components: [(String, String)] = []
             
-            for key in parameters.keys.sort(<) {
+            for key in parameters.keys.sorted(by: <) {
                 let value = parameters[key]!
-                components += queryComponents(key, value)
+                components += queryComponents(key: key, value)
             }
             
-            return (components.map { "\($0)=\($1)" } as [String]).joinWithSeparator("&")
+            return (components.map { "\($0)=\($1)" } as [String]).joined(separator: "&")
         }
         
         func encodesParametersInURL(method: RequestMethod) -> Bool {
@@ -241,22 +241,22 @@ public enum URLRequestEncoding {
             }
         }
         
-        if let method = RequestMethod(rawValue: mutableURLRequest.HTTPMethod) where encodesParametersInURL(method) {
+        if let method = RequestMethod(rawValue: mutableURLRequest.httpMethod), encodesParametersInURL(method: method) {
             if let URLComponents = NSURLComponents(URL: mutableURLRequest.URL!, resolvingAgainstBaseURL: false) {
                 let percentEncodedQuery = (URLComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(params )
                 URLComponents.percentEncodedQuery = percentEncodedQuery
                 mutableURLRequest.URL = URLComponents.URL
             }
         } else {
-            if mutableURLRequest.valueForHTTPHeaderField("Content-Type") == nil {
+            if mutableURLRequest.value(forHTTPHeaderField: "Content-Type") == nil {
                 mutableURLRequest.setValue(
                     "application/x-www-form-urlencoded; charset=utf-8",
                     forHTTPHeaderField: "Content-Type"
                 )
             }
             
-            mutableURLRequest.HTTPBody = query(params ).dataUsingEncoding(
-                NSUTF8StringEncoding,
+            mutableURLRequest.httpBody = query(parameters: params ).data(
+                using: String.Encoding.utf8,
                 allowLossyConversion: false
             )
         }
@@ -269,11 +269,11 @@ public enum URLRequestEncoding {
         var encodingError: NSError? = nil
         
         do {
-            let options = NSJSONWritingOptions()
-            let data = try NSJSONSerialization.dataWithJSONObject(params, options: options)
+            let options = JSONSerialization.WritingOptions()
+            let data = try JSONSerialization.data(withJSONObject: params, options: options)
             
             mutableURLRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            mutableURLRequest.HTTPBody = data
+            mutableURLRequest.httpBodyhttpBody = data
         } catch {
             
             
@@ -284,18 +284,18 @@ public enum URLRequestEncoding {
     }
     
     
-    func encodeRequestWithTypePropertyList(mutableURLRequest: NSMutableURLRequest, params: AnyObject, types: (format: NSPropertyListFormat, options: NSPropertyListWriteOptions)) -> (NSMutableURLRequest, NSError?)  {
+    func encodeRequestWithTypePropertyList(mutableURLRequest: NSMutableURLRequest, params: AnyObject, types: (format: PropertyListSerialization.PropertyListFormat, options: PropertyListSerialization.WriteOptions)) -> (NSMutableURLRequest, NSError?)  {
         
         var encodingError: NSError? = nil
         
         do {
-            let data = try NSPropertyListSerialization.dataWithPropertyList(
-                params,
+            let data = try PropertyListSerialization.data(
+                fromPropertyList: params,
                 format: types.format,
                 options: types.options
             )
             mutableURLRequest.setValue("application/x-plist", forHTTPHeaderField: "Content-Type")
-            mutableURLRequest.HTTPBody = data
+            mutableURLRequest.httpBody = data
         } catch {
             encodingError = error as NSError
         }
@@ -325,7 +325,7 @@ public enum URLRequestEncoding {
                 components += queryComponents("\(key)[]", value)
             }
         } else {
-            components.append((escape(key), escape("\(value)")))
+            components.append((escape(string: key), escape(string: "\(value)")))
         }
         
         return components
@@ -351,7 +351,7 @@ public enum URLRequestEncoding {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         
-        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
+        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy() as! NSMutableCharacterSet
         allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
         
         var escaped = ""

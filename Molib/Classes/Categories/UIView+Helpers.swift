@@ -25,15 +25,15 @@ extension UIView {
     
     public func addDivider() {
     
-        addDividerAtLocation(self.height - 1.0)
+        addDividerAtLocation(location: self.height - 1.0)
     }
     
     public func addDividerAtLocation(location: CGFloat, withEdgeInset insets:UIEdgeInsets) {
     
         let grayColor =  UIColor(white: kGrayLineColor, alpha: CGFloat(1.0))
     
-        var rect = CGRectMake(0.0, location, self.width, 1.0)
-    
+        var rect = CGRect(x: 0.0, y: location, width: self.width, height: 1.0)
+
         rect = UIEdgeInsetsInsetRect(rect, insets);
     
         let divider = UIView(frame: rect)
@@ -44,28 +44,28 @@ extension UIView {
     public func addDividerAtLocation(location: CGFloat) {
     
         let grayColor = UIColor(white: kGrayLineColor, alpha: 1.0)
-        addDividerAtLocation(location, withColor:grayColor)
+        addDividerAtLocation(location: location, withColor:grayColor)
     }
     
     public func addDividerAtLocation(location: CGFloat, withColor color:UIColor) {
         
-        let divider = UIView(frame:CGRectMake(0.0, location, self.width, kLineThickness))
-    
+        let divider = UIView(frame: CGRect(x: 0.0, y: location, width: self.width, height: kLineThickness))
+
         divider.backgroundColor = color
     
         divider.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(divider)
         
-        let constraint = NSLayoutConstraint(item: divider, attribute: .Bottom, relatedBy: .Equal,
-                                        toItem: self, attribute: .Bottom, multiplier: 1.0, constant: location)
+        let constraint = NSLayoutConstraint(item: divider, attribute: .bottom, relatedBy: .equal,
+                                            toItem: self, attribute: .bottom, multiplier: 1.0, constant: location)
         
         self.addConstraint(constraint)
     }
 
     public func addBorderWithColor(color: UIColor) {
     
-        self.layer.borderColor = color.CGColor
+        self.layer.borderColor = color.cgColor
         self.layer.borderWidth = 1.0
     }
     
@@ -73,15 +73,14 @@ extension UIView {
     
         self.layer.cornerRadius = radius
         
-        let maskPath = UIBezierPath(roundedRect:self.bounds, byRoundingCorners:corners, cornerRadii:CGSizeMake(radius, radius))
+        let maskPath = UIBezierPath(roundedRect:self.bounds, byRoundingCorners:corners, cornerRadii:CGSize(width: radius, height: radius))
     
         let maskLayer = CAShapeLayer()
         maskLayer.frame = self.bounds
-        maskLayer.path = maskPath.CGPath
+        maskLayer.path = maskPath.cgPath
         self.layer.mask = maskLayer
     }
 
-    
     class func defaultTableEdgeInsets() -> UIEdgeInsets {
     
         return UIEdgeInsetsMake(0, 14.0, 0, 0)

@@ -48,17 +48,17 @@ public class MODownloadManagerImpl: DownloadManager {
     
     public func startDownload(downloadable: Downloadable) {
         
-        if let fileName = downloadable.fileName, fileURL = downloadable.fileURL {
+        if let fileName = downloadable.fileName, let fileURL = downloadable.fileURL {
             
-            self.downloader.addDownloadTask(downloadable.id, fileName: fileName, fileURL: fileURL)
+            self.downloader.addDownloadTask(id: downloadable.id, fileName: fileName, fileURL: fileURL)
             
         } else {
             
             let userInfo = [NSLocalizedDescriptionKey: "The download failed due to some unknown error"]
 
-            let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidURL.rawValue, userInfo: nil)
+            let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidURL.rawValue, userInfo: userInfo)
             
-            self.delegate?.downloadRequestFailed(downloadable, error: error)
+            self.delegate?.downloadRequestFailed(downloadable: downloadable, error: error)
         }
         
     }
@@ -67,13 +67,13 @@ public class MODownloadManagerImpl: DownloadManager {
         
         if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
-             downloader.pauseDownloadTaskAtIndex(index)
+            downloader.pauseDownloadTaskAtIndex(index: index)
         } else {
             
             let userInfo = [NSLocalizedDescriptionKey: "The download failed due to some unknown error"]
             
             let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidState.rawValue, userInfo: userInfo)
-            self.delegate?.downloadRequestFailed(downloadable, error: error)
+            self.delegate?.downloadRequestFailed(downloadable: downloadable, error: error)
         }
     }
     
@@ -81,10 +81,10 @@ public class MODownloadManagerImpl: DownloadManager {
         
         if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
-            downloader.cancelTaskAtIndex(index)
+            downloader.cancelTaskAtIndex(index: index)
         } else {
             
-            self.delegate?.downloadRequestCancelled(downloadable)
+            self.delegate?.downloadRequestCancelled(downloadable: downloadable)
         }
         
     }
@@ -94,10 +94,10 @@ public class MODownloadManagerImpl: DownloadManager {
         
         if let (_, index) = MODownloadManagerImpl.downloadQueue[downloadable.fileURL] {
             
-            downloader.resumeDownloadTaskAtIndex(index)
+            downloader.resumeDownloadTaskAtIndex(index: index)
         } else {
             
-            startDownload(downloadable)
+            startDownload(downloadable: downloadable)
         }
     }
     
@@ -107,7 +107,7 @@ extension MODownloadManagerImpl: DownloaderDelegate {
     
     public func downloadRequestDidUpdateProgress(downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadDidUpdateProgress(downloadModel, progress: downloadModel.progress)
+        self.delegate?.downloadDidUpdateProgress(downloadable: downloadModel, progress: downloadModel.progress)
     }
     
     /**A delegate method called when interrupted tasks are repopulated
@@ -121,51 +121,51 @@ extension MODownloadManagerImpl: DownloaderDelegate {
     public func downloadRequestStarted(downloadModel: DownloadModel, index: Int) {
         
         MODownloadManagerImpl.downloadQueue[downloadModel.fileURL] = (downloadModel, index)
-        self.delegate?.downloadRequestStarted(downloadModel)
+        self.delegate?.downloadRequestStarted(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever running download task is paused. If task is already paused the action will be ignored
      */
     public func downloadRequestDidPaused(downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadRequestPaused(downloadModel)
+        self.delegate?.downloadRequestPaused(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever any download task is resumed. If task is already downloading the action will be ignored
      */
     public func downloadRequestDidResumed(downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadRequestedResumed(downloadModel)
+        self.delegate?.downloadRequestedResumed(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever any download task is resumed. If task is already downloading the action will be ignored
      */
     public func downloadRequestDidRetry(downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadRequestStarted(downloadModel)
+        self.delegate?.downloadRequestStarted(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever any download task is cancelled by the user
      */
     public func downloadRequestCanceled(downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadRequestCancelled(downloadModel)
+        self.delegate?.downloadRequestCancelled(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever any download task is finished successfully
      */
     public func downloadRequestFinished(downloadModel: DownloadModel, index: Int) {
         
-        MODownloadManagerImpl.downloadQueue.removeValueForKey(downloadModel.fileURL)
+        MODownloadManagerImpl.downloadQueue.removeValue(forKey: downloadModel.fileURL)
         
-        self.delegate?.downloadRequestFinished(downloadModel)
+        self.delegate?.downloadRequestFinished(downloadable: downloadModel)
     }
     
     /**A delegate method called each time whenever any download task is failed due to any reason
      */
     public func downloadRequestDidFailedWithError(error: NSError, downloadModel: DownloadModel, index: Int) {
         
-        self.delegate?.downloadRequestFailed(downloadModel, error: error)
+        self.delegate?.downloadRequestFailed(downloadable: downloadModel, error: error)
     }
 
 }

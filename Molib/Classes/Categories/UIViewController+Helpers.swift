@@ -12,13 +12,13 @@ extension UIStoryboard {
     
     public class func controllerWithIdentifier(identifier: String) -> AnyObject {
         
-        let application = UIApplication.sharedApplication()
+        let application = UIApplication.shared
         
         let backWindow = application.windows[0]
         
         let storyBoard = backWindow.rootViewController!.storyboard
         
-        return storyBoard!.instantiateViewControllerWithIdentifier(identifier)
+        return storyBoard!.instantiateViewController(withIdentifier: identifier)
     }
 }
 
@@ -56,42 +56,42 @@ extension UIViewController {
     }
     
     
-    public func insertViewController(controller: UIViewController, belowViewController: UIViewController, withTransition: UIViewControllerTransition, duration: NSTimeInterval) {
+    public func insertViewController(controller: UIViewController, belowViewController: UIViewController, withTransition: UIViewControllerTransition, duration: TimeInterval) {
         
         
     }
     
     public func presentViewControllerNonAnimated(viewController: UIViewController) {
         
-        presentViewController(viewController, animated: false, completion: nil)
+        present(viewController, animated: false, completion: nil)
 
     }
 
     public func presentViewController(viewController: UIViewController) {
         
-        presentViewController(viewController, animated: true, completion: nil)
+        present(viewController, animated: true, completion: nil)
     }
     
     public func dismissViewController() {
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
 
     
     public func addViewController(viewController: UIViewController, inView:UIView) {
         
-        addViewController(viewController, inView: inView, underView:nil, parentController:self)
+        addViewController(viewController: viewController, inView: inView, underView:nil, parentController:self)
     }
     
     public func addViewController(viewController: UIViewController, inView:UIView, fromController:UIViewController) {
         
-        addViewController(viewController, inView: inView, underView: nil, parentController: fromController)
+        addViewController(viewController: viewController, inView: inView, underView: nil, parentController: fromController)
     }
     
     public func removeViewController(viewController: UIViewController) {
         
-        viewController.willMoveToParentViewController(nil)
+        viewController.willMove(toParentViewController: nil)
         
         viewController.view.removeFromSuperview()
         
@@ -101,7 +101,7 @@ extension UIViewController {
     
     public func addViewController(viewController: UIViewController, inView:UIView, underView:UIView?, parentController:UIViewController) {
         
-        viewController.willMoveToParentViewController(parentController)
+        viewController.willMove(toParentViewController: parentController)
         
         parentController.addChildViewController(viewController)
         
@@ -118,27 +118,27 @@ extension UIViewController {
         
         let myView = viewController.view
         
-        myView.translatesAutoresizingMaskIntoConstraints = false
+        myView?.translatesAutoresizingMaskIntoConstraints = false
         
         let viewDict = ["myView": myView]
         
-        let constraint1 = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[myView]-0-|",
-            options: [NSLayoutFormatOptions.AlignAllTop, NSLayoutFormatOptions.AlignAllBottom], metrics:nil, views:viewDict)
+        let constraint1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[myView]-0-|",
+                                                         options: [NSLayoutFormatOptions.alignAllTop, NSLayoutFormatOptions.alignAllBottom], metrics:nil, views:viewDict)
         
-        let constraint2 = NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[myView]-0-|",
-            options:[NSLayoutFormatOptions.AlignAllLeft, NSLayoutFormatOptions.AlignAllRight], metrics:nil, views:viewDict)
+        let constraint2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[myView]-0-|",
+                                                         options:[NSLayoutFormatOptions.alignAllLeft, NSLayoutFormatOptions.alignAllRight], metrics:nil, views:viewDict)
         
         inView.addConstraints(constraint1)
         inView.addConstraints(constraint2)
         
-        viewController.didMoveToParentViewController(parentController)
+        viewController.didMove(toParentViewController: parentController)
         
     }
     
     
     public func rootViewController() -> UIViewController {
         
-        let window: UIWindow = UIApplication.sharedApplication().windows[0] 
+        let window: UIWindow = UIApplication.shared.windows[0] 
         
         return window.rootViewController!
     }

@@ -2,18 +2,17 @@
 import Foundation
 import CoreData
 
-public extension NSManagedObject {
-    
-    public override func valueForUndefinedKey(key: String) -> AnyObject? {
-        
+extension NSManagedObject {
+
+    open override func value(forUndefinedKey key: String) -> Any? {
+
         print("Not able to set undefined key: %@", key)
         
         return nil
     }
-    
-    
-    public override func setValue(value: AnyObject?, forUndefinedKey key:String) {
-        
+
+    open override func setValue(_ value: Any?, forUndefinedKey key: String) {
+
         print("Couldn't set value for key: %@", key)
     }
 }
@@ -23,20 +22,20 @@ public extension NSManagedObject {
     
     public func configureWithDictionary(dictionary: [NSObject: AnyObject]) {
         
-        safeSetValuesForKeysWithDictionary(dictionary)
+        safeSetValuesForKeysWithDictionary(keyedValues: dictionary)
     }
 
     func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<NSObject, AnyObject>) {
         
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
+        let dateFormatter: DateFormatter = DateFormatter()
     //The Z at the end of your string represents Zulu which is UTC
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
     
-        safeSetValuesForKeysWithDictionary(keyedValues, dateFormatter:dateFormatter)
+        safeSetValuesForKeysWithDictionary(keyedValues: keyedValues, dateFormatter:dateFormatter)
     }
     
-    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<NSObject, AnyObject>, dateFormatter:NSDateFormatter) {
+    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<NSObject, AnyObject>, dateFormatter:DateFormatter) {
         
         let attributes = self.entity.attributesByName
         
