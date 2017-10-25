@@ -37,9 +37,9 @@ public let kLocationDictionaryLongitudeKey = "lon"
     
     public func toDictionary() -> Dictionary<String, AnyObject> {
     
-        let dictonary: Dictionary<String, AnyObject>  = [ kLocationDictionaryNameKey: self.locationName,
-                        kLocationDictionaryLatitudeey: self.geoPoint.latitude,
-                        kLocationDictionaryLongitudeKey: self.geoPoint.longitude]
+        let dictonary: Dictionary<String, AnyObject>  = [ kLocationDictionaryNameKey: self.locationName as AnyObject,
+                                                          kLocationDictionaryLatitudeey: self.geoPoint.latitude as AnyObject,
+                                                          kLocationDictionaryLongitudeKey: self.geoPoint.longitude as AnyObject]
     
     
         return dictonary

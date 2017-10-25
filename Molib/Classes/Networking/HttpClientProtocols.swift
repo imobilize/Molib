@@ -14,7 +14,6 @@ public enum ServiceFailure: Int {
         default:
             100
         }
-        
     }
 }
 
@@ -42,9 +41,9 @@ public protocol DownloadOperation: Operation {
 
 public protocol NetworkRequest {
     
-    var urlRequest: NSURLRequest { get }
+    var urlRequest: URLRequest { get }
     
-    func handleResponse(dataOptional: NSData?, errorOptional: NSError?)
+    func handleResponse(dataOptional: Data?, errorOptional: Error?)
 }
 
 public protocol NetworkUploadRequest: NetworkRequest {
@@ -60,7 +59,7 @@ public protocol NetworkDownloadRequest: NetworkRequest {
     
     var downloadModel: MODownloadModel? { get }
     
-    func handleDownloadLocation(fileLocation: NSURL) -> NSURL
+    func handleDownloadLocation(fileLocation: URL) -> URL
     
     func handleDownloadProgress(bytesRead: Int64, totalBytesRead: Int64, totalBytesExpectedToRead: Int64) -> Void
     
@@ -70,9 +69,9 @@ public protocol NetworkService {
     
     func enqueueNetworkRequest(request: NetworkRequest) -> Operation?
     
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation?
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: Data) -> UploadOperation?
 
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation?
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: URL) -> UploadOperation?
     
     func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation?
     
@@ -82,7 +81,7 @@ extension NetworkService {
     
     func completionForRequest(request: NetworkRequest) -> DataResponseCompletion {
         
-        let completion = { (dataOptional: NSData?, errorOptional: NSError?) -> Void in
+        let completion = { (dataOptional: Data?, errorOptional: Error?) -> Void in
             
             if dataOptional == nil && errorOptional == nil {
                 
@@ -90,11 +89,11 @@ extension NetworkService {
                 
                 let error = NSError(domain: "NetworkService", code: 101, userInfo: userInfo)
                 
-                request.handleResponse(dataOptional, errorOptional: error)
+                request.handleResponse(dataOptional: dataOptional, errorOptional: error)
                 
             } else {
                 
-                request.handleResponse(dataOptional, errorOptional: errorOptional)
+                request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
             }
         }
         
@@ -103,32 +102,29 @@ extension NetworkService {
     
     func completionForDownloadRequest(request: NetworkDownloadRequest) -> ErrorCompletion {
         
-        let completion = { (errorOptional: NSError?) in
+        let completion = { (errorOptional: Error?) in
         
-            var error: NSError?
+            var error: Error?
             
             if errorOptional != nil {
                 
                 let userInfo = [NSLocalizedDescriptionKey: "Invalid response"]
                 
                 error = NSError(domain: "NetworkService", code: 101, userInfo: userInfo)
-                
             }
             
-            request.handleResponse(nil, errorOptional: error)
+            request.handleResponse(dataOptional: nil, errorOptional: error)
 
         }
         
         return completion
-    
     }
     
     func completionForDownloadLocation(request: NetworkDownloadRequest) -> DownloadLocationCompletion {
         
-        let completion = { (fileLocaion: NSURL) -> NSURL in
+        let completion = { (fileLocaion: URL) -> URL in
             
-            request.handleDownloadLocation(fileLocaion)
-                        
+            request.handleDownloadLocation(fileLocation: fileLocaion)
         }
         
         return completion
@@ -138,14 +134,11 @@ extension NetworkService {
         
         let completion = { (bytesRead: Int64, totalBytesRead: Int64, totalBytesExpected: Int64) in
             
-            request.handleDownloadProgress(bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpected)
-            
+            request.handleDownloadProgress(bytesRead: bytesRead, totalBytesRead: totalBytesRead, totalBytesExpectedToRead: totalBytesExpected)
         }
         
         return completion
-        
     }
-    
 }
 
 public protocol ImageService {
@@ -153,15 +146,13 @@ public protocol ImageService {
     func enqueueImageRequest(request: ImageRequest) -> Operation
     
     func enqueueImageRequestRefreshingCache(request: ImageRequest) -> Operation
-
 }
 
 public protocol ImageRequest {
     
-    var urlRequest: NSURLRequest { get }
+    var urlRequest: URLRequest { get }
 
-    func handleResponse(imageURL: String, image: UIImage?, error: NSError?)
-
+    func handleResponse(imageURL: String, image: UIImage?, error: Error?)
 }
 
 public protocol MOConnectionHelper {
@@ -170,6 +161,5 @@ public protocol MOConnectionHelper {
     
     func absoluteURLStringForKey(key: String) -> String
     
-    func absoluteURLForKey(key: String) -> NSURL
-
+    func absoluteURLForKey(key: String) -> URL
 }

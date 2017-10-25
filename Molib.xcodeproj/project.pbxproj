@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		650BBAC11F2F72DC007A8B49 /* MolibTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BBAC01F2F72DC007A8B49 /* MolibTests.swift */; };
 		650BBBD71F2F81AA007A8B49 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 650BBBD61F2F81AA007A8B49 /* README.md */; };
-		65234E061F30C25D0052D161 /* UIAlert+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DC51F30C25D0052D161 /* UIAlert+Helpers.swift */; };
 		65234E071F30C25D0052D161 /* UIView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DC71F30C25D0052D161 /* UIView+Helpers.swift */; };
 		65234E081F30C25D0052D161 /* UIViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DC81F30C25D0052D161 /* UIViewController+Helpers.swift */; };
 		65234E091F30C25D0052D161 /* NSManagedObject+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DCA1F30C25D0052D161 /* NSManagedObject+Conversion.swift */; };
@@ -25,8 +24,6 @@
 		65234E131F30C25D0052D161 /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DD71F30C25D0052D161 /* GeoLocation.swift */; };
 		65234E141F30C25D0052D161 /* LocationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DD81F30C25D0052D161 /* LocationCoordinator.swift */; };
 		65234E151F30C25D0052D161 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DD91F30C25D0052D161 /* LocationManager.swift */; };
-		65234E161F30C25D0052D161 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DDB1F30C25D0052D161 /* Logger.swift */; };
-		65234E171F30C25D0052D161 /* XCGLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DDC1F30C25D0052D161 /* XCGLogger.swift */; };
 		65234E181F30C25D0052D161 /* AlamoFireNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DDE1F30C25D0052D161 /* AlamoFireNetworkService.swift */; };
 		65234E191F30C25D0052D161 /* AuththenticatedNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DDF1F30C25D0052D161 /* AuththenticatedNetworkService.swift */; };
 		65234E1A1F30C25D0052D161 /* ConnectionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DE01F30C25D0052D161 /* ConnectionHelper.swift */; };
@@ -44,9 +41,7 @@
 		65234E261F30C25D0052D161 /* NSURLRequest+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DED1F30C25D0052D161 /* NSURLRequest+Helpers.swift */; };
 		65234E271F30C25D0052D161 /* SDWebImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DEE1F30C25D0052D161 /* SDWebImageService.swift */; };
 		65234E281F30C25D0052D161 /* CommonClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF01F30C25D0052D161 /* CommonClosures.swift */; };
-		65234E291F30C25D0052D161 /* NSData+AES256.h in Headers */ = {isa = PBXBuildFile; fileRef = 65234DF11F30C25D0052D161 /* NSData+AES256.h */; };
-		65234E2A1F30C25D0052D161 /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF21F30C25D0052D161 /* NSData+AES256.m */; };
-		65234E2B1F30C25D0052D161 /* NSData+AES256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF31F30C25D0052D161 /* NSData+AES256.swift */; };
+		65234E2B1F30C25D0052D161 /* Data+AES256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF31F30C25D0052D161 /* Data+AES256.swift */; };
 		65234E2C1F30C25D0052D161 /* NSDate+Formatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 65234DF41F30C25D0052D161 /* NSDate+Formatter.h */; };
 		65234E2D1F30C25D0052D161 /* NSDate+Formatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF51F30C25D0052D161 /* NSDate+Formatter.m */; };
 		65234E2E1F30C25D0052D161 /* NSUserDefaults+Secure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */; };
@@ -63,9 +58,12 @@
 		65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E021F30C25D0052D161 /* ViewController+Helpers.swift */; };
 		65234E3A1F30C25D0052D161 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E041F30C25D0052D161 /* Menu.swift */; };
 		65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */; };
+		65A97D3E1FA0F07F00EC0AB6 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A97D3D1FA0F07F00EC0AB6 /* CryptoSwift.framework */; };
+		65A97D3F1FA0F08D00EC0AB6 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A97D3D1FA0F07F00EC0AB6 /* CryptoSwift.framework */; };
 		65B26ABB1F31106C00D2ED98 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B26ABA1F31106C00D2ED98 /* SVProgressHUD.framework */; };
 		65B26ABD1F31107100D2ED98 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B26ABC1F31107100D2ED98 /* Alamofire.framework */; };
 		65B26ABF1F31118500D2ED98 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B26ABE1F31118500D2ED98 /* SDWebImage.framework */; };
+		65BF03CB1F9F9AC800ADDA18 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,7 +75,6 @@
 		650BBBC51F2F7AEA007A8B49 /* Molib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Molib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		650BBBD41F2F810D007A8B49 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		650BBBD61F2F81AA007A8B49 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		65234DC51F30C25D0052D161 /* UIAlert+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlert+Helpers.swift"; sourceTree = "<group>"; };
 		65234DC71F30C25D0052D161 /* UIView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Helpers.swift"; sourceTree = "<group>"; };
 		65234DC81F30C25D0052D161 /* UIViewController+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helpers.swift"; sourceTree = "<group>"; };
 		65234DCA1F30C25D0052D161 /* NSManagedObject+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Conversion.swift"; sourceTree = "<group>"; };
@@ -93,8 +90,6 @@
 		65234DD71F30C25D0052D161 /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 		65234DD81F30C25D0052D161 /* LocationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationCoordinator.swift; sourceTree = "<group>"; };
 		65234DD91F30C25D0052D161 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		65234DDB1F30C25D0052D161 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		65234DDC1F30C25D0052D161 /* XCGLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCGLogger.swift; sourceTree = "<group>"; };
 		65234DDE1F30C25D0052D161 /* AlamoFireNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamoFireNetworkService.swift; sourceTree = "<group>"; };
 		65234DDF1F30C25D0052D161 /* AuththenticatedNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuththenticatedNetworkService.swift; sourceTree = "<group>"; };
 		65234DE01F30C25D0052D161 /* ConnectionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionHelper.swift; sourceTree = "<group>"; };
@@ -112,9 +107,7 @@
 		65234DED1F30C25D0052D161 /* NSURLRequest+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLRequest+Helpers.swift"; sourceTree = "<group>"; };
 		65234DEE1F30C25D0052D161 /* SDWebImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDWebImageService.swift; sourceTree = "<group>"; };
 		65234DF01F30C25D0052D161 /* CommonClosures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonClosures.swift; sourceTree = "<group>"; };
-		65234DF11F30C25D0052D161 /* NSData+AES256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+AES256.h"; sourceTree = "<group>"; };
-		65234DF21F30C25D0052D161 /* NSData+AES256.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+AES256.m"; sourceTree = "<group>"; };
-		65234DF31F30C25D0052D161 /* NSData+AES256.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+AES256.swift"; sourceTree = "<group>"; };
+		65234DF31F30C25D0052D161 /* Data+AES256.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+AES256.swift"; sourceTree = "<group>"; };
 		65234DF41F30C25D0052D161 /* NSDate+Formatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Formatter.h"; sourceTree = "<group>"; };
 		65234DF51F30C25D0052D161 /* NSDate+Formatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Formatter.m"; sourceTree = "<group>"; };
 		65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserDefaults+Secure.swift"; sourceTree = "<group>"; };
@@ -131,10 +124,12 @@
 		65234E021F30C25D0052D161 /* ViewController+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Helpers.swift"; sourceTree = "<group>"; };
 		65234E041F30C25D0052D161 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOHitTestContainerView.swift; sourceTree = "<group>"; };
+		65A97D3D1FA0F07F00EC0AB6 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 		65B26AB81F31105C00D2ED98 /* SVProgressHUD.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SVProgressHUD.framework.dSYM; path = Carthage/Build/iOS/SVProgressHUD.framework.dSYM; sourceTree = "<group>"; };
 		65B26ABA1F31106C00D2ED98 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
 		65B26ABC1F31107100D2ED98 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		65B26ABE1F31118500D2ED98 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A97D3E1FA0F07F00EC0AB6 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +148,7 @@
 				65B26ABB1F31106C00D2ED98 /* SVProgressHUD.framework in Frameworks */,
 				65B26ABD1F31107100D2ED98 /* Alamofire.framework in Frameworks */,
 				65B26ABF1F31118500D2ED98 /* SDWebImage.framework in Frameworks */,
+				65A97D3F1FA0F08D00EC0AB6 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,7 +228,6 @@
 				65234DCF1F30C25D0052D161 /* DataStorage */,
 				65234DD21F30C25D0052D161 /* Device */,
 				65234DD61F30C25D0052D161 /* Location */,
-				65234DDA1F30C25D0052D161 /* Logging */,
 				65234DDD1F30C25D0052D161 /* Networking */,
 				65234DEF1F30C25D0052D161 /* Utils */,
 				65234DFB1F30C25D0052D161 /* ViewControllers */,
@@ -243,7 +239,6 @@
 		65234DC41F30C25D0052D161 /* Alert */ = {
 			isa = PBXGroup;
 			children = (
-				65234DC51F30C25D0052D161 /* UIAlert+Helpers.swift */,
 			);
 			path = Alert;
 			sourceTree = "<group>";
@@ -298,15 +293,6 @@
 			path = Location;
 			sourceTree = "<group>";
 		};
-		65234DDA1F30C25D0052D161 /* Logging */ = {
-			isa = PBXGroup;
-			children = (
-				65234DDB1F30C25D0052D161 /* Logger.swift */,
-				65234DDC1F30C25D0052D161 /* XCGLogger.swift */,
-			);
-			path = Logging;
-			sourceTree = "<group>";
-		};
 		65234DDD1F30C25D0052D161 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,9 +328,8 @@
 			isa = PBXGroup;
 			children = (
 				65234DF01F30C25D0052D161 /* CommonClosures.swift */,
-				65234DF11F30C25D0052D161 /* NSData+AES256.h */,
-				65234DF21F30C25D0052D161 /* NSData+AES256.m */,
-				65234DF31F30C25D0052D161 /* NSData+AES256.swift */,
+				65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */,
+				65234DF31F30C25D0052D161 /* Data+AES256.swift */,
 				65234DF41F30C25D0052D161 /* NSDate+Formatter.h */,
 				65234DF51F30C25D0052D161 /* NSDate+Formatter.m */,
 				65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */,
@@ -382,6 +367,7 @@
 		65B26AB71F31105B00D2ED98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65A97D3D1FA0F07F00EC0AB6 /* CryptoSwift.framework */,
 				65B26ABE1F31118500D2ED98 /* SDWebImage.framework */,
 				65B26ABC1F31107100D2ED98 /* Alamofire.framework */,
 				65B26ABA1F31106C00D2ED98 /* SVProgressHUD.framework */,
@@ -399,7 +385,6 @@
 			files = (
 				65234E111F30C25D0052D161 /* MODeviceUtils.h in Headers */,
 				65234E2C1F30C25D0052D161 /* NSDate+Formatter.h in Headers */,
-				65234E291F30C25D0052D161 /* NSData+AES256.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,7 +500,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				65234E2F1F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift in Sources */,
-				65234E171F30C25D0052D161 /* XCGLogger.swift in Sources */,
 				65234E1C1F30C25D0052D161 /* DownloadManager.swift in Sources */,
 				65234E321F30C25D0052D161 /* UIImage+Helpers.swift in Sources */,
 				65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */,
@@ -525,7 +509,7 @@
 				65234E201F30C25D0052D161 /* MODownloadModel.swift in Sources */,
 				65234E211F30C25D0052D161 /* HttpClient.swift in Sources */,
 				65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */,
-				65234E2B1F30C25D0052D161 /* NSData+AES256.swift in Sources */,
+				65234E2B1F30C25D0052D161 /* Data+AES256.swift in Sources */,
 				65234E081F30C25D0052D161 /* UIViewController+Helpers.swift in Sources */,
 				65234E271F30C25D0052D161 /* SDWebImageService.swift in Sources */,
 				65234E361F30C25D0052D161 /* MOTableViewCoordinator.swift in Sources */,
@@ -542,16 +526,13 @@
 				65234E1B1F30C25D0052D161 /* Downloader.swift in Sources */,
 				65234E261F30C25D0052D161 /* NSURLRequest+Helpers.swift in Sources */,
 				65234E0B1F30C25D0052D161 /* NSManagedObject+Request.swift in Sources */,
-				65234E161F30C25D0052D161 /* Logger.swift in Sources */,
 				65234E0F1F30C25D0052D161 /* FileManager.swift in Sources */,
 				65234E2E1F30C25D0052D161 /* NSUserDefaults+Secure.swift in Sources */,
 				65234E0A1F30C25D0052D161 /* NSManagedObject+Fetch.swift in Sources */,
 				65234E131F30C25D0052D161 /* GeoLocation.swift in Sources */,
 				65234E1A1F30C25D0052D161 /* ConnectionHelper.swift in Sources */,
 				65234E2D1F30C25D0052D161 /* NSDate+Formatter.m in Sources */,
-				65234E061F30C25D0052D161 /* UIAlert+Helpers.swift in Sources */,
 				65234E191F30C25D0052D161 /* AuththenticatedNetworkService.swift in Sources */,
-				65234E2A1F30C25D0052D161 /* NSData+AES256.m in Sources */,
 				65234E301F30C25D0052D161 /* TestHelpers.swift in Sources */,
 				65234E251F30C25D0052D161 /* NetworkTask.swift in Sources */,
 				65234E0E1F30C25D0052D161 /* DataStore.swift in Sources */,
@@ -564,6 +545,7 @@
 				65234E121F30C25D0052D161 /* MODeviceUtils.m in Sources */,
 				65234E311F30C25D0052D161 /* TextEntryUtils.swift in Sources */,
 				65234E371F30C25D0052D161 /* MOWebViewController.swift in Sources */,
+				65BF03CB1F9F9AC800ADDA18 /* Dispatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,9 +603,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -673,8 +656,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -686,11 +670,15 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = M4C4VT654R;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MolibTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.imobilize.MolibTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -700,11 +688,15 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = M4C4VT654R;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MolibTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.imobilize.MolibTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -730,7 +722,7 @@
 				PRODUCT_NAME = Molib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -756,7 +748,7 @@
 				PRODUCT_NAME = Molib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

@@ -1,3 +1,4 @@
-github "Alamofire/Alamofire" "4.5.0"
-github "SVProgressHUD/SVProgressHUD" "2.1.2"
-github "rs/SDWebImage" "4.1.0"
+github "Alamofire/Alamofire" "4.5.1"
+github "SVProgressHUD/SVProgressHUD" "2.2.2"
+github "krzyzanowskim/CryptoSwift" "0.8.0"
+github "rs/SDWebImage" "4.1.2"

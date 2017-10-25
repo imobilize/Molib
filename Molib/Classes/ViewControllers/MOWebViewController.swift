@@ -5,7 +5,7 @@ import MessageUI
 
 public class MOWebViewController: UIViewController, MFMailComposeViewControllerDelegate, UIWebViewDelegate {
     
-    var request: NSURLRequest!
+    var request: URLRequest!
     
     @IBOutlet weak var webView: UIWebView!
     
@@ -14,11 +14,11 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
     @IBOutlet weak var failureMessageContainer: UILabel!
     
     
-    public init(request: NSURLRequest) {
+    public init(request: URLRequest) {
         
         self.request = request
        
-        let bundle = NSBundle(forClass: MOWebViewController.self)
+        let bundle = Bundle(for: MOWebViewController.self)
         
         super.init(nibName: "MOWebViewController", bundle: bundle)
     }
@@ -28,7 +28,7 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
     }
     
 
-    public convenience init(request: NSURLRequest, title: String) {
+    public convenience init(request: URLRequest, title: String) {
         
         self.init(request: request)
         self.title = title
@@ -41,26 +41,26 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
         
         self.webView.delegate = self
 
-        refreshButtonPressed(self)
+        refreshButtonPressed(sender: self)
     }
     
     
     //MARK: UIWebViewDelegate protocol implementation
     
-    public func webViewDidStartLoad(webView: UIWebView) {
+    public func webViewDidStartLoad(_ webView: UIWebView) {
         
         self.activityIndicatorView.startAnimating()
     }
     
-    public func webViewDidFinishLoad(webView: UIWebView) {
+    public func webViewDidFinishLoad(_ webView: UIWebView) {
     
         self.activityIndicatorView.stopAnimating()
     }
     
-    public func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
+    public func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         
         self.activityIndicatorView.stopAnimating()
-        self.failureMessageContainer.hidden = false
+        self.failureMessageContainer.isHidden = false
 
     }
     
@@ -71,7 +71,7 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
     
         self.webView.loadRequest(self.request)
 
-        self.failureMessageContainer.hidden = true
+        self.failureMessageContainer.isHidden = true
         
     }
 }

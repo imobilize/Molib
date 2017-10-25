@@ -28,7 +28,7 @@ public class LocalFileManagerImpl: LocalFileManager {
             
         } catch let error as NSError {
             
-            if error.code != CocoaError.FileNoSuchFileError.rawValue {
+            if error.code != CocoaError.fileNoSuchFile.rawValue {
                 
                 fileError = error
             }

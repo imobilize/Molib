@@ -4,30 +4,34 @@ import SDWebImage
 
 public class SDWebImageService: ImageService {
     
-    let imageManager = SDWebImageManager.sharedManager()
+    let imageManager = SDWebImageManager.shared()
     
     public init() {}
     
     public func enqueueImageRequest(request: ImageRequest) -> Operation {
         
-        let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: SDWebImageOptions.HighPriority, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
-            
-            request.handleResponse(url.URLString, image: image, error: error)
-        })
+        let operation = imageManager.loadImage(with: request.urlRequest.url, options: SDWebImageOptions.highPriority, progress: nil) { (image, data, error, cacheType, finished, url) in
+
+            guard let urlString = url?.absoluteString else { return }
+
+            request.handleResponse(imageURL: urlString, image: image, error: error)
+        }
         
-        return SDImageOperation(imageOperation: operation)
+        return SDImageOperation(imageOperation: operation!)
     }
     
     public func enqueueImageRequestRefreshingCache(request: ImageRequest) -> Operation {
         
-        let options = SDWebImageOptions.RefreshCached.union(.RetryFailed)
-        
-        let operation = imageManager.downloadImageWithURL(request.urlRequest.URL, options: options, progress: nil, completed: { (image: UIImage?, error: NSError?, cacheType: SDImageCacheType, success: Bool, url: NSURL!) -> Void in
+        let options = SDWebImageOptions.refreshCached.union(.retryFailed)
+
+        let operation = imageManager.loadImage(with: request.urlRequest.url, options: options, progress: nil) { (image, data, error, cacheType, finished, url) in
             
-            request.handleResponse(url.URLString, image: image, error: error)
-        })
+            guard let urlString = url?.absoluteString else { return }
+
+            request.handleResponse(imageURL: urlString, image: image, error: error)
+        }
         
-        return SDImageOperation(imageOperation: operation)
+        return SDImageOperation(imageOperation: operation!)
     }
 }
 

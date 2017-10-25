@@ -31,7 +31,7 @@ public class DownloadManagerFactory {
 
 public class MODownloadManagerImpl: DownloadManager {
     
-    let downloader: Downloader
+    var downloader: Downloader
     
     static var downloadQueue: [String: (Downloadable, Int)] = [:]
     
@@ -48,19 +48,9 @@ public class MODownloadManagerImpl: DownloadManager {
     
     public func startDownload(downloadable: Downloadable) {
         
-        if let fileName = downloadable.fileName, let fileURL = downloadable.fileURL {
-            
-            self.downloader.addDownloadTask(id: downloadable.id, fileName: fileName, fileURL: fileURL)
-            
-        } else {
-            
-            let userInfo = [NSLocalizedDescriptionKey: "The download failed due to some unknown error"]
-
-            let error = NSError(domain: MODownloadManagerImplDomain, code: MODownloadManagerErrorCode.InvalidURL.rawValue, userInfo: userInfo)
-            
-            self.delegate?.downloadRequestFailed(downloadable: downloadable, error: error)
-        }
-        
+        let fileName = downloadable.fileName
+        let fileURL = downloadable.fileURL
+        self.downloader.addDownloadTask(id: downloadable.id, fileName: fileName, fileURL: fileURL)
     }
     
     public func pauseDownload(downloadable: Downloadable) {
@@ -167,7 +157,6 @@ extension MODownloadManagerImpl: DownloaderDelegate {
         
         self.delegate?.downloadRequestFailed(downloadable: downloadModel, error: error)
     }
-
 }
 
 #endif

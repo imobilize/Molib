@@ -7,27 +7,27 @@ import AVFoundation
 
 public struct DataRequestTask: NetworkRequest {
     
-    public let urlRequest: NSURLRequest
+    public let urlRequest: URLRequest
     
     let taskCompletion: DataResponseCompletion
     
-    init(urlRequest: NSURLRequest, taskCompletion: DataResponseCompletion) {
+    init(urlRequest: URLRequest, taskCompletion: @escaping DataResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
     }
     
     
-    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
-        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+        self.taskCompletion(dataOptional, errorOptional)
     }
 }
 
 
 public struct DataUploadTask: NetworkUploadRequest {
     
-    public let urlRequest: NSURLRequest
+    public let urlRequest: URLRequest
 
     public let name: String
     
@@ -37,7 +37,7 @@ public struct DataUploadTask: NetworkUploadRequest {
     
     let taskCompletion: DataResponseCompletion
 
-    public init(urlRequest: NSURLRequest, name: String, fileName: String, mimeType: String, taskCompletion: DataResponseCompletion) {
+    public init(urlRequest: URLRequest, name: String, fileName: String, mimeType: String, taskCompletion: @escaping DataResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.name = name
@@ -46,15 +46,15 @@ public struct DataUploadTask: NetworkUploadRequest {
         self.taskCompletion = taskCompletion
     }
     
-    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
-        self.taskCompletion(dataOptional: dataOptional, errorOptional: errorOptional)
+        self.taskCompletion(dataOptional, errorOptional)
     }
 }
 
 public struct DataUploadJsonResponseTask: NetworkUploadRequest {
     
-    public let urlRequest: NSURLRequest
+    public let urlRequest: URLRequest
     
     public let name: String
     
@@ -64,7 +64,7 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
     
     let taskCompletion: JSONResponseCompletion
     
-    public init(urlRequest: NSURLRequest, name: String, fileName: String, mimeType: String,  taskCompletion: JSONResponseCompletion) {
+    public init(urlRequest: URLRequest, name: String, fileName: String, mimeType: String,  taskCompletion: @escaping JSONResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.name = name
@@ -73,13 +73,13 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
         self.taskCompletion = taskCompletion
     }
     
-    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
-        let (json, jsonError) = convertResponseToJson(dataOptional)
+        let (json, jsonError) = convertResponseToJson(dataOptional: dataOptional)
         
-        let error: NSError? = jsonError == nil ? errorOptional : jsonError
+        let error: Error? = jsonError == nil ? errorOptional : jsonError
         
-        self.taskCompletion(responseOptional: json, errorOptional: error)
+        self.taskCompletion(json, error)
 
     }
 }
@@ -87,15 +87,15 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
 
 public struct DownloadRequest: NetworkRequest {
     
-    public var urlRequest: NSURLRequest
+    public var urlRequest: URLRequest
     
-    init(urlRequest: NSURLRequest) {
+    init(urlRequest: URLRequest) {
         
         self.urlRequest = urlRequest
         
     }
     
-    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
     }
     
@@ -103,39 +103,37 @@ public struct DownloadRequest: NetworkRequest {
 
 public struct JSONRequestTask: NetworkRequest {
     
-    let log = LoggerFactory.logger()
-
-    public let urlRequest: NSURLRequest
+    public let urlRequest: URLRequest
     
     let taskCompletion: JSONResponseCompletion
     
-    public init(urlRequest: NSURLRequest, taskCompletion: JSONResponseCompletion) {
+    public init(urlRequest: URLRequest, taskCompletion: @escaping JSONResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
     }
     
     
-    public func handleResponse(dataOptional: NSData?, errorOptional: NSError?) {
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
         if errorOptional == nil {
             
-            let (json, jsonError) = convertResponseToJson(dataOptional)
+            let (json, jsonError) = convertResponseToJson(dataOptional: dataOptional)
             
-            let error: NSError? = jsonError == nil ? errorOptional : jsonError
+            let error: Error? = jsonError == nil ? errorOptional : jsonError
             
-            self.taskCompletion(responseOptional: json, errorOptional: error)
+            self.taskCompletion(json, error)
         } else {
             
-            let (json, jsonError) = convertResponseToJson(dataOptional)
+            let (json, jsonError) = convertResponseToJson(dataOptional: dataOptional)
             
             if jsonError == nil {
                 
-                self.taskCompletion(responseOptional: json, errorOptional: errorOptional)
+                self.taskCompletion(json, errorOptional)
 
             } else {
 
-                self.taskCompletion(responseOptional: nil, errorOptional: errorOptional)
+                self.taskCompletion(nil, errorOptional)
             }
         }
  
@@ -144,17 +142,19 @@ public struct JSONRequestTask: NetworkRequest {
 
 extension NetworkRequest {
     
-    public func convertResponseToJson(dataOptional: NSData?) -> (AnyObject?, NSError?) {
+    public func convertResponseToJson(dataOptional: Data?) -> (AnyObject?, Error?) {
         
         var json: AnyObject?
-        var jsonError: NSError?
+        var jsonError: Error?
 
         if let data = dataOptional {
         
             do {
             
-                json = try NSJSONSerialization.JSONObjectWithData(data, options: [NSJSONReadingOptions.MutableLeaves, NSJSONReadingOptions.MutableContainers])
-            } catch let error as NSError {
+                let convertedObject = try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.mutableLeaves, JSONSerialization.ReadingOptions.mutableContainers])
+
+                json = convertedObject as AnyObject
+            } catch let error {
                 jsonError = error
                 json = nil
             }
@@ -166,21 +166,21 @@ extension NetworkRequest {
 
 public struct ImageRequestTask: ImageRequest {
     
-    public let urlRequest: NSURLRequest
+    public let urlRequest: URLRequest
 
     let taskCompletion: ImageResponseCompletion
     
     
-    init(urlRequest: NSURLRequest, taskCompletion: ImageResponseCompletion) {
+    init(urlRequest: URLRequest, taskCompletion: @escaping ImageResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
     }
     
     
-    public func handleResponse(imageURL: String, image: UIImage?, error: NSError?) {
+    public func handleResponse(imageURL: String, image: UIImage?, error: Error?) {
     
-        self.taskCompletion(imageURL: imageURL, image: image, error: error)
+        self.taskCompletion(imageURL, image, error)
     }
 }
 
@@ -194,31 +194,29 @@ struct VideoThumbnailRequestOperation: Operation {
         
         self.mediaURL = mediaURL
         
-        if let assetURL = NSURL(string: mediaURL) {
+        if let assetURL = URL(string: mediaURL) {
             
-            let avAsset = AVURLAsset(URL: assetURL)
+            let avAsset = AVURLAsset(url: assetURL)
             
             imageGenerator = AVAssetImageGenerator(asset: avAsset)
         }
     }
     
     
-    func start(completion: ImageResponseCompletion) {
+    func start(completion: @escaping ImageResponseCompletion) {
         
         if let generator = imageGenerator {
             
-            generator.generateCGImagesAsynchronouslyForTimes([1], completionHandler: { (requestedTime, cgImage, actualTime, AVAssetImageGeneratorResult, error) in
+            generator.generateCGImagesAsynchronously(forTimes: [NSNumber(value: 1)], completionHandler: { (requestedTime, cgImage, actualTime, AVAssetImageGeneratorResult, error) in
                 
-                if cgImage != nil {
-                    
-                    let image = UIImage(CGImage: cgImage!)
-                    
-                    completion(imageURL: self.mediaURL, image: image, error: error)
-                } else {
-                    
-                    completion(imageURL: self.mediaURL, image: nil, error: error)
+                guard let imageRef = cgImage else {
+                    completion(self.mediaURL, nil, error)
+                    return
                 }
-                
+
+                let image = UIImage(cgImage: imageRef)
+                    
+                completion(self.mediaURL, image, error)
             })
             
         } else {
@@ -227,7 +225,7 @@ struct VideoThumbnailRequestOperation: Operation {
             
             let error = NSError(domain: "VideoThumbnailRequest", code: ServiceFailure.GeneralError.code, userInfo: userInfo)
             
-            completion(imageURL: mediaURL, image: nil, error: error)
+            completion(mediaURL, nil, error)
         }
     }
     

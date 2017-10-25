@@ -7,9 +7,9 @@ public class MockRequestQueue {
     
     public class func enqueueJsonResponseForRequestURL(urlString: String, responseFile: String) {
         
-        let bundle = NSBundle.mainBundle()
+        let bundle = Bundle.main
         
-        let filePath = bundle.pathForResource(responseFile, ofType: "json")
+        let filePath = bundle.path(forResource: responseFile, ofType: "json")
         
         responses[urlString] = filePath
     }
@@ -31,32 +31,32 @@ class MockNetworkService : NetworkService {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         
-        let completion = completionForRequest(request)
+        let completion = completionForRequest(request: request)
         
-        operation.startConnection(completion)
+        operation.startConnection(completion: completion)
         
         return operation
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: URL) -> UploadOperation? {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         
-        let completion = completionForRequest(request)
+        let completion = completionForRequest(request: request)
         
-        operation.startConnection(completion)
+        operation.startConnection(completion: completion)
         
         return operation
 
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: Data) -> UploadOperation? {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         
-        let completion = completionForRequest(request)
+        let completion = completionForRequest(request: request)
         
-        operation.startConnection(completion)
+        operation.startConnection(completion: completion)
         
         return operation
 
@@ -72,28 +72,38 @@ class MockNetworkService : NetworkService {
 
 struct MockRequestOperation: UploadOperation {
     
-    let request: NSURLRequest
-    let log = LoggerFactory.logger()
+    let request: URLRequest
     
-    init(request: NSURLRequest) {
+    init(request: URLRequest) {
         self.request = request
     }
     
     func startConnection(completion: DataResponseCompletion) {
-        
-        print("Requesting url: \(request.URLString)")
-        
-        let fileURL = MockRequestQueue.dequeueResponeFileForRequestURL(request.URLString)
 
-        print("Found file url: \(fileURL)")
+        guard let urlString = request.url?.absoluteString else {
+            print("No url given for loading mock request")
+            return
+        }
 
-        if let url = fileURL {
+        print("Requesting url: \(urlString)")
         
-            print("Found file url for request: \(fileURL) \n")
+        guard let fileURL = MockRequestQueue.dequeueResponeFileForRequestURL(urlString: urlString) else {
 
-            let data = NSData(contentsOfFile: url)
+            print("File url not found: \(urlString)")
+
+            let error = NSError(domain: "Network", code: 101, userInfo: nil)
+
+            completion(nil, error)
+            return
+        }
+
+        if let url = URL(string: fileURL) {
+        
+            print("Loading file url for request: \(String(describing: urlString)) \n")
+
+            let data = try? Data (contentsOf: url)
             
-            completion(dataOptional: data, errorOptional: nil)
+            completion(data, nil)
             
         } else {
             
@@ -101,9 +111,8 @@ struct MockRequestOperation: UploadOperation {
 
             let error = NSError(domain: "Network", code: 101, userInfo: nil)
             
-            completion(dataOptional: nil, errorOptional: error)
+            completion(nil, error)
         }
-        
     }
     
     func cancel() {

@@ -37,11 +37,11 @@ public struct MODownloadModel: Storable {
         
         var dictionary: StorableDictionary = [:]
         
-        dictionary[DownloadModelAttributes.id.rawValue] = self.id
+        dictionary[DownloadModelAttributes.id.rawValue] = self.id as AnyObject
         
-        dictionary[DownloadModelAttributes.fileName.rawValue] = self.fileName
+        dictionary[DownloadModelAttributes.fileName.rawValue] = self.fileName as AnyObject
         
-        dictionary[DownloadModelAttributes.fileURL.rawValue] = self.fileURL
+        dictionary[DownloadModelAttributes.fileURL.rawValue] = self.fileURL as AnyObject
         
         return dictionary
         

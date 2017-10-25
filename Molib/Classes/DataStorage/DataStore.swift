@@ -18,11 +18,11 @@ public protocol Storable {
 
 public protocol Downloadable {
     
-    var id: String! { get }
+    var id: String { get }
 
-    var fileName: String! { get }
+    var fileName: String { get }
     
-    var fileURL: String! { get }
+    var fileURL: String { get }
     
     var localFileURL: String? { get }
     
@@ -60,7 +60,7 @@ public class DataStoreImpl: DataStore {
         
         self.userDefaults = userDefaults
         
-        if let dictionary = self.userDefaults.dictionaryForKey(kStorageDictionaryKey) {
+        if let dictionary = self.userDefaults.dictionaryForKey(key: kStorageDictionaryKey) {
             
             storageDictionary = NSMutableDictionary(dictionary: dictionary)
             
@@ -77,12 +77,12 @@ public class DataStoreImpl: DataStore {
         var dict = [String: AnyObject]()
         
         for (key, value) in self.storageDictionary {
-            dict[key as! String] = value
+            dict[key as! String] = value as AnyObject
         }
         
-        self.userDefaults.setDictionary(dict, forKey: kStorageDictionaryKey)
+        self.userDefaults.setDictionary(value: dict, forKey: kStorageDictionaryKey)
         
-        self.userDefaults.synchronize()
+        _ = self.userDefaults.synchronize()
     }
     
     
@@ -90,7 +90,7 @@ public class DataStoreImpl: DataStore {
         
         var item: Storable?
         
-        let typeDictionary = dictionaryForType(type.typeName)
+        let typeDictionary = dictionaryForType(typeName: type.typeName)
         
         
         if let object = typeDictionary[id] as? StorableDictionary {
@@ -104,24 +104,24 @@ public class DataStoreImpl: DataStore {
     
     public func fetchAllEntities<T: Storable>(type: T.Type) -> [Storable] {
         
-        return fetchEntities(type, predicateOptional: nil)
+        return fetchEntities(type: type, predicateOptional: nil)
     }
     
     public func fetchEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate?) -> [Storable] {
         
-        return fetchAllEntities(type, predicateOptional: predicateOptional)
+        return fetchAllEntities(type: type, predicateOptional: predicateOptional)
     }
     
     
     public func storeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
-        var typeDictionary = dictionaryForType(T.typeName)
+        var typeDictionary = dictionaryForType(typeName: T.typeName)
         
         if let id = entity.id {
             
             let itemDictionary = entity.toDictionary()
             
-            typeDictionary[id] = itemDictionary
+            typeDictionary[id] = itemDictionary as AnyObject
             
             self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
         }
@@ -129,12 +129,12 @@ public class DataStoreImpl: DataStore {
     
     public func storeEntities<T: Storable>(type: T.Type, entities: [Storable]) {
         
-        var typeDictionary = dictionaryForType(T.typeName)
+        var typeDictionary = dictionaryForType(typeName: T.typeName)
         
         entities.forEach({ (storable) -> () in
             
             if let id = storable.id {
-                typeDictionary[id] = storable.toDictionary()
+                typeDictionary[id] = storable.toDictionary() as AnyObject
             }
         })
         
@@ -143,7 +143,7 @@ public class DataStoreImpl: DataStore {
     
     public func removeEntity<T: Storable>(type: T.Type, entity: Storable) {
         
-        var typeDictionary = dictionaryForType(T.typeName)
+        var typeDictionary = dictionaryForType(typeName: T.typeName)
         
         if let id = entity.id {
             
@@ -169,14 +169,14 @@ public class DataStoreImpl: DataStore {
         
         var items = [Storable]()
         
-        let typeDictionary = dictionaryForType(T.typeName)
+        let typeDictionary = dictionaryForType(typeName: T.typeName)
         
         let filteredItems = typeDictionary.filter({ (id: String, value: AnyObject) -> Bool in
             
             var includeObject = true
             
             if let predicate = predicateOptional {
-                includeObject = predicate.evaluateWithObject(value)
+                includeObject = predicate.evaluate(with: value)
             }
             
             return includeObject
@@ -197,7 +197,7 @@ public class DataStoreImpl: DataStore {
     
     func dictionaryForType(typeName: String) -> [String: AnyObject] {
         
-        var typeDictionary: [String: AnyObject]! = self.storageDictionary.valueForKey(typeName) as? [String: AnyObject]
+        var typeDictionary: [String: AnyObject]! = self.storageDictionary.value(forKey: typeName) as? [String: AnyObject]
         
         if typeDictionary == nil {
             typeDictionary = [String: AnyObject]()

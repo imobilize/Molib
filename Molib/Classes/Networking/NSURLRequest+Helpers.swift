@@ -85,7 +85,7 @@ extension NSURLRequest {
             
             let encoder: URLRequestEncoding = .URL
             
-            let tuple = encoder.encode(URLRequest: request, parameters: bodyParameters)
+            let tuple = encoder.encode(URLRequest: request as! URLRequestConvertible, parameters: bodyParameters)
             
             return tuple.0
         } else {
@@ -127,9 +127,9 @@ extension NSURLRequest {
             
             request.httpMethod = RequestMethod.GET.rawValue
             
-            let encoder: ParameterEncoding = .URLEncodedInURL
+            let encoder: ParameterEncoding = URLEncoding.`default`
             
-            let tuple = encoder.encode(request, with: parameters)
+            let tuple = try encoder.encode(request as! URLRequestConvertible, with: parameters)
             
             return tuple.0
             
@@ -176,7 +176,7 @@ public enum URLRequestEncoding {
         parameters: AnyObject?)
         -> (NSMutableURLRequest, NSError?)
     {
-        var mutableURLRequest = URLRequest.URLRequest
+        var mutableURLRequest = URLRequest.asURLRequest
         
         var encodingError: NSError? = nil
         
@@ -191,18 +191,18 @@ public enum URLRequestEncoding {
                 return (mutableURLRequest, nil)
             }
             
-            encodeRequestWithTypeURL(mutableURLRequest, params: params)
+            encodeRequestWithTypeURL(mutableURLRequest: mutableURLRequest, params: params)
             
         case .JSON:
             
-            encodeRequestWithTypeJSON(mutableURLRequest, params: params)
+            encodeRequestWithTypeJSON(mutableURLRequest: mutableURLRequest, params: params)
             
         case .PropertyList(let format, let options):
             
-            encodeRequestWithTypePropertyList(mutableURLRequest, params: params, types: (format, options))
+            encodeRequestWithTypePropertyList(mutableURLRequest: mutableURLRequest, params: params, types: (format, options))
             
         case .Custom(let closure):
-            (mutableURLRequest, encodingError) = closure(mutableURLRequest, params)
+            (mutableURLRequest, encodingError) = closure(mutableURLRequest(), params as AnyObject)
         }
         
         return (mutableURLRequest, encodingError)
@@ -351,8 +351,8 @@ public enum URLRequestEncoding {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         
-        let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy() as! NSMutableCharacterSet
-        allowedCharacterSet.removeCharactersInString(generalDelimitersToEncode + subDelimitersToEncode)
+        var allowedCharacterSet = NSCharacterSet.urlQueryAllowed
+        allowedCharacterSet.remove(charactersIn: generalDelimitersToEncode + subDelimitersToEncode)
         
         var escaped = ""
         
@@ -373,7 +373,7 @@ public enum URLRequestEncoding {
         
         while index != string.endIndex {
             let startIndex = index
-            let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
+            let endIndex = index.advanced(batchSize, limit: string.endIndex)
             let range = Range(start: startIndex, end: endIndex)
             
             let substring = string.substringWithRange(range)

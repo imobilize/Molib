@@ -5,18 +5,9 @@ class TextEntryUtils {
     
     //MARK: - Helpers
     class func trimmedStringToMaxLength(sourceString: String, length: Int) -> String {
-        
-        var trimmedString = sourceString
-        
-        if sourceString.characters.count > length {
-            
-            trimmedString = sourceString.substringToIndex(sourceString.startIndex.advancedBy(length))
-        }
-        
-        return trimmedString
+
+        return String(sourceString.prefix(length))
     }
-    
-    
 }
 
 extension Double {
@@ -25,12 +16,12 @@ extension Double {
         
         var formattedValue: String?
         
-        let numberFormatter = NSNumberFormatter()
+        let numberFormatter = NumberFormatter()
         
         numberFormatter.currencyCode = currencyCode
-        numberFormatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
+        numberFormatter.numberStyle = NumberFormatter.Style.currency
         
-        formattedValue = numberFormatter.stringFromNumber(self)
+        formattedValue = numberFormatter.string(from: NSNumber(value: self))
         
         return formattedValue
     }

@@ -4,13 +4,13 @@ import UIKit
 
 public class MOHitTestContainerView: UIView {
     
-    override public func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+    override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         
-        var hitView: UIView? = super.hitTest(point, withEvent: event)
+        var hitView: UIView? = super.hitTest(point, with: event)
     
         if let view = hitView {
             
-            if ((view === self) || view.isKindOfClass(UIScrollView.self)) {
+            if ((view === self) || view.isKind(of: UIScrollView.self)) {
     
                 hitView = nil
             }

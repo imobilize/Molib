@@ -43,19 +43,19 @@ public class CoreDataUtils {
     }
     
     // MARK: - Core Data stack
-    lazy var applicationDocumentsDirectory: NSURL = {
+    lazy var applicationDocumentsDirectory: URL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "iMobilize.TrendiPeople" in the application's documents Application Support directory.
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1] 
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let bundle = NSBundle.mainBundle()
+        let bundle = Bundle.main
         
-        let modelURL =  bundle.URLForResource(self.modelResource, withExtension: "momd")!
+        let modelURL =  bundle.url(forResource: self.modelResource, withExtension: "momd")!
         
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        return NSManagedObjectModel(contentsOf: modelURL)!
         }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
@@ -67,90 +67,94 @@ public class CoreDataUtils {
         
         var success = true
         
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(self.sqliteFile)
+        let url = self.applicationDocumentsDirectory.appendingPathComponent(self.sqliteFile)
         
-        var error: NSError? = nil
+        var error: Error? = nil
         
         var failureReason = "There was an error creating or loading the application's saved data."
         
         let store:NSPersistentStore?
         do {
-            store = try coordinator!.addPersistentStoreWithType(self.storeType, configuration: nil, URL: url, options: nil)
-        } catch var error1 as NSError {
+            store = try coordinator!.addPersistentStore(ofType: self.storeType, configurationName: nil, at: url, options: nil)
+        } catch var error1 {
             error = error1
             store = nil
-        } catch {
-            fatalError()
         }
         
         if store == nil {
-            
-            let isMigrationError = (error!.code == NSPersistentStoreIncompatibleVersionHashError || error!.code == NSMigrationMissingSourceModelError || error!.code == NSMigrationError)
-            
-            if (error!.domain == NSCocoaErrorDomain && isMigrationError) {
+
+            var isMigrationError = false
+            var domain = ""
+
+            if let nsError = error as NSError? {
+                isMigrationError = (nsError.code == NSPersistentStoreIncompatibleVersionHashError || nsError.code == NSMigrationMissingSourceModelError || nsError.code == NSMigrationError)
+                domain = nsError.domain
+            }
+
+            if (domain == NSCocoaErrorDomain && isMigrationError) {
                 
-                NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchWillDeleteStore, object:nil)
-                
-                var deleteStoreError: NSError?
+                var notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchWillDeleteStore)
+                notificationCenter.post(name: notificationName, object:nil)
+
+                var deleteStoreError: Error?
                 // Could not open the database, so... kill it! (AND WAL bits)
-                let rawURL = url!.absoluteString
+                let rawURL = url.absoluteString
                 
-                let shmSidecar = NSURL(string: rawURL! + "-shm")!
-                let walSidecar = NSURL(string:rawURL! + "-wal")!
+                let shmSidecar = URL(string: rawURL + "-shm")!
+                let walSidecar = URL(string:rawURL + "-wal")!
                 
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(url!)
-                } catch var error as NSError {
+                    try fileManager.removeItem(at: url)
+                } catch var error {
                     deleteStoreError = error
-                } catch {
-                    fatalError()
                 }
+                
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(shmSidecar)
+                    try fileManager.removeItem(at: shmSidecar)
                 } catch _ {
                 }
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(walSidecar)
+                    try fileManager.removeItem(at: walSidecar)
                 } catch _ {
                 }
                 
-                print("Removed incompatible model version: %", url!.lastPathComponent, terminator: "")
+                print("Removed incompatible model version: %", url.lastPathComponent, terminator: "")
                 
                 if(deleteStoreError != nil) {
                     
                     let userInfo = ["Error":deleteStoreError!]
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchCouldNotDeleteStore, object:nil, userInfo: userInfo)
-                    
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchCouldNotDeleteStore)
+                    notificationCenter.post(name: notificationName, object:nil, userInfo: userInfo)
+
                 } else {
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchDidDeleteStore, object:nil)
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchDidDeleteStore)
+                    notificationCenter.post(name: notificationName, object:nil)
                 }
                 
-                var error: NSError? = nil
+                var error: Error? = nil
                 
-                NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchWillRecreateStore, object:nil)
+                notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchWillRecreateStore)
+                notificationCenter.post(name: notificationName, object:nil)
                 // Try one more time to create the store
                 let store:NSPersistentStore?
                 do {
-                    store = try coordinator!.addPersistentStoreWithType(self.storeType, configuration: nil, URL: url, options: nil)
-                } catch var error1 as NSError {
+                    store = try coordinator!.addPersistentStore(ofType: self.storeType, configurationName: nil, at: url, options: nil)
+                } catch var error1 {
                     error = error1
                     store = nil
-                } catch {
-                    fatalError()
                 }
                 
                 if (store != nil) {
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchDidRecreateStore, object:nil)
-                    
+
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchDidRecreateStore)
+                    notificationCenter.post(name: notificationName, object:nil)
+
                     success = true
                 } else {
                     
                     let userInfo = ["Error":error!]
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchCouldNotRecreateStore, object:nil, userInfo:userInfo)
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchCouldNotRecreateStore)
+                    notificationCenter.post(name: notificationName, object:nil, userInfo: userInfo)
                 }
             }
             
@@ -166,7 +170,7 @@ public class CoreDataUtils {
 //                        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
 //                        dict[NSLocalizedFailureReasonErrorKey] = failureReason
 //                        dict[NSUnderlyingErrorKey] = error
-//                        error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+//                        error = Error(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
 //                        // Replace this with code to handle the error appropriately.
 //                        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 //                        NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -185,7 +189,7 @@ public class CoreDataUtils {
             return nil
         }
         
-        let managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
         
         managedObjectContext.persistentStoreCoordinator = coordinator
         
@@ -197,16 +201,16 @@ public class CoreDataUtils {
         
         if let moc = self.mainManagedObjectContext {
             
-            var error: NSError? = nil
+            var error: Error? = nil
             
             if moc.hasChanges {
                 do {
                     try moc.save()
-                } catch let error1 as NSError {
+                } catch let error1 {
                     error = error1
                     // Replace this implementation with code to handle the error appropriately.
                     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                    NSLog("Unresolved error \(error), \(error!.userInfo)")
+                    print("Unresolved error \(String(describing: error))")
                     abort()
                 }
             }
@@ -223,23 +227,23 @@ public class CoreDataUtils {
 
         var success = true
         
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(self.sqliteFile)
+        let url = self.applicationDocumentsDirectory.appendingPathComponent(self.sqliteFile)
         
-        var error: NSError? = nil
+        var error: Error? = nil
         
         var failureReason = "There was an error creating or loading the application's saved data."
         
         let store:NSPersistentStore?
         do {
-            store = try coordinator!.addPersistentStoreWithType(self.storeType, configuration: nil, URL: url, options: nil)
-        } catch let error1 as NSError {
+            store = try coordinator!.addPersistentStore(ofType: self.storeType, configurationName: nil, at: url, options: nil)
+        } catch let error1 {
             error = error1
             store = nil
         }
             
         if store == nil {
     
-            success = recoverFromFailureWithCoordinator(coordinator!, withURL: url!, error: error!)
+            success = recoverFromFailureWithCoordinator(coordinator: coordinator!, withURL: url, error: error!)
             
             if success == false {
                 
@@ -251,7 +255,7 @@ public class CoreDataUtils {
 //            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
 //            dict[NSLocalizedFailureReasonErrorKey] = failureReason
 //            dict[NSUnderlyingErrorKey] = error
-//            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+//            error = Error(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
 //            // Replace this with code to handle the error appropriately.
 //            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 //            NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -261,74 +265,82 @@ public class CoreDataUtils {
         return coordinator
     }
     
-    func recoverFromFailureWithCoordinator(coordinator: NSPersistentStoreCoordinator,  withURL url: NSURL, error: NSError) -> Bool {
+    func recoverFromFailureWithCoordinator(coordinator: NSPersistentStoreCoordinator,  withURL url: URL, error: Error) -> Bool {
         
         var success = false
         
         if (kShouldDeletePersistentStoreOnModelMismatch) {
+            var isMigrationError = false
+            var domain = ""
+
+            if type(of: error) is NSError.Type {
+                let nsError = error as NSError
+                isMigrationError = (nsError.code == NSPersistentStoreIncompatibleVersionHashError || nsError.code == NSMigrationMissingSourceModelError || nsError.code == NSMigrationError)
+                domain = nsError.domain
+            }
             
-            let isMigrationError = (error.code == NSPersistentStoreIncompatibleVersionHashError || error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationError)
-            
-            if (error.domain == NSCocoaErrorDomain && isMigrationError) {
-                
-                NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchWillDeleteStore, object:nil)
-                
-                var deleteStoreError: NSError?
+            if (domain == NSCocoaErrorDomain && isMigrationError) {
+
+                var notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchWillDeleteStore)
+                notificationCenter.post(name: notificationName, object:nil)
+
+                var deleteStoreError: Error?
                 // Could not open the database, so... kill it! (AND WAL bits)
                 let rawURL = url.absoluteString
                 
-                let shmSidecar = NSURL(string: rawURL! + "-shm")!
-                let walSidecar = NSURL(string:rawURL! + "-wal")!
+                let shmSidecar = URL(string: rawURL + "-shm")!
+                let walSidecar = URL(string:rawURL + "-wal")!
                 
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(url)
-                } catch let error as NSError {
+                    try fileManager.removeItem(at: url)
+                } catch let error {
                     deleteStoreError = error
                 }
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(shmSidecar)
+                    try fileManager.removeItem(at: shmSidecar)
                 } catch _ {
                 }
                 do {
-                    try NSFileManager.defaultManager().removeItemAtURL(walSidecar)
+                    try fileManager.removeItem(at: walSidecar)
                 } catch _ {
                 }
                 
-                print("Removed incompatible model version: %", url.lastPathComponent, terminator: "")
+                print("Removed incompatible model version: %", url.lastPathComponent , terminator: "")
                 
                 if(deleteStoreError != nil) {
                     
                     let userInfo = ["Error":deleteStoreError!]
                     
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchCouldNotDeleteStore, object:nil, userInfo: userInfo)
-                    
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchCouldNotDeleteStore)
+                    notificationCenter.post(name: notificationName, object:nil, userInfo: userInfo)
                 } else {
                     
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchDidDeleteStore, object:nil)
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchDidDeleteStore)
+                    notificationCenter.post(name: notificationName, object:nil)
                 }
                 
-                var error: NSError? = nil
-                
-                NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchWillRecreateStore, object:nil)
+                var error: Error? = nil
+                notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchWillRecreateStore)
+                notificationCenter.post(name: notificationName, object:nil)
                 // Try one more time to create the store
                 let store:NSPersistentStore?
                 do {
-                    store = try coordinator.addPersistentStoreWithType(self.storeType, configuration: nil, URL: url, options: nil)
-                } catch let error1 as NSError {
+                    store = try coordinator.addPersistentStore(ofType: self.storeType, configurationName: nil, at: url as URL, options: nil)
+                } catch let error1 {
                     error = error1
                     store = nil
                 }
                 
                 if (store != nil) {
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchDidRecreateStore, object:nil)
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchDidRecreateStore)
+                    notificationCenter.post(name: notificationName, object:nil)
                     
                     success = true
                 } else {
                     
                     let userInfo = ["Error":error!]
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kMagicalRecordPSCMismatchCouldNotRecreateStore, object:nil, userInfo:userInfo)
+                    let notificationName = NSNotification.Name(rawValue: kMagicalRecordPSCMismatchCouldNotRecreateStore)
+                    notificationCenter.post(name: notificationName, object: nil, userInfo: userInfo)
                 }
             }
         }
@@ -338,4 +350,11 @@ public class CoreDataUtils {
 //        [MagicalRecord handleErrors:error];
     }
 
+    lazy var fileManager: FileManager = {
+        return FileManager.`default`
+    }()
+
+    lazy var notificationCenter: NotificationCenter = {
+        return NotificationCenter.`default`
+    }()
 }

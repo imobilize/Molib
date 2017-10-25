@@ -35,7 +35,7 @@ public class NetworkServiceFactory {
         
         let networkService: NetworkService
         
-        let infoDictionary = NSBundle.mainBundle().infoDictionary
+        let infoDictionary = Bundle.main.infoDictionary
         
         let networkClass = infoDictionary![kNetworkServiceClass] as? String ?? "NetworkService"
         

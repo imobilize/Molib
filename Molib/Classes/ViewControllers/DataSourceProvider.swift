@@ -19,13 +19,13 @@ public protocol DataSourceProvider {
     
     func numberOfRowsInSection(section: Int) -> Int
     
-    func itemAtIndexPath(indexPath: NSIndexPath) -> ItemType
+    func itemAtIndexPath(indexPath: IndexPath) -> ItemType
     
-    mutating func deleteItemAtIndexPath(indexPath: NSIndexPath)
+    mutating func deleteItemAtIndexPath(indexPath: IndexPath)
     
-    mutating func insertItem(item: ItemType, atIndexPath: NSIndexPath)
+    mutating func insertItem(item: ItemType, atIndexPath: IndexPath)
     
-    mutating func updateItem(item: ItemType, atIndexPath: NSIndexPath)
+    mutating func updateItem(item: ItemType, atIndexPath: IndexPath)
  
     mutating func deleteAllInSection(section: Int)
     
@@ -49,13 +49,13 @@ public protocol DataSourceProviderDelegate {
     mutating func providerDidDeleteSectionAtIndex(index: Int)
     
     
-    mutating func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath])
+    mutating func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
     
-    mutating func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath])
+    mutating func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
     
-    mutating func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath])
+    mutating func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
     
-    mutating func providerDidMoveItem(item: ItemType, atIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
+    mutating func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath)
     
     mutating func providerDidDeleteAllItemsInSection(section: Int)
 }
@@ -67,7 +67,7 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
 
     private var arrayItems: [T]
 
-    private var objectChanges: Array<(DataSourceChangeType,[NSIndexPath], [T])>!
+    private var objectChanges: Array<(DataSourceChangeType,[IndexPath], [T])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
     
     public init() {
@@ -93,47 +93,45 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         return arrayItems.count
     }
     
-    public func itemAtIndexPath(indexPath: NSIndexPath) -> T {
+    public func itemAtIndexPath(indexPath: IndexPath) -> T {
         
         return arrayItems[indexPath.row]
     }
     
-    public func deleteItemAtIndexPath(indexPath: NSIndexPath) {
+    public func deleteItemAtIndexPath(indexPath: IndexPath) {
         
         let item = arrayItems[indexPath.row]
         
-        arrayItems.removeAtIndex(indexPath.row)
+        arrayItems.remove(at: indexPath.row)
         
-        delegate?.providerDidDeleteItemsAtIndexPaths([item], atIndexPaths: [indexPath])
+        delegate?.providerDidDeleteItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
 
-    public func insertItem(item: T, atIndexPath indexPath: NSIndexPath) {
+    public func insertItem(item: T, atIndexPath indexPath: IndexPath) {
         
-        arrayItems.insert(item, atIndex: indexPath.row)
+        arrayItems.insert(item, at: indexPath.row)
         
-        delegate?.providerDidInsertItemsAtIndexPaths([item], atIndexPaths: [indexPath])
-        
+        delegate?.providerDidInsertItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
     
-    public func updateItem(item: T, atIndexPath indexPath: NSIndexPath) {
+    public func updateItem(item: T, atIndexPath indexPath: IndexPath) {
         
         var newItems = [T](arrayItems)
     
-        newItems.removeAtIndex(indexPath.row)
+        newItems.remove(at: indexPath.row)
         
-        newItems.insert(item, atIndex: indexPath.row)
+        newItems.insert(item, at: indexPath.row)
         
         self.arrayItems = newItems
         
-        delegate?.providerDidUpdateItemsAtIndexPaths([item], atIndexPaths: [indexPath])
-
+        delegate?.providerDidUpdateItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
     
     public func deleteAllInSection(section: Int) {
 
         arrayItems.removeAll()
         
-        delegate?.providerDidDeleteAllItemsInSection(0)
+        delegate?.providerDidDeleteAllItemsInSection(section: 0)
     }
     
     public func batchUpdates(updatesBlock: VoidCompletion) {
@@ -171,11 +169,11 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         }
     }
     
-    let fetchedResultsController: NSFetchedResultsController
+    let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
     
     var fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<ObjectType, Delegate>?
     
-    public init(fetchedResultsController: NSFetchedResultsController) {
+    public init(fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>) {
         
         self.fetchedResultsController = fetchedResultsController
     }
@@ -203,16 +201,16 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         return sectionInfo.numberOfObjects
     }
     
-    public func itemAtIndexPath(indexPath: NSIndexPath) -> ObjectType {
+    public func itemAtIndexPath(indexPath: IndexPath) -> ObjectType {
         
-        return self.fetchedResultsController.objectAtIndexPath(indexPath) as! ObjectType
+        return self.fetchedResultsController.object(at: indexPath) as! ObjectType
     }
     
-    public func deleteItemAtIndexPath(indexPath: NSIndexPath) {
+    public func deleteItemAtIndexPath(indexPath: IndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
-        context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! ObjectType)
+        context.delete(self.fetchedResultsController.object(at: indexPath) as! ObjectType)
         
         do {
             try context.save()
@@ -220,11 +218,11 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         }
     }
     
-    public func insertItem(item: ObjectType, atIndexPath: NSIndexPath) {
+    public func insertItem(item: ObjectType, atIndexPath: IndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
-        context.insertObject(item)
+        context.insert(item)
         
         do {
             try context.save()
@@ -232,7 +230,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         }
     }
     
-    public func updateItem(item: ObjectType, atIndexPath: NSIndexPath) {
+    public func updateItem(item: ObjectType, atIndexPath: IndexPath) {
         
         let context = self.fetchedResultsController.managedObjectContext
         
@@ -253,7 +251,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
 
             for object in objects {
         
-                context.deleteObject(object as! NSManagedObject)
+                context.delete(object as! NSManagedObject)
             }
         }
     }
@@ -280,58 +278,56 @@ class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: Da
     
     // MARK: - Fetched results controller
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.delegate.providerWillChangeContent()
-        
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
         switch type {
             
-        case .Insert:
-            self.delegate.providerDidInsertSectionAtIndex(sectionIndex)
+        case .insert:
+            self.delegate.providerDidInsertSectionAtIndex(index: sectionIndex)
             
-        case .Delete:
-            self.delegate.providerDidDeleteSectionAtIndex(sectionIndex)
+        case .delete:
+            self.delegate.providerDidDeleteSectionAtIndex(index: sectionIndex)
             
         default:
             return
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         let obj = anObject as! ObjectType
 
         switch type {
             
-        case .Insert:
+        case .insert:
             
+            self.delegate.providerDidInsertItemsAtIndexPaths(items: [obj], atIndexPaths: [newIndexPath!])
             
-            self.delegate.providerDidInsertItemsAtIndexPaths([obj], atIndexPaths: [newIndexPath!])
+        case .delete:
             
-        case .Delete:
+            self.delegate.providerDidDeleteItemsAtIndexPaths(items: [obj], atIndexPaths: [indexPath!])
             
-            self.delegate.providerDidDeleteItemsAtIndexPaths([obj], atIndexPaths: [indexPath!])
+        case .update:
             
-        case .Update:
+            self.delegate.providerDidUpdateItemsAtIndexPaths(items: [obj], atIndexPaths: [indexPath!])
             
-            self.delegate.providerDidUpdateItemsAtIndexPaths([obj], atIndexPaths: [indexPath!])
-            
-        case .Move:
+        case .move:
             
             if let initiaIndexPath = indexPath, let finalIndexPath = newIndexPath {
             
                 if initiaIndexPath != finalIndexPath {
                
-                    self.delegate.providerDidMoveItem(anObject as! ObjectType, atIndexPath: indexPath!, toIndexPath: newIndexPath!)
+                    self.delegate.providerDidMoveItem(item: anObject as! ObjectType, atIndexPath: indexPath!, toIndexPath: newIndexPath!)
                 }
             }
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         self.delegate.providerDidEndChangeContent()
     }

@@ -19,53 +19,53 @@ public struct DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDe
         
     public func providerDidInsertSectionAtIndex(index: Int) {
         
-        self.tableView.insertSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidDeleteSectionAtIndex(index: Int) {
         
-        self.tableView.deleteSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
     }
     
     
-    public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
+    public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.insertRowsAtIndexPaths(atIndexPaths, withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
-    public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
+    public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.deleteRowsAtIndexPaths(atIndexPaths, withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
-    public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths: [NSIndexPath]) {
+    public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.reloadRowsAtIndexPaths(atIndexPaths, withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
-    public func providerDidMoveItem(item: ItemType, atIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+    public func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        self.tableView.deleteRowsAtIndexPaths([atIndexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
 
-        self.tableView.insertRowsAtIndexPaths([toIndexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidDeleteAllItemsInSection(section: Int) {
         
-        let sectionSet = NSIndexSet(index: section)
+        let sectionSet = IndexSet(integer: section)
         
-        self.tableView.reloadSections(sectionSet, withRowAnimation: UITableViewRowAnimation.Automatic)
+        self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
     }
 
 }
 
 public protocol TableViewCellProvider {
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell
 }
 
 
-public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType>> : NSObject, UITableViewDataSource {
+public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UITableViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType> {
         
     
     let table: UITableView
@@ -95,34 +95,34 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
     
     public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        return self.dataSource.numberOfSections() ?? 0
+        return self.dataSource.numberOfSections()
     }
     
-    public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return self.dataSource.numberOfRowsInSection(section) ?? 0
+        return self.dataSource.numberOfRowsInSection(section: section)
     }
     
-    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        return tableViewCellProvider.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        return tableViewCellProvider.tableView(tableView: tableView, cellForRowAtIndexPath: indexPath)
     }
     
-    public func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return false
     }
 
-    public func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    public func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
         
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
             
-            self.dataSource.deleteItemAtIndexPath(indexPath)
+            self.dataSource.deleteItemAtIndexPath(indexPath: indexPath)
         }
     }
 }
 
-public class PlaceholderTableViewCoordinator<CollectionType, DataSource: DataSourceProvider where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType>>:TableViewCoordinator<CollectionType, DataSource> {
+public class PlaceholderTableViewCoordinator<CollectionType, DataSource: DataSourceProvider>:TableViewCoordinator<CollectionType, DataSource> where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType> {
     
     let placeholderCells: Int
     
@@ -134,9 +134,9 @@ public class PlaceholderTableViewCoordinator<CollectionType, DataSource: DataSou
         
     }
     
-    public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-        return dataSource.isEmpty() ? placeholderCells : dataSource.numberOfRowsInSection(section)
+        return dataSource.isEmpty() ? placeholderCells : dataSource.numberOfRowsInSection(section: section)
         
     }
     

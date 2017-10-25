@@ -3,15 +3,18 @@ import Foundation
 import CoreData
 
 let kMagicalRecordDefaultBatchSize = 20000
-let kEntityNameSelector: Selector = "entityName"
 
 
 extension NSManagedObject {
-    
+
+    static var kEntityNameSelector: Selector = {
+        return #selector(getter: NSFetchRequest<NSFetchRequestResult>.entityName)
+    }()
+
     class var entityName:String {
         get {
 
-            return NSStringFromClass(self).componentsSeparatedByString(".").last!
+            return NSStringFromClass(self).components(separatedBy: ".").last!
         }
     }
     
@@ -25,7 +28,7 @@ extension NSManagedObject {
         
         let entityName = self.entityName
         
-        return NSEntityDescription.entityForName(entityName, inManagedObjectContext: context)!
+        return NSEntityDescription.entity(forEntityName: entityName, in: context)!
     }
     
     
@@ -33,7 +36,7 @@ extension NSManagedObject {
         
         let entityName = self.entityName
         
-        let entity: NSManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext: context)
+        let entity: NSManagedObject = NSEntityDescription.insertNewObject(forEntityName: entityName, into: context)
         
         return entity
     }
@@ -44,7 +47,7 @@ extension NSManagedObject {
         
         do {
             
-            object = try context.existingObjectWithID(self.objectID)
+            object = try context.existingObject(with: self.objectID)
         } catch {
             
         }
@@ -54,27 +57,27 @@ extension NSManagedObject {
     
     public class func insertInContext(context: NSManagedObjectContext) -> NSManagedObject? {
     
-        return createEntityInContext(context)
+        return createEntityInContext(context: context)
     }
     
-    public class func createFetchRequestInContext(context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func createFetchRequestInContext(context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
         
-        let request = NSFetchRequest()
+        let request = NSFetchRequest<NSFetchRequestResult>()
         
-        request.entity = entityDescriptionInContext(context)
+        request.entity = entityDescriptionInContext(context: context)
     
         return request
     }
 
     public class func truncateAllInContext(context: NSManagedObjectContext) {
         
-        let allEntities = self.findAllInContext(context)
+        let allEntities = self.findAllInContext(context: context)
         
         if let all = allEntities {
         
             for  obj in all {
             
-                obj.deleteInContext(context)
+                obj.deleteInContext(context: context)
             }
         }
 
@@ -82,39 +85,39 @@ extension NSManagedObject {
     
     public class func deleteAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) {
         
-        let itemsToDelete = findAllWithPredicate(searchTerm, inContext: context)
+        let itemsToDelete = findAllWithPredicate(searchTerm: searchTerm, inContext: context)
         
         if let items = itemsToDelete {
         
             for item in items {
             
-                item.deleteInContext(context)
+                item.deleteInContext(context: context)
             }
         }
     }
     
     public func deleteInContext(context: NSManagedObjectContext) {
         
-        context.deleteObject(self)
+        context.delete(self)
     }
     
-    public class func requestAllInContext(context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllInContext(context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
         
-        return createFetchRequestInContext(context)
+        return createFetchRequestInContext(context: context)
     }
     
-    public class func requestAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
     
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
     
         request.predicate = searchTerm
     
         return request
     }
     
-    public class func requestAllWhere(property: String, isEqualTo value: AnyObject, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllWhere(property: String, isEqualTo value: AnyObject, inContext context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
     
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
         
         let predicate = NSPredicate(format: "%K = %@", argumentArray: [property, value])
 
@@ -124,9 +127,9 @@ extension NSManagedObject {
     }
     
 
-    public class func requestFirstWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestFirstWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
 
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
         
         request.predicate = searchTerm
         
@@ -135,23 +138,23 @@ extension NSManagedObject {
         return request
     }
     
-    public class func requestFirstByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestFirstByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
 
-        let request = requestAllWhere(attribute, isEqualTo: searchValue, inContext:context)
+        let request = requestAllWhere(property: attribute, isEqualTo: searchValue, inContext:context)
 
         request.fetchLimit = 1
     
         return request
     }
     
-    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
 
-        return requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:nil, inContext:context)
+        return requestAllSortedBy(sortTerm: sortTerm, ascending:ascending, withPredicate:nil, inContext:context)
     }
     
-    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm: NSPredicate?, inContext context:NSManagedObjectContext) -> NSFetchRequest {
+    public class func requestAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm: NSPredicate?, inContext context:NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
 
-        let request = requestAllInContext(context)
+        let request = requestAllInContext(context: context)
 
         if let _ = searchTerm {
     
@@ -160,14 +163,14 @@ extension NSManagedObject {
 
         request.fetchBatchSize = defaultBatchSize()
         
-        let sortTerms = sortTerm.componentsSeparatedByString(",")
+        let sortTerms = sortTerm.components(separatedBy: ",")
         
         let sortDescriptors = sortTerms
             .map {
                 
                 (key: String) -> NSSortDescriptor in
                 
-                let components = key.componentsSeparatedByString(":")
+                let components = key.components(separatedBy: ":")
                 
                 let sortKey = components.first
                 var ascend = ascending
@@ -175,7 +178,7 @@ extension NSManagedObject {
                 if components.count > 1 {
                     
                     if let intValue = Int(components.last!) {
-                        ascend = Bool(intValue)
+                        ascend = NSNumber(value: intValue).boolValue
                     }
                 }
                 

@@ -23,9 +23,9 @@ public enum TaskStatus: Int {
 
 public class DownloadModel: NSObject, Downloadable {
     
-    public var id: String!
-    public var fileName: String!
-    public var fileURL: String!
+    public var id: String
+    public var fileName: String
+    public var fileURL: String
     public var localFileURL: String?
     
     public var status: String = TaskStatus.GettingInfo.description()
@@ -39,16 +39,16 @@ public class DownloadModel: NSObject, Downloadable {
     
     public var progress: Float = 0
     
-    public var task: NSURLSessionDownloadTask?
+    public var task: URLSessionDownloadTask?
     
-    public var startTime: NSDate?
+    public var startTime: Date?
     
     init(id: String, fileName: String, fileURL: String) {
-     
-        super.init()
-        
+
         self.id = id
         self.fileName = fileName
         self.fileURL = fileURL
+        
+        super.init()
     }
 }

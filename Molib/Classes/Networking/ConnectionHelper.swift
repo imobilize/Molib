@@ -19,11 +19,11 @@ public class ConnectionHelper: MOConnectionHelper {
         return dictionary[key]!
     }
     
-    public func absoluteURLForKey(key: String) -> NSURL {
+    public func absoluteURLForKey(key: String) -> URL {
         
         let urlString = dictionary[key]!
         
-        let url = NSURL(string: urlString)
+        let url = URL(string: urlString)
         
         return url!
     }
@@ -39,12 +39,10 @@ extension String {
             
             let str = "{\(key)}"
             
-            path = path.stringByReplacingOccurrencesOfString(str, withString: value)
-            
-            
+            path = path.replacingOccurrences(of: str, with: value)
         }
         
-        if let finalPath = path.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+        if let finalPath = path.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             path = finalPath
         }

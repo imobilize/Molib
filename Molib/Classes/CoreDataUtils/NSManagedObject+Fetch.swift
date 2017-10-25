@@ -8,64 +8,64 @@ extension NSManagedObject {
     
     public class func findAllInContext(context: NSManagedObjectContext) -> [NSManagedObject]? {
     
-        let request = requestAllInContext(context)
+        let request = requestAllInContext(context: context)
         
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
     
     public class func findAllSortedBy(sortTerm: String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
     
-        let request = requestAllSortedBy(sortTerm, ascending: ascending, inContext: context)
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending: ascending, inContext: context)
     
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
 
     public class func findAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
-        let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
     
     public class func findAllWithPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext)  -> [NSManagedObject]? {
         
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
         
         request.predicate = searchTerm
     
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
     public class func findFirstInContext(context:NSManagedObjectContext) -> NSManagedObject? {
         
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
     
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
     
     public class func findFirstByAttribute(attribute: String, withValue searchValue:AnyObject, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
-        let request = requestFirstByAttribute(attribute, withValue:searchValue, inContext:context)
+        let request = requestFirstByAttribute(attribute: attribute, withValue:searchValue, inContext:context)
         
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
 
     
     public class func findFirstOrderedByAttribute(attribute: String, ascending: Bool, inContext context: NSManagedObjectContext) -> NSManagedObject? {
         
-        let request = requestAllSortedBy(attribute, ascending:ascending, inContext:context)
+        let request = requestAllSortedBy(sortTerm: attribute, ascending:ascending, inContext:context)
 
         request.fetchLimit = 1
     
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
     
     public class func findFirstOrCreateByPredicate(searchTerm: NSPredicate, inContext context: NSManagedObjectContext) -> NSManagedObject? {
 
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
 
         request.fetchLimit = 1
 
@@ -73,11 +73,11 @@ extension NSManagedObject {
         
         var item: NSManagedObject?
         
-        let result = executeFetchRequest(request, inContext:context)
+        let result = executeFetchRequest(request: request, inContext:context)
         
         if (result?.count == 0) {
             
-            item = createEntityInContext(context)
+            item = createEntityInContext(context: context)
         } else {
             
             item = result?.first
@@ -89,11 +89,11 @@ extension NSManagedObject {
     
     public class func findFirstOrCreateByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context: NSManagedObjectContext) -> NSManagedObject? {
 
-        var result: NSManagedObject? = findFirstByAttribute(attribute, withValue:searchValue, inContext:context)
+        var result: NSManagedObject? = findFirstByAttribute(attribute: attribute, withValue:searchValue, inContext:context)
     
         if (result == nil) {
         
-            result = createEntityInContext(context)
+            result = createEntityInContext(context: context)
             
             result!.setValue(searchValue, forKey:attribute)
         }
@@ -103,42 +103,42 @@ extension NSManagedObject {
     
     public class func findFirstWithPredicate(searchTerm: NSPredicate, inContext context:NSManagedObjectContext) -> NSManagedObject? {
     
-        let request = requestFirstWithPredicate(searchTerm, inContext:context)
+        let request = requestFirstWithPredicate(searchTerm: searchTerm, inContext:context)
     
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
     
     public class func findFirstWithPredicate(searchTerm: NSPredicate, sortedBy property: String, ascending: Bool, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
-        let request = requestAllSortedBy(property, ascending:ascending, withPredicate:searchTerm, inContext:context)
+        let request = requestAllSortedBy(sortTerm: property, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
     
     
     public class func findFirstWithPredicate(searchTerm: NSPredicate, andRetrieveAttributes attributes:Array<String>, inContext context:NSManagedObjectContext) -> NSManagedObject? {
         
-        let request = createFetchRequestInContext(context)
+        let request = createFetchRequestInContext(context: context)
         request.predicate =  searchTerm
         request.propertiesToFetch = attributes
     
-        return executeFetchRequestAndReturnFirstObject(request, inContext:context)
+        return executeFetchRequestAndReturnFirstObject(request: request, inContext:context)
     }
     
     public class func findByAttribute(attribute: String, withValue searchValue: AnyObject, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
-        let request = requestAllWhere(attribute, isEqualTo:searchValue, inContext:context)
+        let request = requestAllWhere(property: attribute, isEqualTo:searchValue, inContext:context)
     
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
     public class func findByAttribute(attribute: String, withValue searchValue: NSManagedObject, andOrderBy sortTerm:String, ascending: Bool, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         let searchTerm = NSPredicate(format: "%K = %@", [attribute, searchValue])
         
-        let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
-        return executeFetchRequest(request, inContext:context)
+        return executeFetchRequest(request: request, inContext:context)
     }
     
     
@@ -147,7 +147,7 @@ extension NSManagedObject {
     
 //    #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
     
-    private class func fetchController(request: NSFetchRequest, delegate:NSFetchedResultsControllerDelegate?, useFileCache: Bool, groupedBy groupKeyPath:String?, inContext context:NSManagedObjectContext)-> NSFetchedResultsController {
+    private class func fetchController(request: NSFetchRequest<NSFetchRequestResult>, delegate:NSFetchedResultsControllerDelegate?, useFileCache: Bool, groupedBy groupKeyPath:String?, inContext context:NSManagedObjectContext)-> NSFetchedResultsController<NSFetchRequestResult> {
     
         var cacheName: String? = nil
         
@@ -162,80 +162,80 @@ extension NSManagedObject {
         return controller
     }
     
-    public class func fetchAllInContext(context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllInContext(context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
         
-        let request = requestAllInContext(context)
+        let request = requestAllInContext(context: context)
         
         request.sortDescriptors = []
         
-        let controller = fetchController(request, delegate: nil, useFileCache: false, groupedBy: nil, inContext: context)
+        let controller = fetchController(request: request, delegate: nil, useFileCache: false, groupedBy: nil, inContext: context)
         
-        performFetch(controller)
+        _ = performFetch(controller: controller)
         
         return controller
     }
 
     
-    public class func fetchAllWithDelegate(delegate: NSFetchedResultsControllerDelegate, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllWithDelegate(delegate: NSFetchedResultsControllerDelegate, inContext context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
     
-        let request = requestAllInContext(context)
+        let request = requestAllInContext(context: context)
     
-        let controller = fetchController(request, delegate: delegate, useFileCache: false, groupedBy: nil, inContext: context)
+        let controller = fetchController(request: request, delegate: delegate, useFileCache: false, groupedBy: nil, inContext: context)
     
-        performFetch(controller)
+        _ = performFetch(controller: controller)
 
         return controller
     }
     
-    public class func fetchAllGroupedBy(group: String, withPredicate searchTerm:NSPredicate, sortedBy sortTerm:String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllGroupedBy(group: String, withPredicate searchTerm:NSPredicate, sortedBy sortTerm:String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
     
-        let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
     
-        let controller = fetchController(request, delegate:delegate, useFileCache:false, groupedBy:group, inContext:context)
+        let controller = fetchController(request: request, delegate:delegate, useFileCache:false, groupedBy:group, inContext:context)
     
-        performFetch(controller)
+        _ = performFetch(controller: controller)
     
         return controller
     }
 
-    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
         
-        let request = requestAllSortedBy(sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending:ascending, withPredicate:searchTerm, inContext:context)
         
-        let controller = fetchController(request, delegate:delegate, useFileCache:false, groupedBy:nil, inContext:context)
+        let controller = fetchController(request: request, delegate:delegate, useFileCache:false, groupedBy:nil, inContext:context)
         
-        performFetch(controller)
-        
-        return controller
-    }
-    
-    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, groupBy groupingKeyPath:String, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
-    
-        return fetchAllGroupedBy(groupingKeyPath, withPredicate:searchTerm, sortedBy:sortTerm, ascending:ascending, delegate:delegate, inContext:context)
-    }
-    
-    
-    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController {
-        
-        let request = requestAllSortedBy(sortTerm, ascending: ascending, inContext: context)
-        
-        let controller = fetchController(request, delegate:delegate, useFileCache:false, groupedBy:nil, inContext:context)
-        
-        performFetch(controller)
+        _ = performFetch(controller: controller)
         
         return controller
     }
     
-    public class func executeFetchRequest(request: NSFetchRequest, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, withPredicate searchTerm:NSPredicate, groupBy groupingKeyPath:String, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
+    
+        return fetchAllGroupedBy(group: groupingKeyPath, withPredicate:searchTerm, sortedBy:sortTerm, ascending:ascending, delegate:delegate, inContext:context)
+    }
+    
+    
+    public class func fetchAllSortedBy(sortTerm: String, ascending: Bool, delegate:NSFetchedResultsControllerDelegate?, inContext context:NSManagedObjectContext) -> NSFetchedResultsController<NSFetchRequestResult> {
+        
+        let request = requestAllSortedBy(sortTerm: sortTerm, ascending: ascending, inContext: context)
+        
+        let controller = fetchController(request: request, delegate:delegate, useFileCache:false, groupedBy:nil, inContext:context)
+        
+        _ = performFetch(controller: controller)
+        
+        return controller
+    }
+    
+    public class func executeFetchRequest(request: NSFetchRequest<NSFetchRequestResult>, inContext context:NSManagedObjectContext) -> [NSManagedObject]? {
         
         var results: [NSManagedObject]?
         
-        context.performBlockAndWait { () -> Void in
+        context.performAndWait { () -> Void in
             
             var error: NSError?
             
             do {
-                results = try context.executeFetchRequest(request) as? [NSManagedObject]
+                results = try context.fetch(request) as? [NSManagedObject]
             } catch let error1 as NSError {
                 error = error1
                 results = nil
@@ -251,11 +251,11 @@ extension NSManagedObject {
         return results
     }
     
-    private class func executeFetchRequestAndReturnFirstObject(request: NSFetchRequest, inContext context:NSManagedObjectContext) -> NSManagedObject? {
+    private class func executeFetchRequestAndReturnFirstObject(request: NSFetchRequest<NSFetchRequestResult>, inContext context:NSManagedObjectContext) -> NSManagedObject? {
     
         request.fetchLimit = 1
     
-        let resultsOptional = executeFetchRequest(request, inContext:context)
+        let resultsOptional = executeFetchRequest(request: request, inContext:context)
 
         if let results = resultsOptional {
             
@@ -270,7 +270,7 @@ extension NSManagedObject {
     }
 
 
-    public class func performFetch(controller: NSFetchedResultsController) -> Bool {
+    public class func performFetch(controller: NSFetchedResultsController<NSFetchRequestResult>) -> Bool {
 
         var error: NSError? = nil
 

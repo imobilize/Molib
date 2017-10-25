@@ -34,7 +34,7 @@ public protocol LocationCoordinatorDelegate {
         self.locationManager = locationManager
         self.userDefaults = userDefaults
         
-        let dictionaryOptional = userDefaults.dictionaryForKey(kLocationDictionaryUserDefaultsKey)
+        let dictionaryOptional = userDefaults.dictionaryForKey(key: kLocationDictionaryUserDefaultsKey)
         
         if let dictionary = dictionaryOptional {
         
@@ -76,12 +76,12 @@ public protocol LocationCoordinatorDelegate {
         
         let locationDictionary = geoLocation.toDictionary()
         
-        self.userDefaults.setDictionary(locationDictionary, forKey: kLocationDictionaryUserDefaultsKey)
+        self.userDefaults.setDictionary(value: locationDictionary, forKey: kLocationDictionaryUserDefaultsKey)
         
         self.actualLocation.locationName = geoLocation.locationName
         self.actualLocation.geoPoint = geoLocation.geoPoint
         
-        self.delegate?.locationCoordinatorDidFindCurrentLocation(self, location: self.actualLocation)
+        self.delegate?.locationCoordinatorDidFindCurrentLocation(coordinator: self, location: self.actualLocation)
     }
     
     //mark: - Location Manager Delegates
@@ -90,7 +90,7 @@ public protocol LocationCoordinatorDelegate {
         
         let geoLocation = MOGeoLocation(name: NSLocalizedString("Unknown Location", comment: ""), coords: location.coordinate)
 
-        setCurrentLocation(geoLocation)
+        setCurrentLocation(geoLocation: geoLocation)
     }
     
     
@@ -99,25 +99,25 @@ public protocol LocationCoordinatorDelegate {
         let title = NSLocalizedString("Location Services Disabled", comment: "")
         let message = NSLocalizedString("You currently have all location services for this app disabled. You will need to enable them to get your current location", comment: "")
         
-       showFailedAlert(title, message: message)
+        showFailedAlert(title: title, message: message)
     }
     
-    public func locationServiceFailed(error: NSError) {
+    public func locationServiceFailed(error: Error) {
         
         let title = NSLocalizedString("Location Services Error", comment: "")
         let message = error.localizedDescription
         
-        showFailedAlert(title, message: message)
+        showFailedAlert(title: title, message: message)
 
     }
     
     func showFailedAlert(title: String, message: String) {
         
-        self.alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        self.alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
-        self.alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        self.alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.`default`, handler: nil))
         
-        self.delegate?.locationCoordinatorDidFail(self, alertController: self.alertController)
+        self.delegate?.locationCoordinatorDidFail(coordinator: self, alertController: self.alertController)
 
     }
     
@@ -127,11 +127,11 @@ public protocol LocationCoordinatorDelegate {
             
             let geoLocation = MOGeoLocation(name: name, coords: placeMark.location!.coordinate)
             
-            setCurrentLocation(geoLocation)
+            setCurrentLocation(geoLocation: geoLocation)
         }
     }
     
-    public func geoCodeFailed(error: NSError) {
+    public func geoCodeFailed(error: Error) {
         
     }
     

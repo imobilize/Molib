@@ -84,7 +84,7 @@ extension UIViewController {
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.`default`, handler: nil))
         
         self.presentViewController(viewController: alertController)
     }

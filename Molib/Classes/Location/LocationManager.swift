@@ -11,13 +11,13 @@ let kLocationErrorCode = 901
 
     func locationServicesDisabled()
 
-    func locationServiceFailed(error: NSError)
+    func locationServiceFailed(error: Error)
 
     func locationFound(location: CLLocation)
  
     func geoCodeFound(placeMark: CLPlacemark)
     
-    func geoCodeFailed(error: NSError)
+    func geoCodeFailed(error: Error)
 }
 
 
@@ -50,16 +50,16 @@ let kLocationErrorCode = 901
 
         let authStatus = CLLocationManager.authorizationStatus()
     
-        handleAuthorisationForState(authStatus)
+        handleAuthorisationForState(authStatus: authStatus)
     }
     
     func handleAuthorisationForState(authStatus: CLAuthorizationStatus) {
         
         switch (authStatus) {
             
-        case .NotDetermined:
+        case .notDetermined:
             
-            if manager.respondsToSelector(#selector(CLLocationManager.requestWhenInUseAuthorization)) {
+            if manager.responds(to: #selector(CLLocationManager.requestWhenInUseAuthorization)) {
                 
                 manager.requestWhenInUseAuthorization()
            
@@ -71,22 +71,22 @@ let kLocationErrorCode = 901
             
             break
         
-        case .AuthorizedAlways:
+        case .authorizedAlways:
             
             manager.startUpdatingLocation()
             
-        case .AuthorizedWhenInUse:
+        case .authorizedWhenInUse:
             
             manager.startUpdatingLocation()
             
             
-        case .Denied:
+        case .denied:
             
             let userInfo = [NSLocalizedDescriptionKey: "You currently have all location services for this app disabled. You will need to enable them to get your current location"]
             
             let error = NSError(domain: "LocationManager", code: kLocationErrorCode, userInfo: userInfo)
             
-            delegate?.locationServiceFailed(error)
+            delegate?.locationServiceFailed(error: error)
 
         default:
             break
@@ -97,13 +97,13 @@ let kLocationErrorCode = 901
     
     
     //mark: - CLLocationManager Delegate Methods
-    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-    
-        handleAuthorisationForState(status)
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+
+        handleAuthorisationForState(authStatus: status)
     }
 
-    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
- 
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
         if let location = locations.last {
 
             let eventDate = location.timestamp
@@ -114,9 +114,9 @@ let kLocationErrorCode = 901
             // If the event is recent, do something with it.
                 currentLocation = location
                 
-                delegate?.locationFound(currentLocation!)
+                delegate?.locationFound(location: currentLocation!)
                 
-                reverseGeocodeLocation(currentLocation!)
+                reverseGeocodeLocation(geoLocation: currentLocation!)
             }
 
             manager.stopUpdatingLocation()
@@ -127,24 +127,26 @@ let kLocationErrorCode = 901
             
             let error = NSError(domain: "LocationManager", code: kLocationErrorCode, userInfo: userInfo)
             
-            delegate?.locationServiceFailed(error)
+            delegate?.locationServiceFailed(error: error)
         }
     }
     
-    public func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 
-        let clErrorCode = CLError(rawValue: error.code)
+        let nsError = error as NSError
 
-        switch (clErrorCode!) {
+        let clErrorCode = CLError(_nsError: nsError) // (_nsError: error._code)
+
+        switch (clErrorCode) {
         
-        case .Denied:
+        case CLError.denied:
     
             delegate?.locationServicesDisabled()
             break
     
         default:
     
-            delegate?.locationServiceFailed(error)
+            delegate?.locationServiceFailed(error: error)
             break
         }
     
@@ -162,7 +164,7 @@ let kLocationErrorCode = 901
             
             let location = CLLocation(latitude:coordinate.latitude, longitude:coordinate.longitude)
     
-            distance = distanceFrom(myLocation.coordinate, to:location.coordinate)
+            distance = distanceFrom(location1: myLocation.coordinate, to:location.coordinate)
         }
         
         return distance / 1000;
@@ -181,29 +183,27 @@ let kLocationErrorCode = 901
         
         let reverseGeocoder = CLGeocoder()
             
-        reverseGeocoder.reverseGeocodeLocation(geoLocation) { (placeMarks: [CLPlacemark]?, error:NSError?) in
+        reverseGeocoder.reverseGeocodeLocation(geoLocation) { (placeMarks: [CLPlacemark]?, error: Error?) in
             
                 if placeMarks != nil {
                     
                     if let placeMark = placeMarks?.first {
-                        self.delegate?.geoCodeFound(placeMark)
+                        self.delegate?.geoCodeFound(placeMark: placeMark)
                     }
                 } else {
                     
-                    self.delegate?.geoCodeFailed(error!)
+                    self.delegate?.geoCodeFailed(error: error!)
                 }
             }
-        
     }
     
     func reverseGeocodeCurrentLocation() {
         
         if let location = self.currentLocation {
             
-            self.reverseGeocodeLocation(location)
+            self.reverseGeocodeLocation(geoLocation: location)
         }
     }
-    
 }
 
 #endif

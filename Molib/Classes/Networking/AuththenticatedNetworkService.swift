@@ -14,7 +14,6 @@ public protocol AuththenticatedNetworkServiceDelegate {
     func authenticatedNetworkService(service: AuththenticatedNetworkService, didReauthenticateWithToken: String)
     
     func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithToken: String)
-    
 }
 
 public class AuththenticatedNetworkService: NetworkService {
@@ -34,34 +33,33 @@ public class AuththenticatedNetworkService: NetworkService {
     
     public func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
         
-        let taskCompletion = authenticatedCheckResponseHandler(request)
+        let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
         let authenticatedCheckTask = DataRequestTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
         
-        let operation = networkService.enqueueNetworkRequest(authenticatedCheckTask)
+        let operation = networkService.enqueueNetworkRequest(request: authenticatedCheckTask)
         
         return operation
     }
     
-    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: NSURL) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: URL) -> UploadOperation? {
         
-        let taskCompletion = authenticatedCheckResponseHandler(request)
+        let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
         let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
-        let operation = networkService.enqueueNetworkUploadRequest(authenticatedCheckTask, fileURL: fileURL)
+        let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask, fileURL: fileURL)
         
         return operation
-        
     }
     
-    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: NSData) -> UploadOperation? {
+    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: Data) -> UploadOperation? {
         
-        let taskCompletion = authenticatedCheckResponseHandler(request)
+        let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
         let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
-        let operation = networkService.enqueueNetworkUploadRequest(authenticatedCheckTask, data: data)
+        let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask, data: data)
         
         return operation
     }
@@ -77,33 +75,33 @@ public class AuththenticatedNetworkService: NetworkService {
         
         let taskCompletion: DataResponseCompletion = {
             
-            (dataOptional: NSData?, errorOptional: NSError?)  in
+            (dataOptional: Data?, errorOptional: Error?)  in
             
             if let error = errorOptional {
                 
-                let refreshToken = self.userDefaults.secureStringForKey(kRefreshTokenKey)
+                let refreshToken = self.userDefaults.secureStringForKey(key: kRefreshTokenKey)
                 
-                if error.code == 401 {
+                if (error as NSError).code == 401 {
                     
-                    let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(self)
+                    let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(service: self)
                     
                     if shouldRefresh == true && refreshToken != nil {
                         
-                        self.handleAuthtenticationErrorForTask(request)
+                        self.handleAuthtenticationErrorForTask(networkRequest: request)
                         
                     } else {
                         
-                        request.handleResponse(dataOptional, errorOptional: errorOptional)
+                        request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
                     }
                     
                     
                 } else {
                     
-                    request.handleResponse(dataOptional, errorOptional: errorOptional)
+                    request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
                 }
             } else {
                 
-                request.handleResponse(dataOptional, errorOptional: errorOptional)
+                request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
             }
         }
         
@@ -112,8 +110,8 @@ public class AuththenticatedNetworkService: NetworkService {
     
     func handleAuthtenticationErrorForTask(networkRequest: NetworkRequest) {
         
-        let refreshToken = userDefaults.secureStringForKey(kRefreshTokenKey)
-        let profileID = userDefaults.secureStringForKey(kProfileID)
+        let refreshToken = userDefaults.secureStringForKey(key: kRefreshTokenKey)
+        let profileID = userDefaults.secureStringForKey(key: kProfileID)
         
         if let token = refreshToken {
             
@@ -123,11 +121,11 @@ public class AuththenticatedNetworkService: NetworkService {
                 refreshTokenParameters[kProfileID] = profileID
             }
             
-            let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(self)
+            let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(service: self)
             
-            if let request = NSURLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
+            if let request = URLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
                 
-                let taskCompletion = refreshTokenResponseHandler(networkRequest)
+                let taskCompletion = refreshTokenResponseHandler(initialNetworkRequest: networkRequest)
                 
                 let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
                 
@@ -139,31 +137,31 @@ public class AuththenticatedNetworkService: NetworkService {
             
             let error = NSError(domain: "Authenticated Service", code: 101, userInfo: userInfo)
             
-            networkRequest.handleResponse(nil, errorOptional: error)
+            networkRequest.handleResponse(dataOptional: nil, errorOptional: error)
         }
     }
     
     func refreshTokenResponseHandler(initialNetworkRequest: NetworkRequest) -> JSONResponseCompletion {
         
-        let refreshToken = userDefaults.secureStringForKey(kRefreshTokenKey)
+        let refreshToken = userDefaults.secureStringForKey(key: kRefreshTokenKey)
         
         let taskCompletion: JSONResponseCompletion = {
             
-            (responseOptional: AnyObject?, errorOptional: NSError?) in
+            (responseOptional: AnyObject?, errorOptional: Error?) in
             
             if errorOptional == nil {
                 
-                self.delegate!.authenticatedNetworkService(self, didReauthenticateWithToken: refreshToken!)
-                
-                self.networkService.enqueueNetworkRequest(initialNetworkRequest)
+                self.delegate?.authenticatedNetworkService(service: self, didReauthenticateWithToken: refreshToken!)
+
+                _ = self.networkService.enqueueNetworkRequest(request: initialNetworkRequest)
                 
             } else {
                 
-                self.delegate!.authenticatedNetworkService(self, failedToAuthenticateWithToken: refreshToken!)
+                self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithToken: refreshToken!)
                 
-                initialNetworkRequest.handleResponse(nil, errorOptional: errorOptional)
+                initialNetworkRequest.handleResponse(dataOptional: nil, errorOptional: errorOptional)
             }
-        }
+            }
         
         return taskCompletion
     }

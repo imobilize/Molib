@@ -60,7 +60,7 @@ public class Menu {
         }
     }
     
-    public var itemViewSize: CGSize = CGSizeMake(48, 48)
+    public var itemViewSize = CGSize(width: 48, height: 48)
     
     public var baseViewSize: CGSize?
     
@@ -74,43 +74,43 @@ public class Menu {
         layoutButtons()
     }
     
-    public func open(duration duration: NSTimeInterval = 0.15, delay: NSTimeInterval = 0, usingSpringWithDamping: CGFloat = 0.5, initialSpringVelocity: CGFloat = 0, options: UIViewAnimationOptions = [], animations: ((UIView) -> Void)? = nil, completion: ((UIView) -> Void)? = nil) {
+    public func open(duration: TimeInterval = 0.15, delay: TimeInterval = 0, usingSpringWithDamping: CGFloat = 0.5, initialSpringVelocity: CGFloat = 0, options: UIViewAnimationOptions = [], animations: ((UIView) -> Void)? = nil, completion: ((UIView) -> Void)? = nil) {
         if enabled {
             disable()
             switch direction {
             case .Up:
-                openUpAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                openUpAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Down:
-                openDownAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                openDownAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Left:
-                openLeftAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                openLeftAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Right:
-                openRightAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                openRightAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Circle:
-                openCircleAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                openCircleAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             }
         }
     }
     
-    public func close(duration duration: NSTimeInterval = 0.15, delay: NSTimeInterval = 0, usingSpringWithDamping: CGFloat = 0.5, initialSpringVelocity: CGFloat = 0, options: UIViewAnimationOptions = [], animations: ((UIView) -> Void)? = nil, completion: ((UIView) -> Void)? = nil) {
+    public func close(duration: TimeInterval = 0.15, delay: TimeInterval = 0, usingSpringWithDamping: CGFloat = 0.5, initialSpringVelocity: CGFloat = 0, options: UIViewAnimationOptions = [], animations: ((UIView) -> Void)? = nil, completion: ((UIView) -> Void)? = nil) {
         if enabled {
             disable()
             switch direction {
             case .Up:
-                closeUpAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                closeUpAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Down:
-                closeDownAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                closeDownAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Left:
-                closeLeftAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                closeLeftAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Right:
-                closeRightAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                closeRightAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             case .Circle:
-                closeCircleAnimation(duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
+                closeCircleAnimation(duration: duration, delay: delay, usingSpringWithDamping: usingSpringWithDamping, initialSpringVelocity: initialSpringVelocity, options: options, animations: animations, completion: completion)
             }
         }
     }
     
-    private func openUpAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    private func openUpAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             var base: UIView?
             for i in 1..<v.count {
@@ -118,9 +118,9 @@ public class Menu {
                     base = v[0]
                 }
                 let view: UIView = v[i]
-                view.hidden = false
+                view.isHidden = false
                 
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -131,19 +131,19 @@ public class Menu {
                                             animations?(view)
                 }) { [unowned self] _ in
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = true
         }
     }
     
-    public func closeUpAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    public func closeUpAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             for i in 1..<v.count {
                 let view: UIView = v[i]
                 
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -153,16 +153,16 @@ public class Menu {
                                             view.frame.origin.y = self.origin.y
                                             animations?(view)
                 }) { [unowned self] _ in
-                    view.hidden = true
+                    view.isHidden = true
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = false
         }
     }
     
-    private func openDownAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    private func openDownAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             var base: UIView?
             for i in 1..<v.count {
@@ -171,10 +171,10 @@ public class Menu {
                 }
                 
                 let view: UIView = v[i]
-                view.hidden = false
+                view.isHidden = false
                 
                 let h: CGFloat = nil == baseViewSize ? itemViewSize.height : baseViewSize!.height
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -185,20 +185,20 @@ public class Menu {
                                             animations?(view)
                 }) { [unowned self] _ in
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = true
         }
     }
     
-    public func closeDownAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    public func closeDownAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             for i in 1..<v.count {
                 let view: UIView = v[i]
                 
                 let h: CGFloat = nil == baseViewSize ? itemViewSize.height : baseViewSize!.height
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -208,16 +208,16 @@ public class Menu {
                                             view.frame.origin.y = self.origin.y + h
                                             animations?(view)
                 }) { [unowned self] _ in
-                    view.hidden = true
+                    view.isHidden = true
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = false
         }
     }
     
-    private func openLeftAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    private func openLeftAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             var base: UIView?
             for i in 1..<v.count {
@@ -226,9 +226,9 @@ public class Menu {
                 }
                 
                 let view: UIView = v[i]
-                view.hidden = false
+                view.isHidden = false
                 
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -239,18 +239,18 @@ public class Menu {
                                             animations?(view)
                 }) { [unowned self] _ in
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = true
         }
     }
     
-    public func closeLeftAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    public func closeLeftAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             for i in 1..<v.count {
                 let view: UIView = v[i]
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -260,16 +260,16 @@ public class Menu {
                                             view.frame.origin.x = self.origin.x
                                             animations?(view)
                 }) { [unowned self] _ in
-                    view.hidden = true
+                    view.isHidden = true
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = false
         }
     }
     
-    private func openRightAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    private func openRightAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             var base: UIView?
             for i in 1..<v.count {
@@ -277,10 +277,10 @@ public class Menu {
                     base = v[0]
                 }
                 let view: UIView = v[i]
-                view.hidden = false
+                view.isHidden = false
                 
                 let h: CGFloat = nil == baseViewSize ? itemViewSize.height : baseViewSize!.height
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -291,20 +291,20 @@ public class Menu {
                                             animations?(view)
                 }) { [unowned self] _ in
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = true
         }
     }
     
-    public func closeRightAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    public func closeRightAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             for i in 1..<v.count {
                 let view: UIView = v[i]
                 
                 let w: CGFloat = nil == baseViewSize ? itemViewSize.width : baseViewSize!.width
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -314,20 +314,20 @@ public class Menu {
                                             view.frame.origin.x = self.origin.x + w
                                             animations?(view)
                 }) { [unowned self] _ in
-                    view.hidden = true
+                    view.isHidden = true
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = false
         }
     }
     
-    private func openCircleAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    private func openCircleAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         
         if let v: Array<UIView> = views {
             
-            v[0].layer.addAnimation(rotateButton(0.1, fromValue: 0.0, toValue: CGFloat(M_PI_4)), forKey: nil)
+            v[0].layer.add(rotateButton(duration: 0.1, fromValue: 0.0, toValue: CGFloat(Double.pi/4)), forKey: nil)
             
             var base: UIView?
             for i in 1..<v.count {
@@ -335,16 +335,16 @@ public class Menu {
                     base = v[0]
                 }
                 let view: UIView = v[i]
-                view.hidden = false
+                view.isHidden = false
                 
-                let angle = M_PI + M_PI / Double(v.count) * Double(i)
+                let angle = Double.pi + Double.pi / Double(v.count) * Double(i)
                 
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
                                            options: options,
-                                           animations: { _ in
+                                           animations: {
                                             view.alpha = 1
                                             view.frame.origin.x = base!.frame.origin.x + self.radius * (cos(CGFloat(angle)))
                                             view.frame.origin.y = base!.frame.origin.y + self.radius * (sin(CGFloat(angle)))
@@ -352,22 +352,22 @@ public class Menu {
                                             animations?(view)
                 }) { [unowned self] _ in
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = true
         }
     }
     
-    public func closeCircleAnimation(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
+    public func closeCircleAnimation(duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: ((UIView) -> Void)?, completion: ((UIView) -> Void)?) {
         if let v: Array<UIView> = views {
             
-            v[0].layer.addAnimation(rotateButton(0.1, fromValue: CGFloat(M_PI_4), toValue: 0.0), forKey: nil)
+            v[0].layer.add(rotateButton(duration: 0.1, fromValue: CGFloat(Double.pi/4), toValue: 0.0), forKey: nil)
             
             for i in 1..<v.count {
                 let view: UIView = v[i]
                 
-                UIView.animateWithDuration(Double(i) * duration,
+                UIView.animate(withDuration: Double(i) * duration,
                                            delay: delay,
                                            usingSpringWithDamping: usingSpringWithDamping,
                                            initialSpringVelocity: initialSpringVelocity,
@@ -378,9 +378,9 @@ public class Menu {
                                             view.frame.origin.y = self.origin.y
                                             animations?(view)
                 }) { [unowned self] _ in
-                    view.hidden = true
+                    view.isHidden = true
                     completion?(view)
-                    self.enable(view)
+                    self.enable(view: view)
                 }
             }
             opened = false
@@ -399,7 +399,7 @@ public class Menu {
         
         rotateAnimation.fillMode = kCAFillModeForwards
         
-        rotateAnimation.removedOnCompletion = false
+        rotateAnimation.isRemovedOnCompletion = false
         
         return rotateAnimation
     }
@@ -415,7 +415,7 @@ public class Menu {
                     view.layer.zPosition = 10000
                 } else {
                     view.alpha = 0
-                    view.hidden = true
+                    view.isHidden = true
                     view.frame.size = itemViewSize
                     view.frame.origin.x = origin.x + (size.width - itemViewSize.width) / 2
                     view.frame.origin.y = origin.y + (size.height - itemViewSize.height) / 2

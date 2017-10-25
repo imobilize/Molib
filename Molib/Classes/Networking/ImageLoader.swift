@@ -18,7 +18,7 @@ public protocol ImageLoader {
     
     func dequeueImageView(imageView: UIImageView)
     
-    func loadImage(src: String, completion: ImageResponseCompletion) -> Operation?
+    func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation?
 
     func dequeueAll()
 }
@@ -39,7 +39,7 @@ public class AsyncImageLoader: ImageLoader {
     
     public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?, refreshCache: Bool) {
         
-        dequeueImageView(imageView)
+        dequeueImageView(imageView: imageView)
         
         currentTag += 1
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
@@ -53,19 +53,19 @@ public class AsyncImageLoader: ImageLoader {
         
         let imageViewKey = String(format: "%ld", imageView.tag)
         
-        loadImageSrc(imageURL, forImageView:imageView, identifier: imageViewKey, loadType: refreshCache ? .RefreshCache : .Normal)
+        loadImageSrc(src: imageURL, forImageView:imageView, identifier: imageViewKey, loadType: refreshCache ? .RefreshCache : .Normal)
         
     }
 
     public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?) {
         
-        enqueueImageView(imageView, withURL: imageURL, placeholder: placeholder, refreshCache: false)
+        enqueueImageView(imageView: imageView, withURL: imageURL, placeholder: placeholder, refreshCache: false)
         
     }
     
     public func enqueueImageView(imageView: UIImageView, withAVAssetMediaURL mediaURL: String, placeholder: String?) {
         
-        dequeueImageView(imageView)
+        dequeueImageView(imageView: imageView)
         
         currentTag += 1
         currentTag = (self.currentTag == NSIntegerMax ? 1 : self.currentTag);
@@ -79,7 +79,7 @@ public class AsyncImageLoader: ImageLoader {
         
         let imageViewKey = String(format: "%ld", imageView.tag)
     
-        loadImageSrc(mediaURL, forImageView:imageView, identifier: imageViewKey, loadType: .AVAssetThumbnail)
+        loadImageSrc(src: mediaURL, forImageView:imageView, identifier: imageViewKey, loadType: .AVAssetThumbnail)
     }
 
     public func dequeueImageView(imageView: UIImageView) {
@@ -92,30 +92,30 @@ public class AsyncImageLoader: ImageLoader {
                 
             imageOperation!.cancel()
                 
-            loadingCache.removeValueForKey(imageViewKey)
+            loadingCache.removeValue(forKey: imageViewKey)
         }
     }
     
     
-    public func loadVideoThumbnialImage(src: String, completion: ImageResponseCompletion) -> Operation {
+    public func loadVideoThumbnialImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation {
     
         let operation = VideoThumbnailRequestOperation(mediaURL: src)
         
-        operation.start(completion)
+        operation.start(completion: completion)
         
         return operation
 
     }
     
-    public func loadImage(src: String, completion: ImageResponseCompletion) -> Operation? {
+    public func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation? {
         
         var operation: Operation?
         
-        if let imageRequest =  NSURLRequest.GETRequest(src) {
+        if let imageRequest =  NSURLRequest.GETRequest(urlString: src) {
             
-            let imageRequest = ImageRequestTask(urlRequest: imageRequest, taskCompletion: completion)
+            let imageRequest = ImageRequestTask(urlRequest: imageRequest as URLRequest, taskCompletion: completion)
             
-            let imageOperation = imageService.enqueueImageRequest(imageRequest)
+            let imageOperation = imageService.enqueueImageRequest(request: imageRequest)
             
             operation = imageOperation
         }
@@ -127,27 +127,27 @@ public class AsyncImageLoader: ImageLoader {
 
     private func loadImageSrc(src: String, forImageView imageView: UIImageView, identifier: String, loadType: ImageLoadType) {
      
-        if let imageRequest =  NSURLRequest.GETRequest(src) {
+        if let imageRequest =  NSURLRequest.GETRequest(urlString: src) {
             
-            let imageRequestTaskCompletion = { (imageURL: String, image: UIImage?, error: NSError?) in
+            let imageRequestTaskCompletion = { (imageURL: String, image: UIImage?, error: Error?) in
 
-                self.handleImageResponse(imageView, image: image, identifier: identifier)
+                self.handleImageResponse(imageView: imageView, image: image, identifier: identifier)
             }
             
-            let imageRequest = ImageRequestTask(urlRequest: imageRequest, taskCompletion: imageRequestTaskCompletion)
-            
+            let imageRequest = ImageRequestTask(urlRequest: imageRequest as URLRequest, taskCompletion: imageRequestTaskCompletion)
+
             let imageOperation: Operation
             
             switch loadType {
           
             case .RefreshCache:
-                imageOperation = imageService.enqueueImageRequestRefreshingCache(imageRequest)
+                imageOperation = imageService.enqueueImageRequestRefreshingCache(request: imageRequest)
 
             case .AVAssetThumbnail:
-                imageOperation = loadVideoThumbnialImage(src, completion: imageRequestTaskCompletion)
+                imageOperation = loadVideoThumbnialImage(src: src, completion: imageRequestTaskCompletion)
 
             default:
-                imageOperation = imageService.enqueueImageRequest(imageRequest)
+                imageOperation = imageService.enqueueImageRequest(request: imageRequest)
 
             }
 
