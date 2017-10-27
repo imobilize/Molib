@@ -8,7 +8,7 @@ public class SDWebImageService: ImageService {
     
     public init() {}
     
-    public func enqueueImageRequest(request: ImageRequest) -> Operation {
+    public func enqueueImageRequest(request: ImageRequest) -> NetworkOperation {
         
         let operation = imageManager.loadImage(with: request.urlRequest.url, options: SDWebImageOptions.highPriority, progress: nil) { (image, data, error, cacheType, finished, url) in
 
@@ -20,7 +20,7 @@ public class SDWebImageService: ImageService {
         return SDImageOperation(imageOperation: operation!)
     }
     
-    public func enqueueImageRequestRefreshingCache(request: ImageRequest) -> Operation {
+    public func enqueueImageRequestRefreshingCache(request: ImageRequest) -> NetworkOperation {
         
         let options = SDWebImageOptions.refreshCached.union(.retryFailed)
 
@@ -35,7 +35,7 @@ public class SDWebImageService: ImageService {
     }
 }
 
-struct SDImageOperation: Operation {
+struct SDImageOperation: NetworkOperation {
     
     let imageOperation: SDWebImageOperation
     

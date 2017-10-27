@@ -1,15 +1,13 @@
-
 import Foundation
-
 
 let kNetworkServiceClass = "NetworkService"
 
 public class NetworkServiceFactory {
     
-    private static var serviceInstance: NetworkService?
+    private static var serviceInstance: NetworkOperationService?
     private static var authenticatedNetworkServiceInstance: AuththenticatedNetworkService?
     
-    public static func networkService() -> NetworkService {
+    public static func networkService() -> NetworkOperationService {
         
         if serviceInstance == nil {
             
@@ -22,18 +20,16 @@ public class NetworkServiceFactory {
     public static func authenticatedNetworkService() -> AuththenticatedNetworkService {
         
         if authenticatedNetworkServiceInstance == nil {
-            
-            let userDefaults = UserDefaultsImpl()
-            
-            authenticatedNetworkServiceInstance = AuththenticatedNetworkService(networkService: networkService(), userDefaults: userDefaults)
+
+            authenticatedNetworkServiceInstance = AuththenticatedNetworkService(networkService: networkService())
         }
         
         return authenticatedNetworkServiceInstance!
     }
     
-    private static func setupNetworkService() -> NetworkService {
+    private static func setupNetworkService() -> NetworkOperationService {
         
-        let networkService: NetworkService
+        let networkService: NetworkOperationService
         
         let infoDictionary = Bundle.main.infoDictionary
         
@@ -49,8 +45,7 @@ public class NetworkServiceFactory {
             
         default:
             
-            networkService = AlamoFireNetworkService()
-            
+            networkService = AlamofireNetworkOperationService()
         }
         
         return networkService

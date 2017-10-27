@@ -1,100 +1,80 @@
 
 import Foundation
 
-public let kRefreshTokenKey = "refreshToken"
-public let kProfileID = "profileId"
-
-
 public protocol AuththenticatedNetworkServiceDelegate {
     
     func authenticatedNetworkServiceShouldReAuthenticate(service: AuththenticatedNetworkService) -> Bool
     
-    func authenticatedNetworkServiceURLForAuthentication(service: AuththenticatedNetworkService) -> String
+    func authenticatedNetworkServiceURLRequestForAuthentication(service: AuththenticatedNetworkService) -> URLRequest
     
-    func authenticatedNetworkService(service: AuththenticatedNetworkService, didReauthenticateWithToken: String)
+    func authenticatedNetworkServiceDidReauthenticate(service: AuththenticatedNetworkService)
     
-    func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithToken: String)
+    func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithError: Error)
 }
 
-public class AuththenticatedNetworkService: NetworkService {
+public class AuththenticatedNetworkService: NetworkOperationService {
     
     public var delegate: AuththenticatedNetworkServiceDelegate?
     
-    let networkService: NetworkService
-    
-    let userDefaults: UserDefaults
-    
-    public init(networkService: NetworkService, userDefaults: UserDefaults) {
+    let networkService: NetworkOperationService
+
+    public init(networkService: NetworkOperationService) {
         
         self.networkService = networkService
-        self.userDefaults = userDefaults
     }
-    
-    
-    public func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
-        
+
+    public func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation? {
+
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
-        
+
         let authenticatedCheckTask = DataRequestTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
-        
+
         let operation = networkService.enqueueNetworkRequest(request: authenticatedCheckTask)
-        
+
         return operation
     }
-    
-    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: URL) -> UploadOperation? {
+
+    public func cancelAllOperations() {
+        self.networkService.cancelAllOperations()
+    }
+
+
+    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation? {
         
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
         let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
-        let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask, fileURL: fileURL)
+        let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask)
         
         return operation
     }
     
-    public func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: Data) -> UploadOperation? {
-        
+    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation? {
+
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
-        
-        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
-        
-        let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask, data: data)
-        
+
+        let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, downloadLocationURL: request.downloadLocationURL, fileName: request.fileName, taskCompletion: taskCompletion)
+        let operation = networkService.enqueueNetworkDownloadRequest(request: authenticatedCheckTask)
+
         return operation
-    }
-    
-    public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
-        
-        return nil
-        
     }
     
     
     func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
         
-        let taskCompletion: DataResponseCompletion = {
-            
-            (dataOptional: Data?, errorOptional: Error?)  in
+        let taskCompletion: DataResponseCompletion = { (dataOptional: Data?, errorOptional: Error?)  in
             
             if let error = errorOptional {
-                
-                let refreshToken = self.userDefaults.secureStringForKey(key: kRefreshTokenKey)
-                
+
                 if (error as NSError).code == 401 {
                     
-                    let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(service: self)
-                    
-                    if shouldRefresh == true && refreshToken != nil {
-                        
+                    if let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(service: self), shouldRefresh == true {
+
                         self.handleAuthtenticationErrorForTask(networkRequest: request)
-                        
                     } else {
-                        
                         request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
                     }
-                    
-                    
                 } else {
                     
                     request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
@@ -109,28 +89,15 @@ public class AuththenticatedNetworkService: NetworkService {
     }
     
     func handleAuthtenticationErrorForTask(networkRequest: NetworkRequest) {
-        
-        let refreshToken = userDefaults.secureStringForKey(key: kRefreshTokenKey)
-        let profileID = userDefaults.secureStringForKey(key: kProfileID)
-        
-        if let token = refreshToken {
-            
-            var refreshTokenParameters = [kRefreshTokenKey: token]
-            
-            if profileID != nil {
-                refreshTokenParameters[kProfileID] = profileID
-            }
-            
-            let refreshTokenURL = self.delegate!.authenticatedNetworkServiceURLForAuthentication(service: self)
-            
-            if let request = URLRequest.POSTRequestJSON(refreshTokenURL, bodyParameters: refreshTokenParameters) {
-                
-                let taskCompletion = refreshTokenResponseHandler(initialNetworkRequest: networkRequest)
-                
-                let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
-                
-                networkService.enqueueNetworkRequest(authenticationTask)
-            }
+
+        if let request = delegate?.authenticatedNetworkServiceURLRequestForAuthentication(service: self) {
+
+            let taskCompletion = refreshTokenResponseHandler(initialNetworkRequest: networkRequest)
+
+            let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
+
+            networkService.enqueueNetworkRequest(request: authenticationTask)
+
         } else {
             
             let userInfo = [NSLocalizedDescriptionKey: "User not authenticated to use this service"]
@@ -142,28 +109,25 @@ public class AuththenticatedNetworkService: NetworkService {
     }
     
     func refreshTokenResponseHandler(initialNetworkRequest: NetworkRequest) -> JSONResponseCompletion {
-        
-        let refreshToken = userDefaults.secureStringForKey(key: kRefreshTokenKey)
-        
+
         let taskCompletion: JSONResponseCompletion = {
             
             (responseOptional: AnyObject?, errorOptional: Error?) in
             
             if errorOptional == nil {
                 
-                self.delegate?.authenticatedNetworkService(service: self, didReauthenticateWithToken: refreshToken!)
+                self.delegate?.authenticatedNetworkServiceDidReauthenticate(service: self)
 
                 _ = self.networkService.enqueueNetworkRequest(request: initialNetworkRequest)
                 
             } else {
                 
-                self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithToken: refreshToken!)
+                self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithError: errorOptional!)
                 
                 initialNetworkRequest.handleResponse(dataOptional: nil, errorOptional: errorOptional)
             }
-            }
+        }
         
         return taskCompletion
     }
-
 }

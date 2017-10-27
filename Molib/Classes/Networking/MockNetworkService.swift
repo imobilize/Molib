@@ -25,20 +25,20 @@ public class MockRequestQueue {
 }
 
 
-class MockNetworkService : NetworkService {
-    
-    func enqueueNetworkRequest(request: NetworkRequest) -> Operation? {
-        
+class MockNetworkService : NetworkOperationService {
+
+    func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation? {
+
         let operation = MockRequestOperation(request: request.urlRequest)
-        
+
         let completion = completionForRequest(request: request)
-        
+
         operation.startConnection(completion: completion)
-        
+
         return operation
     }
-    
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, fileURL: URL) -> UploadOperation? {
+
+    func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation? {
         
         let operation = MockRequestOperation(request: request.urlRequest)
         
@@ -50,27 +50,17 @@ class MockNetworkService : NetworkService {
 
     }
     
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest, data: Data) -> UploadOperation? {
-        
-        let operation = MockRequestOperation(request: request.urlRequest)
-        
-        let completion = completionForRequest(request: request)
-        
-        operation.startConnection(completion: completion)
-        
-        return operation
-
-    }
-    
-    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> DownloadOperation? {
+    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation? {
         
         return nil
-        
     }
-    
+
+    func cancelAllOperations() {
+
+    }
 }
 
-struct MockRequestOperation: UploadOperation {
+struct MockRequestOperation: NetworkUploadOperation {
     
     let request: URLRequest
     
@@ -128,7 +118,7 @@ struct MockRequestOperation: UploadOperation {
         
     }
     
-    func registerProgressUpdate(progressUpdate: ProgressUpdate) {
+    func registerProgressUpdate(progressUpdate: @escaping ProgressUpdate) {
         
     }
 }

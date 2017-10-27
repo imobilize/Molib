@@ -18,23 +18,36 @@ public protocol ImageLoader {
     
     func dequeueImageView(imageView: UIImageView)
     
-    func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation?
+    func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> NetworkOperation?
 
     func dequeueAll()
 }
 
+public protocol ImageService {
+
+    func enqueueImageRequest(request: ImageRequest) -> NetworkOperation
+
+    func enqueueImageRequestRefreshingCache(request: ImageRequest) -> NetworkOperation
+}
+
+public protocol ImageRequest {
+
+    var urlRequest: URLRequest { get }
+
+    func handleResponse(imageURL: String, image: UIImage?, error: Error?)
+}
 
 public class AsyncImageLoader: ImageLoader {
 
     let imageService: ImageService
     var currentTag: Int
-    var loadingCache: Dictionary<String, Operation>
+    var loadingCache: Dictionary<String, NetworkOperation>
     
     public init(imageService: ImageService) {
     
         self.currentTag = 0
         self.imageService = imageService
-        self.loadingCache = Dictionary<String, Operation>()
+        self.loadingCache = Dictionary<String, NetworkOperation>()
     }
     
     public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder:String?, refreshCache: Bool) {
@@ -97,7 +110,7 @@ public class AsyncImageLoader: ImageLoader {
     }
     
     
-    public func loadVideoThumbnialImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation {
+    public func loadVideoThumbnialImage(src: String, completion: @escaping ImageResponseCompletion) -> NetworkOperation {
     
         let operation = VideoThumbnailRequestOperation(mediaURL: src)
         
@@ -107,11 +120,11 @@ public class AsyncImageLoader: ImageLoader {
 
     }
     
-    public func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> Operation? {
+    public func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> NetworkOperation? {
         
-        var operation: Operation?
+        var operation: NetworkOperation?
         
-        if let imageRequest =  NSURLRequest.GETRequest(urlString: src) {
+        if let imageRequest = URLRequest(string: src) {
             
             let imageRequest = ImageRequestTask(urlRequest: imageRequest as URLRequest, taskCompletion: completion)
             
@@ -127,7 +140,7 @@ public class AsyncImageLoader: ImageLoader {
 
     private func loadImageSrc(src: String, forImageView imageView: UIImageView, identifier: String, loadType: ImageLoadType) {
      
-        if let imageRequest =  NSURLRequest.GETRequest(urlString: src) {
+        if let imageRequest =  URLRequest(string: src) {
             
             let imageRequestTaskCompletion = { (imageURL: String, image: UIImage?, error: Error?) in
 
@@ -136,7 +149,7 @@ public class AsyncImageLoader: ImageLoader {
             
             let imageRequest = ImageRequestTask(urlRequest: imageRequest as URLRequest, taskCompletion: imageRequestTaskCompletion)
 
-            let imageOperation: Operation
+            let imageOperation: NetworkOperation
             
             switch loadType {
           
@@ -151,7 +164,6 @@ public class AsyncImageLoader: ImageLoader {
 
             }
 
-            
             loadingCache[identifier] = imageOperation
         }
 

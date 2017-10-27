@@ -15,7 +15,7 @@ public struct MODownloadModel: Storable {
     
     public let fileName: String?
     public let fileURL: String?
-    public var downloadOperation: DownloadOperation?
+    public var downloadOperation: NetworkDownloadOperation?
     
     //MARK: Storable Protocol
     

@@ -1,6 +1,6 @@
 import Foundation
 
-public class ConnectionHelper: MOConnectionHelper {
+public class ConnectionHelper {
     
     var dictionary: [String: String]
     

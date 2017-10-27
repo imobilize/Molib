@@ -3,8 +3,6 @@ import Foundation
 import UIKit
 import AVFoundation
 
-
-
 public struct DataRequestTask: NetworkRequest {
     
     public let urlRequest: URLRequest
@@ -24,10 +22,34 @@ public struct DataRequestTask: NetworkRequest {
     }
 }
 
+public struct DataDownloadTask: NetworkDownloadRequest {
+
+    public var fileName: String
+
+    public var downloadLocationURL: URL
+
+    public let urlRequest: URLRequest
+
+    let taskCompletion: DataResponseCompletion
+
+    public init(urlRequest: URLRequest, downloadLocationURL: URL, fileName: String, taskCompletion: @escaping DataResponseCompletion) {
+
+        self.urlRequest = urlRequest
+        self.downloadLocationURL = downloadLocationURL
+        self.fileName = fileName
+        self.taskCompletion = taskCompletion
+    }
+
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
+        self.taskCompletion(dataOptional, errorOptional)
+    }
+}
 
 public struct DataUploadTask: NetworkUploadRequest {
-    
+
     public let urlRequest: URLRequest
+
+    public var fileURL: URL
 
     public let name: String
     
@@ -37,12 +59,14 @@ public struct DataUploadTask: NetworkUploadRequest {
     
     let taskCompletion: DataResponseCompletion
 
-    public init(urlRequest: URLRequest, name: String, fileName: String, mimeType: String, taskCompletion: @escaping DataResponseCompletion) {
+    public init(urlRequest: URLRequest, name: String, fileName: String, fileURL: URL, mimeType: String, taskCompletion: @escaping DataResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.name = name
         self.fileName = fileName
         self.mimeType = mimeType
+        self.fileURL = fileURL
+
         self.taskCompletion = taskCompletion
     }
     
@@ -53,6 +77,8 @@ public struct DataUploadTask: NetworkUploadRequest {
 }
 
 public struct DataUploadJsonResponseTask: NetworkUploadRequest {
+
+    public var fileURL: URL
     
     public let urlRequest: URLRequest
     
@@ -64,12 +90,13 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
     
     let taskCompletion: JSONResponseCompletion
     
-    public init(urlRequest: URLRequest, name: String, fileName: String, mimeType: String,  taskCompletion: @escaping JSONResponseCompletion) {
+    public init(urlRequest: URLRequest, name: String, fileName: String, mimeType: String, fileURL: URL, taskCompletion: @escaping JSONResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.name = name
         self.fileName = fileName
         self.mimeType = mimeType
+        self.fileURL = fileURL
         self.taskCompletion = taskCompletion
     }
     
@@ -82,23 +109,6 @@ public struct DataUploadJsonResponseTask: NetworkUploadRequest {
         self.taskCompletion(json, error)
 
     }
-}
-
-
-public struct DownloadRequest: NetworkRequest {
-    
-    public var urlRequest: URLRequest
-    
-    init(urlRequest: URLRequest) {
-        
-        self.urlRequest = urlRequest
-        
-    }
-    
-    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
-        
-    }
-    
 }
 
 public struct JSONRequestTask: NetworkRequest {
@@ -185,7 +195,7 @@ public struct ImageRequestTask: ImageRequest {
 }
 
 
-struct VideoThumbnailRequestOperation: Operation {
+struct VideoThumbnailRequestOperation: NetworkOperation {
     
     var imageGenerator: AVAssetImageGenerator?
     let mediaURL: String
@@ -223,7 +233,7 @@ struct VideoThumbnailRequestOperation: Operation {
             
             let userInfo = [NSLocalizedDescriptionKey: "Invalid media url supplied"]
             
-            let error = NSError(domain: "VideoThumbnailRequest", code: ServiceFailure.GeneralError.code, userInfo: userInfo)
+            let error = NSError(domain: "VideoThumbnailRequest", code: 101, userInfo: userInfo)
             
             completion(mediaURL, nil, error)
         }
