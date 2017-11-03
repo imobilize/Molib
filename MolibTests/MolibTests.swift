@@ -1,11 +1,3 @@
-//
-//  MolibTests.swift
-//  MolibTests
-//
-//  Created by Andre Barrett on 31/07/2017.
-//  Copyright © 2017 iMobilize. All rights reserved.
-//
-
 import XCTest
 @testable import Molib
 

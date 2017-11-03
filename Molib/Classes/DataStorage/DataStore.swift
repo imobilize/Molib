@@ -22,9 +22,9 @@ public protocol Downloadable {
 
     var fileName: String { get }
     
-    var fileURL: String { get }
+    var fileURL: URL { get }
     
-    var localFileURL: String? { get }
+    var localFileURL: URL { get }
     
 }
 

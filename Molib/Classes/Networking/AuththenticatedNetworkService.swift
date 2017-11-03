@@ -43,7 +43,7 @@ public class AuththenticatedNetworkService: NetworkOperationService {
         
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
-        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, mimeType: request.mimeType, taskCompletion: taskCompletion)
+        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, fileURL: request.fileURL, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
         let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask)
         

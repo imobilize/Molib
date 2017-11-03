@@ -22,12 +22,14 @@ public enum TaskStatus: Int {
 }
 
 public class DownloadModel: NSObject, Downloadable {
-    
+
+    public var fileURL: URL
+
+    public var localFileURL: URL
+
     public var id: String
     public var fileName: String
-    public var fileURL: String
-    public var localFileURL: String?
-    
+
     public var status: String = TaskStatus.GettingInfo.description()
     
     public var file: (size: Float, unit: String)?
@@ -43,11 +45,12 @@ public class DownloadModel: NSObject, Downloadable {
     
     public var startTime: Date?
     
-    init(id: String, fileName: String, fileURL: String) {
+    init(id: String, fileName: String, fileURL: URL, destinationFileURL: URL) {
 
         self.id = id
         self.fileName = fileName
         self.fileURL = fileURL
+        self.localFileURL = destinationFileURL
         
         super.init()
     }

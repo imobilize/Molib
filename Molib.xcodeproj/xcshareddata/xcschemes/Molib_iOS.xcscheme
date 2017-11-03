@@ -29,7 +29,26 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "650BBABA1F2F72DC007A8B49"
+               BuildableName = "MolibTests.xctest"
+               BlueprintName = "MolibTests"
+               ReferencedContainer = "container:Molib.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "650BBBC41F2F7AEA007A8B49"
+            BuildableName = "Molib.framework"
+            BlueprintName = "Molib_iOS"
+            ReferencedContainer = "container:Molib.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

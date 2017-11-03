@@ -1,7 +1,8 @@
 import Foundation
 import XCTest
+@testable import Molib
 
-class ParameterEncodingTestCase: BaseTestCase {
+class ParameterEncodingTestCase: XCTest {
     let urlRequest = URLRequest(url: URL(string: "https://example.com/")!)
 }
 

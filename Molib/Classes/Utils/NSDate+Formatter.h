@@ -1,11 +1,3 @@
-//
-//  NSDate+Formatter.h
-//  OnIt
-//
-//  Created by Andre Barrett on 07/09/2012.
-//  Copyright (c) 2012 imobilize. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 extern NSString* const kJQTimeAgoAllowFutureKey;
