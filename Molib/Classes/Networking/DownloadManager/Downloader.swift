@@ -13,7 +13,7 @@ public struct DownloaderTask {
     }
 }
 
-public protocol DownloaderDelegate {
+public protocol DownloaderDelegate: class {
     /**A delegate method called each time whenever any download task's progress is updated
      */
     func downloadRequestDidUpdateProgress(downloadModel: DownloadModel, index: Int)
@@ -47,7 +47,7 @@ public protocol DownloaderDelegate {
 
 public protocol Downloader {
     
-    var delegate: DownloaderDelegate? { get set }
+    weak var delegate: DownloaderDelegate? { get set }
 
     func addDownloadTask(task: DownloaderTask)
 

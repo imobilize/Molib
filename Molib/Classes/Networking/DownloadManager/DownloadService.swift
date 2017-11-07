@@ -64,4 +64,47 @@ class DownloadServiceOperationImpl: DownloadServiceOperation {
     func cancelDownload() {
         downloader.cancelTask(task: downloaderTask)
     }
+
+    func registerForProgressUpdates() {
+//        downloader.
+    }
+}
+
+extension DownloadServiceOperationImpl: DownloaderDelegate {
+    func downloadRequestDidUpdateProgress(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestDidPopulatedInterruptedTasks(downloadModel: [DownloadModel]) {
+
+    }
+
+    func downloadRequestStarted(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestDidPaused(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestDidResumed(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestDidRetry(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestCanceled(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestFinished(downloadModel: DownloadModel, index: Int) {
+
+    }
+
+    func downloadRequestDidFailedWithError(error: NSError, downloadModel: DownloadModel, index: Int) {
+
+    }
+    
 }
