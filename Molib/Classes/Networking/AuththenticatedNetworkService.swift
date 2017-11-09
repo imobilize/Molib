@@ -12,13 +12,13 @@ public protocol AuththenticatedNetworkServiceDelegate {
     func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithError: Error)
 }
 
-public class AuththenticatedNetworkService: NetworkOperationService {
+public class AuththenticatedNetworkService: NetworkRequestService {
     
     public var delegate: AuththenticatedNetworkServiceDelegate?
     
-    let networkService: NetworkOperationService
+    let networkService: NetworkRequestService
 
-    public init(networkService: NetworkOperationService) {
+    public init(networkService: NetworkRequestService) {
         
         self.networkService = networkService
     }

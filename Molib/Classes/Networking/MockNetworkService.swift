@@ -25,7 +25,7 @@ public class MockRequestQueue {
 }
 
 
-class MockNetworkService : NetworkOperationService {
+class MockNetworkService : NetworkRequestService {
 
     func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation? {
 

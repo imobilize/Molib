@@ -5,10 +5,10 @@ class NetworkDownloader: Downloader {
 
     private let inProgressOperationQueue = OperationQueue()
     private var pausedOperationQueue = [DownloaderOperation]()
-    private let networkOperationService: NetworkOperationService
+    private let networkOperationService: NetworkRequestService
     var delegate: DownloaderDelegate?
 
-    init(networkOperationService: NetworkOperationService) {
+    init(networkOperationService: NetworkRequestService) {
         self.networkOperationService = networkOperationService
     }
 

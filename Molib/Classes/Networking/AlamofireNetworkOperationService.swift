@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-class AlamofireNetworkOperationService: NetworkOperationService {
+class AlamofireNetworkOperationService: NetworkRequestService {
 
     private var manager: SessionManager!
 

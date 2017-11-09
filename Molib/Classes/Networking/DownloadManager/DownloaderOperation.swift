@@ -12,10 +12,10 @@ class DownloaderOperation: Operation {
 
     var delegate: DownloaderOperationDelegate?
     private let downloaderTask: DownloaderTask
-    private let networkOperationService: NetworkOperationService
+    private let networkOperationService: NetworkRequestService
     private var networkDownloadOperation: NetworkDownloadOperation?
 
-    init(downloaderTask: DownloaderTask, networkOperationService: NetworkOperationService) {
+    init(downloaderTask: DownloaderTask, networkOperationService: NetworkRequestService) {
         self.downloaderTask = downloaderTask
         self.networkOperationService = networkOperationService
     }

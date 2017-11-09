@@ -4,10 +4,10 @@ let kNetworkServiceClass = "NetworkService"
 
 public class NetworkServiceFactory {
     
-    private static var serviceInstance: NetworkOperationService?
+    private static var serviceInstance: NetworkRequestService?
     private static var authenticatedNetworkServiceInstance: AuththenticatedNetworkService?
     
-    public static func networkService() -> NetworkOperationService {
+    public static func networkService() -> NetworkRequestService {
         
         if serviceInstance == nil {
             
@@ -27,9 +27,9 @@ public class NetworkServiceFactory {
         return authenticatedNetworkServiceInstance!
     }
     
-    private static func setupNetworkService() -> NetworkOperationService {
+    private static func setupNetworkService() -> NetworkRequestService {
         
-        let networkService: NetworkOperationService
+        let networkService: NetworkRequestService
         
         let infoDictionary = Bundle.main.infoDictionary
         

@@ -37,8 +37,6 @@
 		65234E271F30C25D0052D161 /* SDWebImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DEE1F30C25D0052D161 /* SDWebImageService.swift */; };
 		65234E281F30C25D0052D161 /* CommonClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF01F30C25D0052D161 /* CommonClosures.swift */; };
 		65234E2B1F30C25D0052D161 /* Data+AES256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF31F30C25D0052D161 /* Data+AES256.swift */; };
-		65234E2C1F30C25D0052D161 /* NSDate+Formatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 65234DF41F30C25D0052D161 /* NSDate+Formatter.h */; };
-		65234E2D1F30C25D0052D161 /* NSDate+Formatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF51F30C25D0052D161 /* NSDate+Formatter.m */; };
 		65234E2E1F30C25D0052D161 /* NSUserDefaults+Secure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */; };
 		65234E2F1F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF71F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift */; };
 		65234E301F30C25D0052D161 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DF81F30C25D0052D161 /* TestHelpers.swift */; };
@@ -53,7 +51,7 @@
 		65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E021F30C25D0052D161 /* ViewController+Helpers.swift */; };
 		65234E3A1F30C25D0052D161 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E041F30C25D0052D161 /* Menu.swift */; };
 		65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */; };
-		6544957C1FA254C500E794DD /* NetworkOprationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6544957B1FA254C500E794DD /* NetworkOprationService.swift */; };
+		6544957C1FA254C500E794DD /* NetworkRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6544957B1FA254C500E794DD /* NetworkRequestService.swift */; };
 		6544957E1FA257E900E794DD /* AlamofireNetworkOperationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6544957D1FA257E900E794DD /* AlamofireNetworkOperationService.swift */; };
 		6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6565750B1FA24360009161D0 /* URLRequestEncoder.swift */; };
 		6565750F1FA2486C009161D0 /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656575091FA23A90009161D0 /* URLRequestBuilder.swift */; };
@@ -116,8 +114,6 @@
 		65234DEE1F30C25D0052D161 /* SDWebImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDWebImageService.swift; sourceTree = "<group>"; };
 		65234DF01F30C25D0052D161 /* CommonClosures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonClosures.swift; sourceTree = "<group>"; };
 		65234DF31F30C25D0052D161 /* Data+AES256.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+AES256.swift"; sourceTree = "<group>"; };
-		65234DF41F30C25D0052D161 /* NSDate+Formatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Formatter.h"; sourceTree = "<group>"; };
-		65234DF51F30C25D0052D161 /* NSDate+Formatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Formatter.m"; sourceTree = "<group>"; };
 		65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserDefaults+Secure.swift"; sourceTree = "<group>"; };
 		65234DF71F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserDefaults+SecureProtocol.swift"; sourceTree = "<group>"; };
 		65234DF81F30C25D0052D161 /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
@@ -132,7 +128,7 @@
 		65234E021F30C25D0052D161 /* ViewController+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Helpers.swift"; sourceTree = "<group>"; };
 		65234E041F30C25D0052D161 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOHitTestContainerView.swift; sourceTree = "<group>"; };
-		6544957B1FA254C500E794DD /* NetworkOprationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOprationService.swift; sourceTree = "<group>"; };
+		6544957B1FA254C500E794DD /* NetworkRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestService.swift; sourceTree = "<group>"; };
 		6544957D1FA257E900E794DD /* AlamofireNetworkOperationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworkOperationService.swift; sourceTree = "<group>"; };
 		6544957F1FA3212B00E794DD /* ParameterEncodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterEncodingTests.swift; sourceTree = "<group>"; };
 		656575091FA23A90009161D0 /* URLRequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestBuilder.swift; sourceTree = "<group>"; };
@@ -146,7 +142,6 @@
 		65DA80D81FA3812500292466 /* NetworkDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDownloader.swift; sourceTree = "<group>"; };
 		65DA80DA1FA3B08600292466 /* DownloaderOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperation.swift; sourceTree = "<group>"; };
 		65DA80DC1FA3C48300292466 /* DownloaderOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperationTests.swift; sourceTree = "<group>"; };
-		65DA80DE1FA3CD7500292466 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,7 +242,6 @@
 				65234DEF1F30C25D0052D161 /* Utils */,
 				65234DFB1F30C25D0052D161 /* ViewControllers */,
 				65234E031F30C25D0052D161 /* Views */,
-				65DA80DE1FA3CD7500292466 /* Bridging-Header.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -317,7 +311,7 @@
 				65234DE81F30C25D0052D161 /* HttpClient.swift */,
 				656575091FA23A90009161D0 /* URLRequestBuilder.swift */,
 				6565750B1FA24360009161D0 /* URLRequestEncoder.swift */,
-				6544957B1FA254C500E794DD /* NetworkOprationService.swift */,
+				6544957B1FA254C500E794DD /* NetworkRequestService.swift */,
 				65234DEB1F30C25D0052D161 /* MockNetworkService.swift */,
 				6544957D1FA257E900E794DD /* AlamofireNetworkOperationService.swift */,
 				65234DDF1F30C25D0052D161 /* AuththenticatedNetworkService.swift */,
@@ -350,8 +344,6 @@
 				65234DF01F30C25D0052D161 /* CommonClosures.swift */,
 				65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */,
 				65234DF31F30C25D0052D161 /* Data+AES256.swift */,
-				65234DF41F30C25D0052D161 /* NSDate+Formatter.h */,
-				65234DF51F30C25D0052D161 /* NSDate+Formatter.m */,
 				65234DF61F30C25D0052D161 /* NSUserDefaults+Secure.swift */,
 				65234DF71F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift */,
 				65234DF81F30C25D0052D161 /* TestHelpers.swift */,
@@ -403,7 +395,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				65234E111F30C25D0052D161 /* MODeviceUtils.h in Headers */,
-				65234E2C1F30C25D0052D161 /* NSDate+Formatter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,12 +540,11 @@
 				65234E0B1F30C25D0052D161 /* NSManagedObject+Request.swift in Sources */,
 				65DA80D71FA3472B00292466 /* Downloader.swift in Sources */,
 				65234E0F1F30C25D0052D161 /* FileManager.swift in Sources */,
-				6544957C1FA254C500E794DD /* NetworkOprationService.swift in Sources */,
+				6544957C1FA254C500E794DD /* NetworkRequestService.swift in Sources */,
 				65234E2E1F30C25D0052D161 /* NSUserDefaults+Secure.swift in Sources */,
 				65234E0A1F30C25D0052D161 /* NSManagedObject+Fetch.swift in Sources */,
 				65234E131F30C25D0052D161 /* GeoLocation.swift in Sources */,
 				65234E1A1F30C25D0052D161 /* ConnectionHelper.swift in Sources */,
-				65234E2D1F30C25D0052D161 /* NSDate+Formatter.m in Sources */,
 				65234E191F30C25D0052D161 /* AuththenticatedNetworkService.swift in Sources */,
 				65234E301F30C25D0052D161 /* TestHelpers.swift in Sources */,
 				65234E251F30C25D0052D161 /* NetworkRequest.swift in Sources */,
@@ -757,7 +747,6 @@
 				PRODUCT_NAME = Molib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Molib/Classes/Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -785,7 +774,6 @@
 				PRODUCT_NAME = Molib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Molib/Classes/Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -62,7 +62,7 @@ public protocol NetworkDownloadOperation: NetworkOperation {
     func registerProgressUpdate(progressUpdate: @escaping ProgressUpdate)
 }
 
-public protocol NetworkOperationService {
+public protocol NetworkRequestService {
 
     func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation?
 
@@ -73,7 +73,7 @@ public protocol NetworkOperationService {
     func cancelAllOperations()
 }
 
-extension NetworkOperationService {
+extension NetworkRequestService {
 
     func completionForRequest(request: NetworkRequest) -> DataResponseCompletion {
 
