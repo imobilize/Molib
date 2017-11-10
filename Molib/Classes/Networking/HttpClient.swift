@@ -2,7 +2,7 @@ import Foundation
 
 let kNetworkServiceClass = "NetworkService"
 
-public class NetworkServiceFactory {
+public class NetworkRequestServiceFactory {
     
     private static var serviceInstance: NetworkRequestService?
     private static var authenticatedNetworkServiceInstance: AuththenticatedNetworkService?
@@ -45,7 +45,7 @@ public class NetworkServiceFactory {
             
         default:
             
-            networkService = AlamofireNetworkOperationService()
+            networkService = AlamofireNetworkRequestService()
         }
         
         return networkService

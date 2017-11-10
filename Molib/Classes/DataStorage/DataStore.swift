@@ -18,14 +18,13 @@ public protocol Storable {
 
 public protocol Downloadable {
     
-    var id: String { get }
+    func uniqueIdentifier() -> String
 
-    var fileName: String { get }
+    func downloadName() -> String
     
-    var fileURL: URL { get }
+    func url() -> URL
     
-    var localFileURL: URL { get }
-    
+    func localURL() -> URL
 }
 
 
@@ -54,9 +53,9 @@ public class DataStoreImpl: DataStore {
     
     var storageDictionary: NSMutableDictionary
     
-    var userDefaults: UserDefaults
+    var userDefaults: ConfigDefaults
     
-    public init(userDefaults: UserDefaults) {
+    public init(userDefaults: ConfigDefaults) {
         
         self.userDefaults = userDefaults
         

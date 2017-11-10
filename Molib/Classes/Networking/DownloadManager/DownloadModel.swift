@@ -22,12 +22,28 @@ public enum TaskStatus: Int {
 }
 
 public class DownloadModel: NSObject, Downloadable {
+    public func uniqueIdentifier() -> String {
+        return id
+    }
 
-    public var fileURL: URL
+    public func downloadName() -> String {
+        return fileName
+    }
+
+    public func url() -> URL {
+        return downloadURL
+    }
+
+    public func localURL() -> URL {
+        return localFileURL
+    }
+
+    public var downloadURL: URL
 
     public var localFileURL: URL
 
     public var id: String
+
     public var fileName: String
 
     public var status: String = TaskStatus.GettingInfo.description()
@@ -49,7 +65,7 @@ public class DownloadModel: NSObject, Downloadable {
 
         self.id = id
         self.fileName = fileName
-        self.fileURL = fileURL
+        self.downloadURL = fileURL
         self.localFileURL = destinationFileURL
         
         super.init()

@@ -2,7 +2,7 @@
 import Foundation
 
 
-public protocol UserDefaults {
+public protocol ConfigDefaults {
     
     func stringForKey(key: String) -> String?
     

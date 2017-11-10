@@ -4,10 +4,16 @@ public protocol DownloadService {
 
     func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation
 
+    func resumeDownload(downloadable: Downloadable) -> DownloadServiceOperation
+
     func currentDownloadServiceOperations() -> [DownloadServiceOperation]
 }
 
 public protocol DownloadServiceOperation {
+
+    func downloadableIdentifier() -> String
+
+    func downloadURL() -> URL
 
     func pauseDownload()
 
@@ -27,7 +33,29 @@ class DownloadServiceImpl: DownloadService {
 
     func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation {
 
-        let downloaderTask = DownloaderTask(downloadURL: downloadable.fileURL, downloadDestinationURL: downloadable.localFileURL, fileName: downloadable.fileName)
+        let downloadOperation = createAndAppendDownloadOperation(downloadable: downloadable)
+
+        downloadOperation.startDownload()
+
+        return downloadOperation
+    }
+
+    func resumeDownload(downloadable: Downloadable) -> DownloadServiceOperation {
+
+        let downloadOperation = createAndAppendDownloadOperation(downloadable: downloadable)
+
+        downloadOperation.resumeDownload()
+
+        return downloadOperation
+    }
+
+    func currentDownloadServiceOperations() -> [DownloadServiceOperation] {
+        return currentOperations
+    }
+
+    private func createAndAppendDownloadOperation(downloadable: Downloadable) -> DownloadServiceOperationImpl {
+
+        let downloaderTask = DownloaderTask(uniqueIdentifier: downloadable.uniqueIdentifier(), downloadURL: downloadable.url(), downloadDestinationURL: downloadable.localURL(), fileName: downloadable.downloadName())
 
         downloader.addDownloadTask(task: downloaderTask)
 
@@ -37,13 +65,9 @@ class DownloadServiceImpl: DownloadService {
 
         return downloadServiceOperation
     }
-
-    func currentDownloadServiceOperations() -> [DownloadServiceOperation] {
-        return currentOperations
-    }
 }
 
-class DownloadServiceOperationImpl: DownloadServiceOperation {
+class DownloadServiceOperationImpl {
 
     private let downloaderTask: DownloaderTask
     private let downloader: Downloader
@@ -51,6 +75,21 @@ class DownloadServiceOperationImpl: DownloadServiceOperation {
     init(downloaderTask: DownloaderTask, downloader: Downloader) {
         self.downloaderTask = downloaderTask
         self.downloader = downloader
+    }
+
+    func startDownload() {
+        downloader.addDownloadTask(task: downloaderTask)
+    }
+}
+
+extension DownloadServiceOperationImpl: DownloadServiceOperation {
+
+    func downloadableIdentifier() -> String {
+        return downloaderTask.uniqueIdentifier
+    }
+
+    func downloadURL() -> URL {
+        return downloaderTask.downloadURL
     }
 
     func pauseDownload() {

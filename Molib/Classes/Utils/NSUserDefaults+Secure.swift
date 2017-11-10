@@ -11,7 +11,7 @@ var defaultsDictionary: NSMutableDictionary! = nil
 var secureItemsDictionary: NSMutableDictionary! = nil
 
 
-public struct UserDefaultsImpl: UserDefaults {
+public struct UserDefaultsImpl: ConfigDefaults {
 
     
     public init() {

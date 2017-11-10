@@ -22,9 +22,8 @@ public enum HTTPMethod : String {
 }
 
 public protocol URLRequestBuilder {
-    init(url: URL)
 
-    func asURLRequest() -> URLRequest
+    func asURLRequest() throws -> URLRequest
 
     func setEncoder(encoder: URLRequestEncoder) -> URLRequestBuilder
 
@@ -34,20 +33,55 @@ public protocol URLRequestBuilder {
 }
 
 public class URLRequestBuilderFactory {
-    class func builder(with url: URL) -> URLRequestBuilder {
+    public class func builder(with url: URL) -> URLRequestBuilder {
         return URLRequestBuilderImpl(url: url)
+    }
+
+    public class func builder(with urlString: String) -> URLRequestBuilder {
+        if let builder = URLRequestBuilderImpl(urlString: urlString) {
+            return builder
+        } else {
+            return ThrowErrorBuilder()
+        }
+    }
+}
+
+class ThrowErrorBuilder: URLRequestBuilder {
+
+    func asURLRequest() throws -> URLRequest {
+        throw URLRequestBuilderError.invalidURL
+    }
+
+    func setEncoder(encoder: URLRequestEncoder) -> URLRequestBuilder {
+        return self
+    }
+
+    func setRequestMethod(method: HTTPMethod) -> URLRequestBuilder {
+        return self
+    }
+
+    func setHeaders(headers: [String : String]) -> URLRequestBuilder {
+        return self
     }
 }
 
 class URLRequestBuilderImpl: URLRequestBuilder {
 
-    let url: URL
-    var requestMethod: HTTPMethod = .get
-    var requestHeaders: [String: String]? = nil
-    var encoder: URLRequestEncoder = DoNothingEncoder()
+    private let url: URL
+    private var requestMethod: HTTPMethod = .get
+    private var requestHeaders: [String: String]? = nil
+    private var encoder: URLRequestEncoder = DoNothingEncoder()
 
-    required init(url: URL) {
+    init(url: URL) {
         self.url = url
+    }
+
+    init?(urlString: String) {
+        if let url = URL(string: urlString) {
+            self.url = url
+        } else {
+            return nil
+        }
     }
 
     func setEncoder(encoder: URLRequestEncoder) -> URLRequestBuilder {
@@ -65,7 +99,7 @@ class URLRequestBuilderImpl: URLRequestBuilder {
         return self
     }
 
-    func asURLRequest() -> URLRequest {
+    func asURLRequest() throws -> URLRequest {
 
         var request = URLRequest(url: url)
 
@@ -75,7 +109,9 @@ class URLRequestBuilderImpl: URLRequestBuilder {
 
         do {
             try request = encoder.encodeRequest(request: request)
-        } catch {}
+        } catch {
+            throw URLRequestBuilderError.invalidEncoding
+        }
 
         return request
     }
@@ -93,6 +129,10 @@ class URLRequestBuilderImpl: URLRequestBuilder {
     }
 }
 
+enum URLRequestBuilderError: Error {
+    case invalidEncoding
+    case invalidURL
+}
 
 extension URLRequest {
     init?(string: String) {

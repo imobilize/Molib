@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 
 public struct DownloaderTask {
+    let uniqueIdentifier: String
     let downloadURL: URL
     let downloadDestinationURL: URL
     let fileName: String
