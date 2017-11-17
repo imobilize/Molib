@@ -64,11 +64,11 @@ public protocol NetworkDownloadOperation: NetworkOperation {
 
 public protocol NetworkRequestService {
 
-    func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation?
+    @discardableResult func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation?
 
-    func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation?
+    @discardableResult func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation?
 
-    func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation?
+    @discardableResult func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation?
 
     func cancelAllOperations()
 }
