@@ -1,17 +1,17 @@
 import Foundation
 import UIKit
 
-class LocalImageLoader: ImageLoader {
+public class MockImageLoader: ImageLoader {
     
-    var replacementDictionary: [String: String]
-    let bundle: Bundle
+    private var replacementDictionary: [String: String]
+    private let bundle: Bundle
     
-    init(bundle: Bundle) {
+    public init(bundle: Bundle) {
         self.bundle = bundle
         self.replacementDictionary = [:]
     }
     
-    func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder: String?, refreshCache: Bool) {
+    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder: String?, refreshCache: Bool) {
         
         var image: UIImage?
         let replacementImageName = replacementDictionary[imageURL]
@@ -25,23 +25,23 @@ class LocalImageLoader: ImageLoader {
         imageView.image = image
     }
 
-    func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder: String?) {
+    public func enqueueImageView(imageView: UIImageView, withURL imageURL: String, placeholder: String?) {
         enqueueImageView(imageView: imageView, withURL: imageURL, placeholder: placeholder, refreshCache: false)
     }
 
-    func enqueueImageView(imageView: UIImageView, withAVAssetMediaURL mediaURL: String, placeholder: String?) {
+    public func enqueueImageView(imageView: UIImageView, withAVAssetMediaURL mediaURL: String, placeholder: String?) {
     
     }
 
-    func dequeueImageView(imageView: UIImageView) {
+    public func dequeueImageView(imageView: UIImageView) {
 
     }
 
-    func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> NetworkOperation? {
+    public func loadImage(src: String, completion: @escaping ImageResponseCompletion) -> NetworkOperation? {
         return MockNetworkOperation()
     }
 
-    func dequeueAll() {
+    public func dequeueAll() {
     
     }
 }
