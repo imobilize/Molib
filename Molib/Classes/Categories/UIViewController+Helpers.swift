@@ -105,8 +105,6 @@ extension UIViewController {
         
         parentController.addChildViewController(viewController)
         
-        viewController.view.frame = inView.frame
-        
         if let topView = underView {
             
             inView.insertSubview(viewController.view, belowSubview:topView)
@@ -119,20 +117,10 @@ extension UIViewController {
         let myView = viewController.view
         
         myView?.translatesAutoresizingMaskIntoConstraints = false
-        
-        let viewDict = ["myView": myView]
-        
-        let constraint1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[myView]-0-|",
-                                                         options: [NSLayoutFormatOptions.alignAllTop, NSLayoutFormatOptions.alignAllBottom], metrics:nil, views:viewDict)
-        
-        let constraint2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[myView]-0-|",
-                                                         options:[NSLayoutFormatOptions.alignAllLeft, NSLayoutFormatOptions.alignAllRight], metrics:nil, views:viewDict)
-        
-        inView.addConstraints(constraint1)
-        inView.addConstraints(constraint2)
-        
+
+        myView?.pinToSuperview([.top, .bottom, .left, .right])
+
         viewController.didMove(toParentViewController: parentController)
-        
     }
     
     

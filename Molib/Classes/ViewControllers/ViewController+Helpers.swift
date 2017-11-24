@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-public protocol MOContainerViewDelegate {
+public protocol ContainerViewDelegate {
 
     func headerOffset() -> CGFloat
 
@@ -10,4 +10,11 @@ public protocol MOContainerViewDelegate {
 
     func didScrollToOffset(offset: CGFloat)
 
+}
+
+public protocol ContainerEmbeddableViewController {
+
+    func heightOfView() -> CGFloat
+
+    func widthOfView() -> CGFloat
 }
