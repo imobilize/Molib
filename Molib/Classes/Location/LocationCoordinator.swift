@@ -24,12 +24,12 @@ public protocol LocationCoordinatorDelegate {
     
     private var locationManager: LocationManager
     
-    private var userDefaults: ConfigDefaults
+    private var userDefaults: UserConfig
     
     private var alertController: UIAlertController!
     
     
-    public init(locationManager: LocationManager, userDefaults: ConfigDefaults) {
+    public init(locationManager: LocationManager, userDefaults: UserConfig) {
         
         self.locationManager = locationManager
         self.userDefaults = userDefaults
