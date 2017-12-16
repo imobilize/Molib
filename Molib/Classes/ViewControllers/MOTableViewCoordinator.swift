@@ -5,7 +5,6 @@ public struct DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDe
     
     let tableView: UITableView
     
-    
     // conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
         
@@ -59,34 +58,35 @@ public struct DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDe
 
 }
 
-public protocol TableViewCellProvider {
+public protocol TableViewCellProvider: class {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell
 }
 
+public protocol TableViewEditingDelegate: class {
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
+    func tableView(_ tableView: UITableView, didDeleteRowAt indexPath: IndexPath)
+}
 
 public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UITableViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType> {
-        
-    
-    let table: UITableView
-    
+
     var dataSource: DataSource
     
     let dataSourceProviderTableViewAdapter: DataSourceProviderTableViewAdapter<CollectionType>
     
-    let tableViewCellProvider: TableViewCellProvider
-    
+    unowned let tableViewCellProvider: TableViewCellProvider
+    public weak var tableViewEditingDelegate: TableViewEditingDelegate?
     
     public init(tableView: UITableView, dataSource: DataSource, cellProvider: TableViewCellProvider) {
 
-        self.table = tableView
         self.dataSource = dataSource
         self.tableViewCellProvider = cellProvider
-        self.dataSourceProviderTableViewAdapter = DataSourceProviderTableViewAdapter<CollectionType>(tableView: self.table)
+        self.dataSourceProviderTableViewAdapter = DataSourceProviderTableViewAdapter<CollectionType>(tableView: tableView)
         
         super.init()
         
-        self.table.dataSource = self
+        tableView.dataSource = self
         self.dataSource.delegate = self.dataSourceProviderTableViewAdapter
 
     }
@@ -109,15 +109,21 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
     }
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return false
+
+        var canEdit = false
+
+        if let editable = tableViewEditingDelegate?.tableView(tableView, canEditRowAt: indexPath) {
+            canEdit = editable
+        }
+
+        return canEdit
     }
 
-    public func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            
-            self.dataSource.deleteItemAtIndexPath(indexPath: indexPath)
+
+            tableViewEditingDelegate?.tableView(tableView, didDeleteRowAt: indexPath)
         }
     }
 }

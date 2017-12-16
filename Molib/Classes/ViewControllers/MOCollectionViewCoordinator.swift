@@ -275,7 +275,7 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     }
 }
 
-@objc public protocol CollectionViewCellProvider {
+@objc public protocol CollectionViewCellProvider: class {
     
     func collectionView(collectionView: UICollectionView, cellForRowAtIndexPath indexPath: IndexPath) -> UICollectionViewCell
     
@@ -288,26 +288,23 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
 
 
 public class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UICollectionViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType> {
-    
-    let collectionView: UICollectionView
-    
+
     var dataSource: DataSource
     
     var dataSourceProviderCollectionViewAdapter: DataSourceProviderCollectionViewAdapter<CollectionType>
     
-    let collectionViewCellProvider: CollectionViewCellProvider
+    unowned let collectionViewCellProvider: CollectionViewCellProvider
     
     
     public init(collectionView: UICollectionView, dataSource: DataSource, cellProvider: CollectionViewCellProvider) {
         
-        self.collectionView = collectionView
         self.dataSource = dataSource
         self.collectionViewCellProvider = cellProvider
         self.dataSourceProviderCollectionViewAdapter = DataSourceProviderCollectionViewAdapter<CollectionType>(collectionView: collectionView)
         
         super.init()
         
-        self.collectionView.dataSource = self
+        collectionView.dataSource = self
         self.dataSource.delegate = self.dataSourceProviderCollectionViewAdapter
     }
     

@@ -14,6 +14,26 @@ public protocol Storable {
     init(dictionary: StorableDictionary)
 }
 
+extension String {
+
+    public static func randomIdentifier(ofLength length: Int) -> String {
+
+        let letters : String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let len = UInt32(letters.count)
+
+        var randomString = ""
+
+        for _ in 0 ..< length {
+
+            let rand = arc4random_uniform(len)
+            let nextChar = letters[letters.index(letters.startIndex, offsetBy: Int(rand))]
+            randomString += "\(nextChar)"
+        }
+
+        return randomString
+    }
+}
+
 public protocol Downloadable {
     
     func uniqueIdentifier() -> String
