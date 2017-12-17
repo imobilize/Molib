@@ -169,7 +169,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         }
     }
     
-    let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
+    public let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
     
     var fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<ObjectType, Delegate>?
     
