@@ -52,6 +52,9 @@ class ALDownloadInfo: NSObject {
         willSet{
             if let stateBlock = self.stateChangeBlock,let newState = newValue {
                 stateBlock(newState)
+                if newValue == ALDownloadState.Failed {
+                    self.progress = 0
+                }
             }
         }
         didSet{}

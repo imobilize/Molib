@@ -24,9 +24,7 @@ extension ALDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
 
             do {
 
-                if fileManager.fileExists(atPath: info.destinationURL.absoluteString) {
-                    try fileManager.removeItem(at: info.destinationURL)
-                }
+                try? fileManager.removeItem(at: info.destinationURL)
 
                 try fileManager.moveItem(at: location, to: info.destinationURL)
 
@@ -49,7 +47,7 @@ extension ALDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 
-        debugPrint("Task completed: \(task), error: \(String(describing: error))")
+        debugPrint("Task completed with error: \(task), error: \(String(describing: error))")
 
         if let downloadURL = task.currentRequest?.url, let info = downloadInfoForURL(url: downloadURL) {
             info.state = ALDownloadState.Failed
