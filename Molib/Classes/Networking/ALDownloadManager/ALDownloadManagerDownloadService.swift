@@ -18,19 +18,33 @@ extension ALDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 
         debugPrint("Download finished: \(location)")
+        let fileManager = FileManager.default
 
         if let downloadURL = downloadTask.currentRequest?.url, let info = downloadInfoForURL(url: downloadURL) {
 
-            let fileManager = FileManager.default
-            try? fileManager.moveItem(at: location, to: info.destinationURL)
+            do {
 
-            info.state = ALDownloadState.Completed
+                if fileManager.fileExists(atPath: info.destinationURL.absoluteString) {
+                    try fileManager.removeItem(at: info.destinationURL)
+                }
 
-            ALDownloadNoteCenter.post(name: Notification.Name.Info.DidComplete, object: self, userInfo: ["url": downloadURL])
+                try fileManager.moveItem(at: location, to: info.destinationURL)
 
-        } else {
-            try? FileManager.default.removeItem(at: location)
+                info.state = ALDownloadState.Completed
+
+                ALDownloadNoteCenter.post(name: Notification.Name.Info.DidComplete, object: self, userInfo: ["url": downloadURL])
+            } catch {
+
+                var debugMessage = "Error trying to move download: " + downloadURL.absoluteString
+                    debugMessage += " to url: " + info.destinationURL.absoluteString + " " + error.localizedDescription
+
+                debugPrint(debugMessage)
+
+                info.state = ALDownloadState.Failed
+            }
         }
+
+        try? fileManager.removeItem(at: location)
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -38,7 +52,7 @@ extension ALDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
         debugPrint("Task completed: \(task), error: \(String(describing: error))")
 
         if let downloadURL = task.currentRequest?.url, let info = downloadInfoForURL(url: downloadURL) {
-            info.state = ALDownloadState.Wait
+            info.state = ALDownloadState.Failed
         }
     }
 }
@@ -101,17 +115,17 @@ extension ALDownloadInfo: DownloadServiceOperation {
                 var downloadState: DownloadServiceOperationState
 
                 switch alState {
-                case .Cancel:
+                case .Canceled:
                     downloadState = .Paused
                 case .Completed:
                     downloadState = .Finished
-                case .Download:
+                case .Downloading:
                     downloadState = .Downloading
                 case .None:
                     downloadState = .NotStarted
                 case .Suspended:
                     downloadState = .Paused
-                case .Wait:
+                case .Failed:
                     downloadState = .Failed
                 }
 

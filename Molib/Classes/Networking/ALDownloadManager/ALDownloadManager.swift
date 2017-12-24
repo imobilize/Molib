@@ -54,7 +54,7 @@ class ALDownloadManager: NSObject {
 
     func suspendAll() {
         self.downloadInfoArray = self.downloadInfoArray?.map({ (info) -> ALDownloadInfo in
-            if  info.state == ALDownloadState.Cancel || info.state == ALDownloadState.Completed {}
+            if  info.state == ALDownloadState.Canceled || info.state == ALDownloadState.Completed {}
             else{
                 info.cancel()
             }
@@ -64,7 +64,7 @@ class ALDownloadManager: NSObject {
 
     func resumeAll(){
         self.downloadInfoArray = self.downloadInfoArray?.map({ (info) -> ALDownloadInfo in
-            if  info.state == ALDownloadState.Download || info.state == ALDownloadState.Completed {}
+            if  info.state == ALDownloadState.Downloading || info.state == ALDownloadState.Completed {}
             else{
                 info.download()
             }
@@ -74,7 +74,7 @@ class ALDownloadManager: NSObject {
 
     func resumeFirstWillResume() {
         let willInfo = self.downloadInfoArray?.first(where: { (info) -> Bool in
-            info.state == ALDownloadState.Wait
+            info.state == ALDownloadState.Failed
         })
         willInfo?.download()
     }
@@ -111,7 +111,7 @@ class ALDownloadManager: NSObject {
             var isDownloadFirst = false
             self.downloadInfoArray = self.downloadInfoArray?.map({ (info) -> ALDownloadInfo in
                 if isDownloadFirst == false {
-                    if info.state == ALDownloadState.Download {
+                    if info.state == ALDownloadState.Downloading {
                     isDownloadFirst = true
                         return info
                     }
@@ -129,7 +129,7 @@ class ALDownloadManager: NSObject {
 
     func changeDownloadState() {
         self.downloadInfoArray = self.downloadInfoArray?.map({ (info) -> ALDownloadInfo in
-            if  info.state == ALDownloadState.Download || info.state == ALDownloadState.Completed{}
+            if  info.state == ALDownloadState.Downloading || info.state == ALDownloadState.Completed{}
             else{
                 info.download()
             }

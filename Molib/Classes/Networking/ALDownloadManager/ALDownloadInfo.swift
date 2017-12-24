@@ -3,20 +3,20 @@ import Alamofire
 
 public enum ALDownloadState: Int {
     case None = 0
-    case Download = 1
+    case Downloading = 1
     case Suspended = 2
-    case Cancel = 3
-    case Wait = 4
+    case Canceled = 3
+    case Failed = 4
     case Completed = 5
 
     init(urlSessionState: URLSessionDownloadTask.State) {
         switch urlSessionState {
         case .canceling:
-            self = .Cancel
+            self = .Canceled
         case .completed:
             self = .Completed
         case .running:
-            self = .Download
+            self = .Downloading
         case .suspended:
             self = .Suspended
         }
@@ -84,7 +84,7 @@ class ALDownloadInfo: NSObject {
         
         downloadRequest?.resume()
 
-        self.state = ALDownloadState.Download
+        self.state = ALDownloadState.Downloading
     }
 
     func suspend() {

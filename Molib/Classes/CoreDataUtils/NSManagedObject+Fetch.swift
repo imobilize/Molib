@@ -231,7 +231,7 @@ extension NSManagedObject {
         var results: [NSManagedObject]?
         
         context.performAndWait { () -> Void in
-            
+
             var error: NSError?
             
             do {
