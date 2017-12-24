@@ -56,6 +56,10 @@
 		6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6565750B1FA24360009161D0 /* URLRequestEncoder.swift */; };
 		6565750F1FA2486C009161D0 /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656575091FA23A90009161D0 /* URLRequestBuilder.swift */; };
 		65A1D3DB1FC5DB1E00920EF6 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1D3DA1FC5DB1E00920EF6 /* DateUtils.swift */; };
+		65BA0C701FEED2C00042F988 /* ALDownloadManagerDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA0C6F1FEED2C00042F988 /* ALDownloadManagerDownloadService.swift */; };
+		65BA0C711FEED2C60042F988 /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA0C691FEECF080042F988 /* AlamofireExtension.swift */; };
+		65BA0C721FEED2CC0042F988 /* ALDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA0C6A1FEECF080042F988 /* ALDownloadManager.swift */; };
+		65BA0C731FEED2D00042F988 /* ALDownloadInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA0C6B1FEECF080042F988 /* ALDownloadInfo.swift */; };
 		65BF03CB1F9F9AC800ADDA18 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */; };
 		65C0FCF81FC2FD6700930C0B /* UIView+AutolayoutExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C0FCF71FC2FD6600930C0B /* UIView+AutolayoutExtensions.swift */; };
 		65C0FD071FC34C6300930C0B /* MockImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C0FD051FC34C4400930C0B /* MockImageLoader.swift */; };
@@ -158,6 +162,10 @@
 		65B26ABA1F31106C00D2ED98 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
 		65B26ABC1F31107100D2ED98 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		65B26ABE1F31118500D2ED98 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		65BA0C691FEECF080042F988 /* AlamofireExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireExtension.swift; sourceTree = "<group>"; };
+		65BA0C6A1FEECF080042F988 /* ALDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALDownloadManager.swift; sourceTree = "<group>"; };
+		65BA0C6B1FEECF080042F988 /* ALDownloadInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALDownloadInfo.swift; sourceTree = "<group>"; };
+		65BA0C6F1FEED2C00042F988 /* ALDownloadManagerDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALDownloadManagerDownloadService.swift; sourceTree = "<group>"; };
 		65BF03CA1F9F9AC800ADDA18 /* Dispatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
 		65C0FCF71FC2FD6600930C0B /* UIView+AutolayoutExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AutolayoutExtensions.swift"; sourceTree = "<group>"; };
 		65C0FD051FC34C4400930C0B /* MockImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageLoader.swift; sourceTree = "<group>"; };
@@ -338,6 +346,7 @@
 		65234DDD1F30C25D0052D161 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				65BA0C681FEECF080042F988 /* ALDownloadManager */,
 				6519AD341FB45CF300734BDC /* Images */,
 				65234DE11F30C25D0052D161 /* DownloadManager */,
 				65234DE01F30C25D0052D161 /* ConnectionHelper.swift */,
@@ -417,6 +426,17 @@
 				65B26ABA1F31106C00D2ED98 /* SVProgressHUD.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		65BA0C681FEECF080042F988 /* ALDownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				65BA0C691FEECF080042F988 /* AlamofireExtension.swift */,
+				65BA0C6A1FEECF080042F988 /* ALDownloadManager.swift */,
+				65BA0C6B1FEECF080042F988 /* ALDownloadInfo.swift */,
+				65BA0C6F1FEED2C00042F988 /* ALDownloadManagerDownloadService.swift */,
+			);
+			path = ALDownloadManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -546,12 +566,15 @@
 			files = (
 				65234E2F1F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift in Sources */,
 				65234E1C1F30C25D0052D161 /* DownloadManager.swift in Sources */,
+				65BA0C731FEED2D00042F988 /* ALDownloadInfo.swift in Sources */,
 				65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */,
 				65234E351F30C25D0052D161 /* MOHUDController.swift in Sources */,
 				65234E071F30C25D0052D161 /* UIView+Helpers.swift in Sources */,
+				65BA0C701FEED2C00042F988 /* ALDownloadManagerDownloadService.swift in Sources */,
 				65DA80D91FA3812500292466 /* NetworkDownloader.swift in Sources */,
 				6565750F1FA2486C009161D0 /* URLRequestBuilder.swift in Sources */,
 				65234E201F30C25D0052D161 /* MODownloadModel.swift in Sources */,
+				65BA0C721FEED2CC0042F988 /* ALDownloadManager.swift in Sources */,
 				65234E211F30C25D0052D161 /* HttpClient.swift in Sources */,
 				65C0FCF81FC2FD6700930C0B /* UIView+AutolayoutExtensions.swift in Sources */,
 				65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */,
@@ -567,6 +590,7 @@
 				65234E0C1F30C25D0052D161 /* NSManagedObject+Setup.swift in Sources */,
 				65C0FD071FC34C6300930C0B /* MockImageLoader.swift in Sources */,
 				6519AD3A1FB45D0D00734BDC /* AsyncImageLoader.swift in Sources */,
+				65BA0C711FEED2C60042F988 /* AlamofireExtension.swift in Sources */,
 				65234E1D1F30C25D0052D161 /* DownloadModel.swift in Sources */,
 				65234E241F30C25D0052D161 /* MockNetworkService.swift in Sources */,
 				65234E341F30C25D0052D161 /* MOCollectionViewCoordinator.swift in Sources */,

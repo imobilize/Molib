@@ -34,18 +34,6 @@ extension String {
     }
 }
 
-public protocol Downloadable {
-    
-    func uniqueIdentifier() -> String
-
-    func downloadName() -> String
-    
-    func url() -> URL
-    
-    func localURL() -> URL
-}
-
-
 public protocol DataStore {
     
     func fetchEntity<T: Storable>(type: T.Type, id: String) -> T?

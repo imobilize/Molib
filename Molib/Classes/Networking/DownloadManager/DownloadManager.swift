@@ -17,10 +17,8 @@ public class DownloadServiceFactory {
     public class func getDownloadService() -> DownloadService {
         
         if downloadService == nil {
-        
-            let downloader = NetworkDownloader(networkOperationService:  MockNetworkService())
-            
-            downloadService = DownloadServiceImpl(downloader: downloader)
+
+            downloadService = ALDownloadManager()
         }
         
         return downloadService

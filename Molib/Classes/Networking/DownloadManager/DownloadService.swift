@@ -1,5 +1,30 @@
 import Foundation
 
+public protocol Downloadable {
+
+    func downloadIdentifier() -> String
+
+    func downloadName() -> String
+
+    func url() -> URL
+
+    func localURL() -> URL
+}
+
+
+public typealias DownloadServiceOperationStateUpdate = (_ serviceOperation: DownloadServiceOperation, _ state: DownloadServiceOperationState) -> Void
+public typealias DownloadServiceOperationProgressUpdate = (_ serviceOperation: DownloadServiceOperation, _ progress: Float) -> Void
+
+public enum DownloadServiceOperationState {
+
+    case NotStarted
+    case Downloading
+    case Paused
+    case Failed
+    case Finished
+}
+
+
 public protocol DownloadService {
 
     func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation
@@ -11,139 +36,16 @@ public protocol DownloadService {
 
 public protocol DownloadServiceOperation {
 
-    func downloadableIdentifier() -> String
-
-    func downloadURL() -> URL
+    var downloadable: Downloadable { get }
 
     func pauseDownload()
 
     func resumeDownload()
 
     func cancelDownload()
+
+    func register(forStateUpdate update: @escaping DownloadServiceOperationStateUpdate)
+
+    func register(forProgressUpdate update: @escaping DownloadServiceOperationProgressUpdate)
 }
 
-class DownloadServiceImpl: DownloadService {
-
-    private let downloader: Downloader
-    private var currentOperations = [DownloadServiceOperation]()
-
-    init(downloader: Downloader) {
-        self.downloader = downloader
-    }
-
-    func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation {
-
-        let downloadOperation = createAndAppendDownloadOperation(downloadable: downloadable)
-
-        downloadOperation.startDownload()
-
-        return downloadOperation
-    }
-
-    func resumeDownload(downloadable: Downloadable) -> DownloadServiceOperation {
-
-        let downloadOperation = createAndAppendDownloadOperation(downloadable: downloadable)
-
-        downloadOperation.resumeDownload()
-
-        return downloadOperation
-    }
-
-    func currentDownloadServiceOperations() -> [DownloadServiceOperation] {
-        return currentOperations
-    }
-
-    private func createAndAppendDownloadOperation(downloadable: Downloadable) -> DownloadServiceOperationImpl {
-
-        let downloaderTask = DownloaderTask(uniqueIdentifier: downloadable.uniqueIdentifier(), downloadURL: downloadable.url(), downloadDestinationURL: downloadable.localURL(), fileName: downloadable.downloadName())
-
-        downloader.addDownloadTask(task: downloaderTask)
-
-        let downloadServiceOperation = DownloadServiceOperationImpl(downloaderTask: downloaderTask, downloader: downloader)
-
-        currentOperations.append(downloadServiceOperation)
-
-        return downloadServiceOperation
-    }
-}
-
-class DownloadServiceOperationImpl {
-
-    private let downloaderTask: DownloaderTask
-    private let downloader: Downloader
-
-    init(downloaderTask: DownloaderTask, downloader: Downloader) {
-        self.downloaderTask = downloaderTask
-        self.downloader = downloader
-    }
-
-    func startDownload() {
-        downloader.addDownloadTask(task: downloaderTask)
-    }
-}
-
-extension DownloadServiceOperationImpl: DownloadServiceOperation {
-
-    func downloadableIdentifier() -> String {
-        return downloaderTask.uniqueIdentifier
-    }
-
-    func downloadURL() -> URL {
-        return downloaderTask.downloadURL
-    }
-
-    func pauseDownload() {
-        downloader.pauseDownloadTask(task: downloaderTask)
-    }
-
-    func resumeDownload() {
-        downloader.resumeDownloadTask(task: downloaderTask)
-    }
-
-    func cancelDownload() {
-        downloader.cancelTask(task: downloaderTask)
-    }
-
-    func registerForProgressUpdates() {
-//        downloader.
-    }
-}
-
-extension DownloadServiceOperationImpl: DownloaderDelegate {
-    func downloadRequestDidUpdateProgress(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestDidPopulatedInterruptedTasks(downloadModel: [DownloadModel]) {
-
-    }
-
-    func downloadRequestStarted(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestDidPaused(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestDidResumed(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestDidRetry(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestCanceled(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestFinished(downloadModel: DownloadModel, index: Int) {
-
-    }
-
-    func downloadRequestDidFailedWithError(error: NSError, downloadModel: DownloadModel, index: Int) {
-
-    }
-    
-}

@@ -22,6 +22,11 @@ public enum TaskStatus: Int {
 }
 
 public class DownloadModel: NSObject, Downloadable {
+
+    public func downloadIdentifier() -> String {
+        return id
+    }
+
     public func uniqueIdentifier() -> String {
         return id
     }
