@@ -101,23 +101,25 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
     
     public func itemAtIndexPath(indexPath: IndexPath) -> T {
 
-        if let array = arrayItems[indexPath.section] {
-            return array[indexPath.row]
+        guard arrayItems.count > indexPath.section, let array = arrayItems[indexPath.section] else {
+            preconditionFailure("There was no item at indexPath \(indexPath)")
         }
-        preconditionFailure("There was no item at indexPath \(indexPath)")
+
+        return array[indexPath.row]
     }
     
     public func deleteItemAtIndexPath(indexPath: IndexPath) {
 
         var items = [T]()
-        if var array = arrayItems[indexPath.section] {
+        if arrayItems.count > indexPath.section, var array = arrayItems[indexPath.section] {
 
             let item = array[indexPath.row]
             items.append(item)
             array.remove(at: indexPath.row)
-        }
+            arrayItems[indexPath.section] = array
 
-        delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: [indexPath])
+            delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: [indexPath])
+        }
     }
 
     public func insertItem(item: T, atIndexPath indexPath: IndexPath) {
@@ -125,6 +127,8 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         if arrayItems.count > indexPath.section, var array = arrayItems[indexPath.section] {
 
             array.insert(item, at: indexPath.row)
+            arrayItems[indexPath.section] = array
+
         } else {
 
             var array = [T]()
@@ -137,19 +141,24 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
     
     public func updateItem(item: T, atIndexPath indexPath: IndexPath) {
 
-        if var array = arrayItems[indexPath.section] {
+        if arrayItems.count > indexPath.section, var array = arrayItems[indexPath.section] {
 
             array[indexPath.row] = item
+            arrayItems[indexPath.section] = array
+
+            delegate?.providerDidUpdateItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
         }
-        
-        delegate?.providerDidUpdateItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
     
     public func deleteAllInSection(section: Int) {
 
-        arrayItems.removeAll()
-        
-        delegate?.providerDidDeleteAllItemsInSection(section: 0)
+        if arrayItems.count > section, var array = arrayItems[section] {
+
+            array.removeAll()
+            arrayItems[section] = array
+
+            delegate?.providerDidDeleteAllItemsInSection(section: 0)
+        }
     }
     
     public func batchUpdates(updatesBlock: VoidCompletion) {
