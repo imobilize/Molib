@@ -65,7 +65,7 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
     
     public var delegate: Delegate?
 
-    private var arrayItems: [T]
+    private var arrayItems: [[T]?]
 
     private var objectChanges: Array<(DataSourceChangeType,[IndexPath], [T])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
@@ -75,7 +75,7 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         self.objectChanges = Array()
         self.sectionChanges = Array()
 
-        arrayItems = [T]()
+        arrayItems = [[T]?]()
     }
     
     public func isEmpty() -> Bool {
@@ -85,44 +85,62 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
     
     public func numberOfSections() -> Int {
         
-        return 1
-    }
-    
-    public func numberOfRowsInSection(section: Int) -> Int {
-        
         return arrayItems.count
     }
     
+    public func numberOfRowsInSection(section: Int) -> Int {
+
+        var itemCount = 0
+
+        if arrayItems.count > section, let array = arrayItems[section] {
+            itemCount = array.count
+        }
+
+        return itemCount
+    }
+    
     public func itemAtIndexPath(indexPath: IndexPath) -> T {
-        
-        return arrayItems[indexPath.row]
+
+        if let array = arrayItems[indexPath.section] {
+            return array[indexPath.row]
+        }
+        preconditionFailure("There was no item at indexPath \(indexPath)")
     }
     
     public func deleteItemAtIndexPath(indexPath: IndexPath) {
-        
-        let item = arrayItems[indexPath.row]
-        
-        arrayItems.remove(at: indexPath.row)
-        
-        delegate?.providerDidDeleteItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
+
+        var items = [T]()
+        if var array = arrayItems[indexPath.section] {
+
+            let item = array[indexPath.row]
+            items.append(item)
+            array.remove(at: indexPath.row)
+        }
+
+        delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: [indexPath])
     }
 
     public func insertItem(item: T, atIndexPath indexPath: IndexPath) {
-        
-        arrayItems.insert(item, at: indexPath.row)
-        
+
+        if arrayItems.count > indexPath.section, var array = arrayItems[indexPath.section] {
+
+            array.insert(item, at: indexPath.row)
+        } else {
+
+            var array = [T]()
+            array.insert(item, at: 0)
+            arrayItems.insert(array, at: indexPath.section)
+        }
+
         delegate?.providerDidInsertItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
     
     public func updateItem(item: T, atIndexPath indexPath: IndexPath) {
-        
-        var newItems = [T](arrayItems)
-    
-        newItems.remove(at: indexPath.row)
-        
-        newItems.insert(item, at: indexPath.row)
-        
-        self.arrayItems = newItems
+
+        if var array = arrayItems[indexPath.section] {
+
+            array[indexPath.row] = item
+        }
         
         delegate?.providerDidUpdateItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
@@ -152,10 +170,11 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         return nil
     }
     
-    public func itemsArray() -> [T] {
-        
-        return arrayItems
-        
+    public func itemsArray(atSection section: Int) -> [T] {
+
+        guard let itemsArray = arrayItems[section] else { return [T]() }
+
+        return itemsArray
     }
 }
 
