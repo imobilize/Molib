@@ -1,10 +1,26 @@
 
 import UIKit
 
-public struct DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDelegate {
+public protocol TableViewCellProvider: class {
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell
+}
+
+public protocol TableViewEditingDelegate: class {
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
+    func tableView(_ tableView: UITableView, didDeleteRowAt indexPath: IndexPath)
+}
+
+
+public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDelegate {
     
-    let tableView: UITableView
-    
+    private let tableView: UITableView
+
+    init(tableView: UITableView) {
+        self.tableView = tableView
+    }
+
     // conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
         
@@ -55,27 +71,18 @@ public struct DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDe
         
         self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
     }
-
 }
 
-public protocol TableViewCellProvider: class {
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell
-}
 
-public protocol TableViewEditingDelegate: class {
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
-    func tableView(_ tableView: UITableView, didDeleteRowAt indexPath: IndexPath)
-}
 
 public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UITableViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderTableViewAdapter<CollectionType> {
 
     var dataSource: DataSource
+    private var sectionNames: [String: String]
+
+    private let dataSourceProviderTableViewAdapter: DataSourceProviderTableViewAdapter<CollectionType>
     
-    let dataSourceProviderTableViewAdapter: DataSourceProviderTableViewAdapter<CollectionType>
-    
-    unowned let tableViewCellProvider: TableViewCellProvider
+    private unowned let tableViewCellProvider: TableViewCellProvider
     public weak var tableViewEditingDelegate: TableViewEditingDelegate?
     
     public init(tableView: UITableView, dataSource: DataSource, cellProvider: TableViewCellProvider) {
@@ -83,18 +90,22 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
         self.dataSource = dataSource
         self.tableViewCellProvider = cellProvider
         self.dataSourceProviderTableViewAdapter = DataSourceProviderTableViewAdapter<CollectionType>(tableView: tableView)
-        
+        self.sectionNames = [String: String]()
+
         super.init()
         
         tableView.dataSource = self
         self.dataSource.delegate = self.dataSourceProviderTableViewAdapter
-
     }
-    
+
+    public func setName(_ name: String, forSection section: Int) {
+        sectionNames["\(section)"] = name
+    }
+
     // MARK: - Table View
     
-    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        
+    public func numberOfSections(in tableView: UITableView) -> Int {
+
         return self.dataSource.numberOfSections()
     }
     
@@ -125,6 +136,10 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
 
             tableViewEditingDelegate?.tableView(tableView, didDeleteRowAt: indexPath)
         }
+    }
+
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionNames["\(section)"]
     }
 }
 

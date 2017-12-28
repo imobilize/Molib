@@ -69,6 +69,9 @@
 		65C2F0E71FBDEC6300DBA99F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B26ABC1F31107100D2ED98 /* Alamofire.framework */; };
 		65C2F0E81FBDEC6300DBA99F /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A97D3D1FA0F07F00EC0AB6 /* CryptoSwift.framework */; };
 		65CA38C01FABA44300284CBB /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA38BF1FABA44300284CBB /* DownloadService.swift */; };
+		65D65E191FF4524200892B37 /* DictionaryDataSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D65E181FF4524200892B37 /* DictionaryDataSourceProvider.swift */; };
+		65D65E1B1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D65E1A1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift */; };
+		65D65E1D1FF4531000892B37 /* ArrayDataSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D65E1C1FF4531000892B37 /* ArrayDataSourceProvider.swift */; };
 		65DA80D71FA3472B00292466 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DE21F30C25D0052D161 /* Downloader.swift */; };
 		65DA80D91FA3812500292466 /* NetworkDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DA80D81FA3812500292466 /* NetworkDownloader.swift */; };
 		65DA80DB1FA3B08600292466 /* DownloaderOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DA80DA1FA3B08600292466 /* DownloaderOperation.swift */; };
@@ -171,6 +174,9 @@
 		65C0FD051FC34C4400930C0B /* MockImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageLoader.swift; sourceTree = "<group>"; };
 		65C2F0E31FBDDDC100DBA99F /* UIImage+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		65CA38BF1FABA44300284CBB /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
+		65D65E181FF4524200892B37 /* DictionaryDataSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryDataSourceProvider.swift; sourceTree = "<group>"; };
+		65D65E1A1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsDataSourceProvider.swift; sourceTree = "<group>"; };
+		65D65E1C1FF4531000892B37 /* ArrayDataSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayDataSourceProvider.swift; sourceTree = "<group>"; };
 		65DA80D81FA3812500292466 /* NetworkDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDownloader.swift; sourceTree = "<group>"; };
 		65DA80DA1FA3B08600292466 /* DownloaderOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperation.swift; sourceTree = "<group>"; };
 		65DA80DC1FA3C48300292466 /* DownloaderOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperationTests.swift; sourceTree = "<group>"; };
@@ -398,11 +404,14 @@
 			isa = PBXGroup;
 			children = (
 				65234DFC1F30C25D0052D161 /* DataSourceProvider.swift */,
+				65D65E1C1FF4531000892B37 /* ArrayDataSourceProvider.swift */,
+				65D65E181FF4524200892B37 /* DictionaryDataSourceProvider.swift */,
+				65D65E1A1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift */,
 				65234DFD1F30C25D0052D161 /* MOCollectionViewCoordinator.swift */,
-				65234DFE1F30C25D0052D161 /* MOHUDController.swift */,
 				65234DFF1F30C25D0052D161 /* MOTableViewCoordinator.swift */,
 				65234E001F30C25D0052D161 /* MOWebViewController.swift */,
 				65234E011F30C25D0052D161 /* MOWebViewController.xib */,
+				65234DFE1F30C25D0052D161 /* MOHUDController.swift */,
 				65234E021F30C25D0052D161 /* ViewController+Helpers.swift */,
 			);
 			path = ViewControllers;
@@ -580,6 +589,7 @@
 				65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */,
 				65234E2B1F30C25D0052D161 /* Data+AES256.swift in Sources */,
 				65234E081F30C25D0052D161 /* UIViewController+Helpers.swift in Sources */,
+				65D65E1B1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift in Sources */,
 				65234E361F30C25D0052D161 /* MOTableViewCoordinator.swift in Sources */,
 				6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */,
 				65C2F0E41FBDDDC100DBA99F /* UIImage+Helpers.swift in Sources */,
@@ -607,6 +617,7 @@
 				65234E1A1F30C25D0052D161 /* ConnectionHelper.swift in Sources */,
 				65234E191F30C25D0052D161 /* AuththenticatedNetworkService.swift in Sources */,
 				65234E301F30C25D0052D161 /* TestHelpers.swift in Sources */,
+				65D65E191FF4524200892B37 /* DictionaryDataSourceProvider.swift in Sources */,
 				65234E251F30C25D0052D161 /* NetworkRequest.swift in Sources */,
 				65CA38C01FABA44300284CBB /* DownloadService.swift in Sources */,
 				65234E0E1F30C25D0052D161 /* DataStore.swift in Sources */,
@@ -621,6 +632,7 @@
 				65234E311F30C25D0052D161 /* TextEntryUtils.swift in Sources */,
 				65234E371F30C25D0052D161 /* MOWebViewController.swift in Sources */,
 				65BF03CB1F9F9AC800ADDA18 /* Dispatch.swift in Sources */,
+				65D65E1D1FF4531000892B37 /* ArrayDataSourceProvider.swift in Sources */,
 				6544957E1FA257E900E794DD /* AlamofireNetworkRequestService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
