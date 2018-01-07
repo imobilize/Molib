@@ -4,9 +4,11 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public var delegate: Delegate?
 
+    private var sectionsInserted: [Int]
     private var dictionaryItems: [IndexPath: T]
 
     public init() {
+        sectionsInserted = [Int]()
         dictionaryItems = [IndexPath: T]()
     }
 
@@ -56,7 +58,17 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func insertItem(item: T, atIndexPath indexPath: IndexPath) {
 
+        for i in 0...indexPath.section {
+
+            if sectionsInserted.contains(i) == false {
+
+                sectionsInserted.append(i)
+                delegate?.providerDidInsertSectionAtIndex(index: i)
+            }
+        }
+
         dictionaryItems[indexPath] = item
+
         delegate?.providerDidInsertItemsAtIndexPaths(items: [item], atIndexPaths: [indexPath])
     }
 

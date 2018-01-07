@@ -53,6 +53,8 @@
 		65234E3B1F30C25D0052D161 /* MOHitTestContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */; };
 		6544957C1FA254C500E794DD /* NetworkRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6544957B1FA254C500E794DD /* NetworkRequestService.swift */; };
 		6544957E1FA257E900E794DD /* AlamofireNetworkRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6544957D1FA257E900E794DD /* AlamofireNetworkRequestService.swift */; };
+		65575ECB2000FADA00FEEBB4 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65575ECA2000FADA00FEEBB4 /* Serializable.swift */; };
+		65575ECD2000FB2300FEEBB4 /* InMemoryDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65575ECC2000FB2300FEEBB4 /* InMemoryDataStore.swift */; };
 		6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6565750B1FA24360009161D0 /* URLRequestEncoder.swift */; };
 		6565750F1FA2486C009161D0 /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656575091FA23A90009161D0 /* URLRequestBuilder.swift */; };
 		65A1D3DB1FC5DB1E00920EF6 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1D3DA1FC5DB1E00920EF6 /* DateUtils.swift */; };
@@ -158,6 +160,8 @@
 		6544957B1FA254C500E794DD /* NetworkRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestService.swift; sourceTree = "<group>"; };
 		6544957D1FA257E900E794DD /* AlamofireNetworkRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworkRequestService.swift; sourceTree = "<group>"; };
 		6544957F1FA3212B00E794DD /* ParameterEncodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterEncodingTests.swift; sourceTree = "<group>"; };
+		65575ECA2000FADA00FEEBB4 /* Serializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
+		65575ECC2000FB2300FEEBB4 /* InMemoryDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryDataStore.swift; sourceTree = "<group>"; };
 		656575091FA23A90009161D0 /* URLRequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestBuilder.swift; sourceTree = "<group>"; };
 		6565750B1FA24360009161D0 /* URLRequestEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestEncoder.swift; sourceTree = "<group>"; };
 		65A1D3DA1FC5DB1E00920EF6 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
@@ -324,7 +328,9 @@
 			isa = PBXGroup;
 			children = (
 				65234DD01F30C25D0052D161 /* DataStore.swift */,
+				65575ECC2000FB2300FEEBB4 /* InMemoryDataStore.swift */,
 				65234DD11F30C25D0052D161 /* FileManager.swift */,
+				65575ECA2000FADA00FEEBB4 /* Serializable.swift */,
 			);
 			path = DataStorage;
 			sourceTree = "<group>";
@@ -577,6 +583,7 @@
 				65234E1C1F30C25D0052D161 /* DownloadManager.swift in Sources */,
 				65BA0C731FEED2D00042F988 /* ALDownloadInfo.swift in Sources */,
 				65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */,
+				65575ECD2000FB2300FEEBB4 /* InMemoryDataStore.swift in Sources */,
 				65234E351F30C25D0052D161 /* MOHUDController.swift in Sources */,
 				65234E071F30C25D0052D161 /* UIView+Helpers.swift in Sources */,
 				65BA0C701FEED2C00042F988 /* ALDownloadManagerDownloadService.swift in Sources */,
@@ -592,6 +599,7 @@
 				65D65E1B1FF452B900892B37 /* FetchedResultsDataSourceProvider.swift in Sources */,
 				65234E361F30C25D0052D161 /* MOTableViewCoordinator.swift in Sources */,
 				6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */,
+				65575ECB2000FADA00FEEBB4 /* Serializable.swift in Sources */,
 				65C2F0E41FBDDDC100DBA99F /* UIImage+Helpers.swift in Sources */,
 				65234E151F30C25D0052D161 /* LocationManager.swift in Sources */,
 				65234E101F30C25D0052D161 /* MODevice.swift in Sources */,
