@@ -19,11 +19,7 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func numberOfSections() -> Int {
 
-        if let lastIndexPath = dictionaryItems.keys.sorted().last {
-            return lastIndexPath.section + 1
-        }
-
-        return 0
+        return sectionsInserted.count
     }
 
     public func numberOfRowsInSection(section: Int) -> Int {
