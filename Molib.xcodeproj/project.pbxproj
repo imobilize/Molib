@@ -80,6 +80,8 @@
 		65DA80DD1FA3C48300292466 /* DownloaderOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DA80DC1FA3C48300292466 /* DownloaderOperationTests.swift */; };
 		65E2414E1FA74ABC00ADC736 /* Molib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 650BBBC51F2F7AEA007A8B49 /* Molib.framework */; };
 		65E2414F1FA74AD700ADC736 /* MOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65234E011F30C25D0052D161 /* MOWebViewController.xib */; };
+		65E3E2F72003F87700B64D4B /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E3E2F62003F87700B64D4B /* DataCache.swift */; };
+		65E3E2F92003FA6A00B64D4B /* ObjectDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E3E2F82003FA6A00B64D4B /* ObjectDataCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +186,8 @@
 		65DA80D81FA3812500292466 /* NetworkDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDownloader.swift; sourceTree = "<group>"; };
 		65DA80DA1FA3B08600292466 /* DownloaderOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperation.swift; sourceTree = "<group>"; };
 		65DA80DC1FA3C48300292466 /* DownloaderOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderOperationTests.swift; sourceTree = "<group>"; };
+		65E3E2F62003F87700B64D4B /* DataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCache.swift; sourceTree = "<group>"; };
+		65E3E2F82003FA6A00B64D4B /* ObjectDataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDataCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -331,6 +335,8 @@
 				65575ECC2000FB2300FEEBB4 /* InMemoryDataStore.swift */,
 				65234DD11F30C25D0052D161 /* FileManager.swift */,
 				65575ECA2000FADA00FEEBB4 /* Serializable.swift */,
+				65E3E2F62003F87700B64D4B /* DataCache.swift */,
+				65E3E2F82003FA6A00B64D4B /* ObjectDataCache.swift */,
 			);
 			path = DataStorage;
 			sourceTree = "<group>";
@@ -582,6 +588,7 @@
 				65234E2F1F30C25D0052D161 /* NSUserDefaults+SecureProtocol.swift in Sources */,
 				65234E1C1F30C25D0052D161 /* DownloadManager.swift in Sources */,
 				65BA0C731FEED2D00042F988 /* ALDownloadInfo.swift in Sources */,
+				65E3E2F92003FA6A00B64D4B /* ObjectDataCache.swift in Sources */,
 				65234E391F30C25D0052D161 /* ViewController+Helpers.swift in Sources */,
 				65575ECD2000FB2300FEEBB4 /* InMemoryDataStore.swift in Sources */,
 				65234E351F30C25D0052D161 /* MOHUDController.swift in Sources */,
@@ -635,6 +642,7 @@
 				65234E0D1F30C25D0052D161 /* NSManagedObjectContext+Helpers.swift in Sources */,
 				6519AD3B1FB492C600734BDC /* ImageLoader.swift in Sources */,
 				65234E331F30C25D0052D161 /* DataSourceProvider.swift in Sources */,
+				65E3E2F72003F87700B64D4B /* DataCache.swift in Sources */,
 				65DA80DB1FA3B08600292466 /* DownloaderOperation.swift in Sources */,
 				65234E121F30C25D0052D161 /* MODeviceUtils.m in Sources */,
 				65234E311F30C25D0052D161 /* TextEntryUtils.swift in Sources */,
