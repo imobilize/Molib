@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Molib.xcodeproj">
+      location = "group:../Molib.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Pods/Pods.xcodeproj">
+      location = "group:MolibExample.xcodeproj">
    </FileRef>
 </Workspace>
