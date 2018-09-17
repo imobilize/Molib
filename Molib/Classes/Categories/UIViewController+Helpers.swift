@@ -124,7 +124,7 @@ extension UIViewController {
     }
     
     
-    public func rootViewController() -> UIViewController {
+    public func applicationRootViewController() -> UIViewController {
         
         let window: UIWindow = UIApplication.shared.windows[0] 
         

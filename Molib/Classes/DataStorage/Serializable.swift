@@ -33,21 +33,27 @@ extension Array: JSONSerializable {
 
     public func toJSONString() -> String? {
 
-        guard let jsonData = try? JSONEncoder().encode(self) else { return nil }
+        //Convert to Data
+        let jsonData = try? JSONSerialization.data(withJSONObject: self, options: JSONSerialization.WritingOptions.prettyPrinted)
 
-        let jsonString = String(data: jsonData, encoding: .utf8)
+        //Convert back to string. Usually only do this for debugging
+        if let data = jsonData, let jsonString = String(data: data, encoding: String.Encoding.utf8) {
+            return jsonString
+        }
 
-        return jsonString
+        return nil
     }
 
     static public func fromJSONString(jsonString: String) -> Array? {
 
-        guard let data = jsonString.data(using: .utf8),
-            let array = try? JSONDecoder().decode(Array.self, from: data) else {
+        guard let data = jsonString.data(using: .utf8) else {
             return nil
         }
 
-        return array
+        guard let jsonArray = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as? Array else {
+            return nil
+        }
+
+        return jsonArray
     }
 }
-
