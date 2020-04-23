@@ -3,15 +3,12 @@ import Alamofire
 
 class AlamofireNetworkRequestService: NetworkRequestService {
 
-    private var manager: SessionManager!
-
     init() {
-        self.manager = SessionManager.`default`
     }
 
     func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation? {
 
-        let alamoFireRequestOperation = AlamofireNetworkOperation(networkRequest: request, sessionManager: manager)
+        let alamoFireRequestOperation = AlamofireNetworkOperation(networkRequest: request)
 
         alamoFireRequestOperation.performRequest()
 
@@ -20,7 +17,7 @@ class AlamofireNetworkRequestService: NetworkRequestService {
 
     func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation? {
 
-        let alamorFireUploadOperation = AlamofireNetworkUploadOperation(networkRequest: request, sessionManager: manager)
+        let alamorFireUploadOperation = AlamofireNetworkUploadOperation(networkRequest: request)
 
         alamorFireUploadOperation.performRequest()
 
@@ -29,7 +26,7 @@ class AlamofireNetworkRequestService: NetworkRequestService {
 
     func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation? {
 
-        let alamorFireDownloadOperation = AlamofireNetworkDownloadOperation(networkRequest: request, sessionManager: manager)
+        let alamorFireDownloadOperation = AlamofireNetworkDownloadOperation(networkRequest: request)
 
         alamorFireDownloadOperation.performRequest()
 
@@ -37,24 +34,22 @@ class AlamofireNetworkRequestService: NetworkRequestService {
     }
 
     func cancelAllOperations() {
-        manager.session.invalidateAndCancel()
+        AF.cancelAllRequests()
     }
 }
 
 class AlamofireNetworkOperation: NetworkOperation {
 
     private let networkRequest: NetworkRequest
-    private let sessionManager: SessionManager
     private var alamoFireRequest: DataRequest?
 
-    init(networkRequest: NetworkRequest, sessionManager: SessionManager) {
+    init(networkRequest: NetworkRequest) {
         self.networkRequest = networkRequest
-        self.sessionManager = sessionManager
     }
 
     func performRequest() {
 
-        alamoFireRequest = sessionManager.request(networkRequest.urlRequest)
+        alamoFireRequest = AF.request(networkRequest.urlRequest)
         alamoFireRequest?.validate().responseData { [weak self](networkResponse) -> Void in
 
             debugPrint("Request response for URL: \(String(describing: self?.networkRequest.urlRequest.url))")
@@ -73,17 +68,15 @@ class AlamofireNetworkOperation: NetworkOperation {
 class AlamofireNetworkUploadOperation : NetworkUploadOperation {
 
     private let networkRequest: NetworkUploadRequest
-    private let sessionManager: SessionManager
     private var alamoFireRequest: UploadRequest?
 
-    init(networkRequest: NetworkUploadRequest, sessionManager: SessionManager) {
+    init(networkRequest: NetworkUploadRequest) {
         self.networkRequest = networkRequest
-        self.sessionManager = sessionManager
     }
 
     func performRequest() {
 
-        alamoFireRequest = sessionManager.upload(networkRequest.fileURL, with: networkRequest.urlRequest)
+        alamoFireRequest = AF.upload(networkRequest.fileURL, with: networkRequest.urlRequest)
         
         alamoFireRequest?.validate().responseData { [weak self](networkResponse) -> Void in
 
@@ -123,19 +116,17 @@ class AlamofireNetworkUploadOperation : NetworkUploadOperation {
 class AlamofireNetworkDownloadOperation: NetworkDownloadOperation {
 
     private let networkRequest: NetworkDownloadRequest
-    private let sessionManager: SessionManager
     private var alamoFireRequest: DownloadRequest?
 
-    init(networkRequest: NetworkDownloadRequest, sessionManager: SessionManager) {
+    init(networkRequest: NetworkDownloadRequest) {
         self.networkRequest = networkRequest
-        self.sessionManager = sessionManager
     }
 
     func performRequest() {
 
-        alamoFireRequest = sessionManager.download(networkRequest.urlRequest, to: { (url, response) -> (destinationURL: URL, options: DownloadRequest.DownloadOptions) in
+        alamoFireRequest = AF.download(networkRequest.urlRequest, to: { (url, response) -> (destinationURL: URL, options: DownloadRequest.Options) in
 
-            return (self.networkRequest.downloadLocationURL, Alamofire.DownloadRequest.DownloadOptions.removePreviousFile)
+            return (self.networkRequest.downloadLocationURL, Alamofire.DownloadRequest.Options.removePreviousFile)
         })
 
         alamoFireRequest?.validate().responseData { [weak self](networkResponse) -> Void in
@@ -176,7 +167,7 @@ class AlamofireNetworkDownloadOperation: NetworkDownloadOperation {
 
 extension NetworkDownloadOperation {
 
-    func handleResponse<T>(networkResponse: DataResponse<T>, completion: DataResponseCompletion) {
+    func handleResponse<T>(networkResponse: AFDataResponse<T>, completion: DataResponseCompletion) {
 
         debugPrint(networkResponse)
 

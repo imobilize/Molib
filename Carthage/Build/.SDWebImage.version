@@ -1,27 +1,43 @@
 {
   "Mac" : [
     {
+      "name" : "SDWebImageMapKit",
+      "hash" : "188127debb580056a7f9a65943f8117c243d5971fe7b59fe05d86f0cb5c13516"
+    },
+    {
       "name" : "SDWebImage",
-      "hash" : "29b802dcdb1256a3d1287a5e3aa4f9d11aec1f343ec25088ac3e29831714d0ca"
+      "hash" : "974daa799bac46c55bb718bdb76ede67a35f0ae932641ff3fc9f53ddeda04949"
     }
   ],
   "watchOS" : [
     {
       "name" : "SDWebImage",
-      "hash" : "f9450a0e901178cb3e7ea9149e8bb577cdb6e61e2c4a02661cb1ceb86dba1d73"
+      "hash" : "87258987ae65f923a9614181b753e1b2cebd3c6580de8487838ab412f403ff3a"
     }
   ],
   "tvOS" : [
     {
-      "name" : "SDWebImage",
-      "hash" : "3e9bbdf8cc8136c6272e7e242143d102e3c7bd7c62697a85a3bada912d6d96e4"
-    }
-  ],
-  "commitish" : "4.4.2",
-  "iOS" : [
+      "name" : "SDWebImageMapKit",
+      "hash" : "8120bccbef9397aa5796195c4cc13cfbec2247b52c2dfe515ad950e2b0f779c6"
+    },
     {
       "name" : "SDWebImage",
-      "hash" : "14c2fb04d9609d720cc52c0d6767a46e861c736993c7e234980dcfafd1c87816"
+      "hash" : "c4cdfaea647ab3cf5767ea7a9d4941428a3e2bfb16d8a122803d2e7e0df55365"
+    }
+  ],
+  "commitish" : "5.7.3",
+  "iOS" : [
+    {
+      "name" : "SDWebImageMapKit",
+      "hash" : "fbf75f6f468d7d87764144a54a570224e7d92bbdc55b8d5c460745b6298592cc"
+    },
+    {
+      "name" : "FLAnimatedImage",
+      "hash" : "fdeaf0680ce4b7bba393b6dcd902482440c7fef3e799592c9242a4f1b6f8808b"
+    },
+    {
+      "name" : "SDWebImage",
+      "hash" : "c5599b18bfcc688b9dab2c640a8aa878145e126e92dc111b07159a66a5b4d20f"
     }
   ]
 }

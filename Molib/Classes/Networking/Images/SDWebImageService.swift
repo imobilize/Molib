@@ -4,7 +4,7 @@ import SDWebImage
 
 public class SDWebImageService: ImageService {
     
-    let imageManager = SDWebImageManager.shared()
+    let imageManager = SDWebImageManager.shared
     
     public init() {}
     

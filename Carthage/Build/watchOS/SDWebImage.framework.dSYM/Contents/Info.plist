@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>English</string>
 		<key>CFBundleIdentifier</key>
-		<string>com.apple.xcode.dsym.com.dailymotion.SDWebImage.watchos</string>
+		<string>com.apple.xcode.dsym.com.dailymotion.SDWebImage</string>
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundlePackageType</key>
@@ -13,8 +13,8 @@
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleShortVersionString</key>
-		<string>4.4.2</string>
+		<string>5.7.3</string>
 		<key>CFBundleVersion</key>
-		<string>4.4.2</string>
+		<string>5.7.3</string>
 	</dict>
 </plist>
