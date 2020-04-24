@@ -327,9 +327,9 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
     
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
-        let view = collectionViewCellProvider.collectionView!(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
-
-        return view
+        let view = collectionViewCellProvider.collectionView?(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
+            
+        return view ?? UICollectionReusableView()
     }
     
     public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
@@ -365,5 +365,4 @@ public class CollectionViewCoordinatorWithItemCountLimit<CollectionType, DataSou
         
         return dataSource.numberOfRowsInSection(section: section) > itemCountLimit ? itemCountLimit : dataSource.numberOfRowsInSection(section: section)
     }
-    
 }
