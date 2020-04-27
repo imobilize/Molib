@@ -1,7 +1,7 @@
 
 import Foundation
 
-public typealias StorableDictionary = [String: AnyObject]
+public typealias StorableDictionary = [String: Any]
 
 public protocol Storable {
 

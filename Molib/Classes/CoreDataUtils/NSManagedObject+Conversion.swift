@@ -20,12 +20,12 @@ extension NSManagedObject {
 
 public extension NSManagedObject {
     
-    public func configureWithDictionary(dictionary: [String: AnyObject]) {
+    public func configureWithDictionary(dictionary: [String: Any]) {
         
         safeSetValuesForKeysWithDictionary(keyedValues: dictionary)
     }
 
-    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<String, AnyObject>) {
+    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<String, Any>) {
         
         let dateFormatter: DateFormatter = DateFormatter()
         //The Z at the end of your string represents Zulu which is UTC
@@ -35,13 +35,13 @@ public extension NSManagedObject {
         safeSetValuesForKeysWithDictionary(keyedValues: keyedValues, dateFormatter:dateFormatter)
     }
     
-    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<String, AnyObject>, dateFormatter:DateFormatter) {
+    func safeSetValuesForKeysWithDictionary(keyedValues: Dictionary<String, Any>, dateFormatter:DateFormatter) {
         
         let attributes: [String: NSAttributeDescription] = self.entity.attributesByName
         
         for (key, _) in attributes {
             
-            let valueOptional: AnyObject? = keyedValues[key]
+            let valueOptional = keyedValues[key] as? AnyObject
             
             if var value: AnyObject = valueOptional {
 

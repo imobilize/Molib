@@ -32,7 +32,7 @@ public struct MODownloadModel: Storable {
                 
     }
     
-    public func toDictionary() -> [String : AnyObject] {
+    public func toDictionary() -> StorableDictionary {
         
         var dictionary: StorableDictionary = [:]
         
