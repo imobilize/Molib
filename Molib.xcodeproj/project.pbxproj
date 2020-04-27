@@ -13,6 +13,7 @@
 		6519AD3C1FB492CD00734BDC /* SDWebImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6519AD361FB45CF300734BDC /* SDWebImageService.swift */; };
 		65211E6F2014A68A0018CC11 /* Int+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65211E6E2014A68A0018CC11 /* Int+Utils.swift */; };
 		65211E702014A68A0018CC11 /* Int+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65211E6E2014A68A0018CC11 /* Int+Utils.swift */; };
+		6521FBC0245399FD0037DB00 /* MOContainerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6521FBBF245399FD0037DB00 /* MOContainerViewDelegate.swift */; };
 		65234E071F30C25D0052D161 /* UIView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DC71F30C25D0052D161 /* UIView+Helpers.swift */; };
 		65234E081F30C25D0052D161 /* UIViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DC81F30C25D0052D161 /* UIViewController+Helpers.swift */; };
 		65234E091F30C25D0052D161 /* NSManagedObject+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65234DCA1F30C25D0052D161 /* NSManagedObject+Conversion.swift */; };
@@ -131,6 +132,7 @@
 		6519AD361FB45CF300734BDC /* SDWebImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDWebImageService.swift; sourceTree = "<group>"; };
 		6519AD391FB45D0D00734BDC /* AsyncImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageLoader.swift; sourceTree = "<group>"; };
 		65211E6E2014A68A0018CC11 /* Int+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Utils.swift"; sourceTree = "<group>"; };
+		6521FBBF245399FD0037DB00 /* MOContainerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MOContainerViewDelegate.swift; sourceTree = "<group>"; };
 		65234DC71F30C25D0052D161 /* UIView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Helpers.swift"; sourceTree = "<group>"; };
 		65234DC81F30C25D0052D161 /* UIViewController+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helpers.swift"; sourceTree = "<group>"; };
 		65234DCA1F30C25D0052D161 /* NSManagedObject+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Conversion.swift"; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 			children = (
 				65234E041F30C25D0052D161 /* Menu.swift */,
 				65234E051F30C25D0052D161 /* MOHitTestContainerView.swift */,
+				6521FBBF245399FD0037DB00 /* MOContainerViewDelegate.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -664,6 +668,7 @@
 				6565750D1FA2483F009161D0 /* URLRequestEncoder.swift in Sources */,
 				65575ECB2000FADA00FEEBB4 /* Serializable.swift in Sources */,
 				65C2F0E41FBDDDC100DBA99F /* UIImage+Helpers.swift in Sources */,
+				6521FBC0245399FD0037DB00 /* MOContainerViewDelegate.swift in Sources */,
 				65234E151F30C25D0052D161 /* LocationManager.swift in Sources */,
 				65234E101F30C25D0052D161 /* MODevice.swift in Sources */,
 				65234E3A1F30C25D0052D161 /* Menu.swift in Sources */,
