@@ -79,21 +79,30 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func deleteAllInSection(section: Int) {
 
+        if sectionsInserted.contains(section) {
+            sectionsInserted.removeAll(where: { $0 == section })
+        }
+        
         let keysOfItemsToRemove = dictionaryItems.keys.filter { $0.section == section }
 
         var items = [T]()
 
-        for key in keysOfItemsToRemove {
+        if(keysOfItemsToRemove.count > 0) {
 
-            if let itemToRemove = dictionaryItems[key] {
+            for key in keysOfItemsToRemove {
 
-                items.append(itemToRemove)
+                if let itemToRemove = dictionaryItems[key] {
 
-                dictionaryItems.removeValue(forKey: key)
+                    items.append(itemToRemove)
+
+                    dictionaryItems.removeValue(forKey: key)
+                }
             }
-        }
 
-        delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: keysOfItemsToRemove)
+            delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: keysOfItemsToRemove)
+        }
+        
+        delegate?.providerDidDeleteSectionAtIndex(index: section)
     }
 
     public func batchUpdates(updatesBlock: VoidCompletion) {

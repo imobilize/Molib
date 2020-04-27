@@ -14,7 +14,7 @@ enum DataSourceChangeType {
 public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
     
     weak var collectionView: UICollectionView?
-  
+    
     private var objectChanges: Array<(DataSourceChangeType,[IndexPath])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
     
@@ -30,13 +30,29 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     public func providerWillChangeContent() {
         
     }
+
     
     public func providerDidEndChangeContent() {
         
+        DispatchQueue.main.async {
+            
+            self.collectionView?.performBatchUpdates( {  () -> Void in
+
+                self.handleSectionChanges()
+
+                self.handleObjectChanges()
+            
+            }, completion: { (_) -> Void in
+                self.sectionChanges.removeAll(keepingCapacity: true)
+                self.objectChanges.removeAll(keepingCapacity: true)
+            })
+        }
+    }
+    
+    fileprivate func handleSectionChanges() {
+        
         if sectionChanges.count > 0 {
             
-            collectionView?.performBatchUpdates( {  () -> Void in
-                
                 for (type, section) in self.sectionChanges {
                     
                     let set = IndexSet (integer: section)
@@ -49,7 +65,6 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                         break
                         
                     case .Delete:
-                        
                         self.collectionView?.deleteSections(set)
                         break
                         
@@ -62,12 +77,10 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                         break
                     }
                 }
-                }, completion: { (_) -> Void in
-                    
-                    
-            })
         }
-        
+    }
+    
+    fileprivate func handleObjectChanges() {
         if self.objectChanges.count > 0 && self.sectionChanges.count == 0 {
             
             let shouldReload = shouldReloadCollectionViewToPreventKnownIssue()
@@ -81,9 +94,7 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                 self.collectionView?.reloadData()
                 
             } else {
-                
-                self.collectionView?.performBatchUpdates({ () -> Void in
-                    
+                                    
                     for (type, obj) in self.objectChanges {
                         
                         switch type {
@@ -108,21 +119,14 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                             self.collectionView?.moveItem(at: oldIndexPath!, to: newIndexPath!)
                         }
                     }
-                    }, completion: { (_) -> Void in
-                        
-                })
+
             }
         }
-        
-        self.sectionChanges.removeAll(keepingCapacity: true)
-        self.objectChanges.removeAll(keepingCapacity: true)
     }
-    
     
     public func providerDidInsertSectionAtIndex(index: Int) {
         
         let change = (DataSourceChangeType.Insert, index)
-        
         sectionChanges.append(change)
     }
     
@@ -135,12 +139,12 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
     
     public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath]) {
-
+        
         updateWithItemChange(type: .Insert, indexPaths: atIndexPaths)
     }
     
     public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath]) {
-
+        
         
         updateWithItemChange(type: .Delete, indexPaths: atIndexPaths)
     }
@@ -164,63 +168,10 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
     
     private func updateWithItemChange(type: DataSourceChangeType, indexPaths: [IndexPath]) {
-            
+        
         let change = (type, indexPaths)
-            
+        
         objectChanges.append(change)
-    }
-    
-    private func handleObjectChanges() {
-        
-        
-        if self.objectChanges.count > 0 && self.sectionChanges.count == 0 {
-            
-            let shouldReload = shouldReloadCollectionViewToPreventKnownIssue()
-            
-            if shouldReload || self.collectionView?.window == nil {
-                // This is to prevent a bug in UICollectionView from occurring.
-                // The bug presents itself when inserting the first object or deleting the last object in a collection view.
-                // http://stackoverflow.com/questions/12611292/uicollectionview-assertion-failure
-                // This code should be removed once the bug has been fixed, it is tracked in OpenRadar
-                // http://openradar.appspot.com/12954582
-                self.collectionView?.reloadData()
-                
-            } else {
-                
-                self.collectionView?.performBatchUpdates({ () -> Void in
-                    
-                    for (type, indexPaths) in self.objectChanges {
-                        
-                        switch type {
-                            
-                        case .Insert:
-                            
-                            self.collectionView?.insertItems(at: indexPaths)
-                            
-                        case .Delete:
-                            
-                            self.collectionView?.deleteItems(at: indexPaths)
-                            
-                        case .Update:
-                            
-                            self.collectionView?.reloadItems(at: indexPaths)
-                            
-                        case .Move:
-                            
-                            let oldIndexPath = indexPaths.first
-                            let newIndexPath = indexPaths.last
-                            
-                            self.collectionView?.moveItem(at: oldIndexPath!, to: newIndexPath!)
-                        }
-                    }
-                    }, completion: { (_) -> Void in
-                        
-                })
-            }
-        }
-        
-        self.sectionChanges.removeAll(keepingCapacity: true)
-        self.objectChanges.removeAll(keepingCapacity: true)
     }
     
     public func shouldReloadCollectionViewToPreventKnownIssue() -> Bool {
@@ -283,12 +234,12 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
     @objc optional func collectionView(collectionView: UICollectionView, canMoveItemAtIndexPath indexPath: IndexPath) -> Bool
     
-
+    
 }
 
 
 public class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UICollectionViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType> {
-
+    
     var dataSource: DataSource
     
     var dataSourceProviderCollectionViewAdapter: DataSourceProviderCollectionViewAdapter<CollectionType>
@@ -309,7 +260,7 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
     }
     
     // MARK: - Collection View Datasource
-    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in: UICollectionView) -> Int {
         
         return self.dataSource.numberOfSections()
     }
@@ -326,19 +277,19 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
     
     
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
+        
         let view = collectionViewCellProvider.collectionView?(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
-            
+        
         return view ?? UICollectionReusableView()
     }
     
     public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-
+        
         let canMove = collectionViewCellProvider.collectionView!(collectionView: collectionView, canMoveItemAtIndexPath: indexPath)
-
+        
         return canMove
     }
- 
+    
     public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         let item = self.dataSource.itemAtIndexPath(indexPath: sourceIndexPath)
@@ -356,7 +307,7 @@ public class CollectionViewCoordinatorWithItemCountLimit<CollectionType, DataSou
     public init(collectionView: UICollectionView, dataSource: DataSource, itemCountLimit: Int, cellProvider: CollectionViewCellProvider) {
         
         self.itemCountLimit = itemCountLimit
-
+        
         super.init(collectionView: collectionView, dataSource: dataSource, cellProvider: cellProvider)
         
     }

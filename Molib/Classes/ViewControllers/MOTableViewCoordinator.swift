@@ -24,52 +24,71 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
     // conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
         
-        self.tableView.beginUpdates()
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+        }
     }
     
     public func providerDidEndChangeContent() {
         
-        self.tableView.endUpdates()
+        DispatchQueue.main.async {
+            self.tableView.endUpdates()
+        }
     }
         
     public func providerDidInsertSectionAtIndex(index: Int) {
         
-        self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
+            self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        }
     }
     
     public func providerDidDeleteSectionAtIndex(index: Int) {
         
-        self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
+            self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        }
     }
     
     
     public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
+            self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        }
     }
     
     public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
+            self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        }
     }
     
     public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
+            self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        }
     }
     
     public func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
+        DispatchQueue.main.async {
 
-        self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
+            self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
+
+            self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
+        }
     }
     
     public func providerDidDeleteAllItemsInSection(section: Int) {
         
-        let sectionSet = IndexSet(integer: section)
+        DispatchQueue.main.async {
+            let sectionSet = IndexSet(integer: section)
         
-        self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
+            self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
+        }
     }
 }
 
