@@ -19,6 +19,8 @@ public protocol DataSourceProvider {
     
     func itemAtIndexPath(indexPath: IndexPath) -> ItemType
     
+    func headerDetailsAtSection(index: Int) -> [String: Any]?
+
     mutating func deleteItemAtIndexPath(indexPath: IndexPath)
     
     mutating func insertItem(item: ItemType, atIndexPath: IndexPath)
@@ -26,6 +28,9 @@ public protocol DataSourceProvider {
     mutating func updateItem(item: ItemType, atIndexPath: IndexPath)
  
     mutating func deleteAllInSection(section: Int)
+    
+    mutating func insertHeaderDetails(details: [String: Any], atSection: Int)
+
 }
 
 

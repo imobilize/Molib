@@ -6,10 +6,12 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     private var sectionsInserted: [Int]
     private var dictionaryItems: [IndexPath: T]
+    private var headerItems: [Int: [String: Any]]
 
     public init() {
         sectionsInserted = [Int]()
         dictionaryItems = [IndexPath: T]()
+        headerItems =  [Int: [String: Any]]()
     }
 
     public func isEmpty() -> Bool {
@@ -106,6 +108,16 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
         objc_sync_exit(self)
     }
+    
+    //MARK:- Header
+    public func insertHeaderDetails(details: [String : Any], atSection: Int) {
+        headerItems[atSection] = details
+    }
+
+    public func headerDetailsAtSection(index: Int) -> [String : Any]? {
+        return headerItems[index]
+    }
+
 
     public func itemsArray(atSection section: Int) -> [T] {
 

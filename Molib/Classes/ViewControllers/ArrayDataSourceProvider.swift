@@ -5,10 +5,12 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
     public var delegate: Delegate?
 
     private var arrayItems: [T]
+    private var headerItems: [Int: [String: Any]]
 
     public init() {
 
         arrayItems = [T]()
+        headerItems = [Int: [String: Any]]()
     }
 
     public func isEmpty() -> Bool {
@@ -78,6 +80,15 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         delegate?.providerDidEndChangeContent()
 
         objc_sync_exit(self)
+    }
+    
+    //MARK:- Header
+    public func insertHeaderDetails(details: [String : Any], atSection: Int) {
+        headerItems[atSection] = details
+    }
+
+    public func headerDetailsAtSection(index: Int) -> [String : Any]? {
+        return headerItems[index]
     }
 
     public func itemsArray() -> [T] {

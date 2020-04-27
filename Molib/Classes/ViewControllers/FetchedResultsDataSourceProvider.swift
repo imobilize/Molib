@@ -3,6 +3,8 @@ import CoreData
 
 public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate> : DataSourceProvider where Delegate.ItemType == ObjectType {
 
+    private var headerItems: [Int: [String: Any]]
+
     public var delegate: Delegate? { didSet {
 
         fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<ObjectType, Delegate>(delegate: delegate!)
@@ -18,6 +20,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
     public init(fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>) {
 
         self.fetchedResultsController = fetchedResultsController
+        self.headerItems = [Int: [String: Any]]()
     }
 
 
@@ -101,6 +104,15 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
     public func titleForHeaderAtSection(section: Int) -> String? {
 
         return self.fetchedResultsController.sections?[section].name
+    }
+    
+    //MARK:- Header
+    public func insertHeaderDetails(details: [String : Any], atSection: Int) {
+        headerItems[atSection] = details
+    }
+
+    public func headerDetailsAtSection(index: Int) -> [String : Any]? {
+        return headerItems[index]
     }
 
     deinit {
