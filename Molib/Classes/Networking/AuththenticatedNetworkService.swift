@@ -3,9 +3,11 @@ import Foundation
 
 public protocol AuththenticatedNetworkServiceDelegate {
     
+    func authenticatedNetworkServiceHeader() -> [String: String]
+
     func authenticatedNetworkServiceShouldReAuthenticate(service: AuththenticatedNetworkService) -> Bool
     
-    func authenticatedNetworkServiceURLRequestForAuthentication(service: AuththenticatedNetworkService) -> URLRequest
+    func authenticatedNetworkServiceURLRequestForAuthentication(service: AuththenticatedNetworkService) -> URLRequest?
     
     func authenticatedNetworkServiceDidReauthenticate(service: AuththenticatedNetworkService)
     
@@ -18,6 +20,8 @@ public class AuththenticatedNetworkService: NetworkRequestService {
     
     let networkService: NetworkRequestService
 
+    var authHeaders: [String: String]?
+    
     public init(networkService: NetworkRequestService) {
         
         self.networkService = networkService
@@ -27,7 +31,16 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
 
-        let authenticatedCheckTask = DataRequestTask(urlRequest: request.urlRequest, taskCompletion: taskCompletion)
+        var authRequest = request.urlRequest
+
+         if let headers = authHeaders ?? delegate?.authenticatedNetworkServiceHeader() {
+            authHeaders = headers
+            headers.forEach { (key: String, value: String) in
+                authRequest.setValue(key, forHTTPHeaderField: value)
+            }
+        }
+        
+        let authenticatedCheckTask = DataRequestTask(urlRequest: authRequest, taskCompletion: taskCompletion)
 
         let operation = networkService.enqueueNetworkRequest(request: authenticatedCheckTask)
 
@@ -43,7 +56,16 @@ public class AuththenticatedNetworkService: NetworkRequestService {
         
         let taskCompletion = authenticatedCheckResponseHandler(request: request)
         
-        let authenticatedCheckTask = DataUploadTask(urlRequest: request.urlRequest, name: request.name, fileName: request.fileName, fileURL: request.fileURL, mimeType: request.mimeType, taskCompletion: taskCompletion)
+        var authRequest = request.urlRequest
+        
+        if let headers = authHeaders ?? delegate?.authenticatedNetworkServiceHeader() {
+            authHeaders = headers
+            headers.forEach { (key: String, value: String) in
+                authRequest.setValue(key, forHTTPHeaderField: value)
+            }
+        }
+        
+        let authenticatedCheckTask = DataUploadTask(urlRequest: authRequest, name: request.name, fileName: request.fileName, fileURL: request.fileURL, mimeType: request.mimeType, taskCompletion: taskCompletion)
         
         let operation = networkService.enqueueNetworkUploadRequest(request: authenticatedCheckTask)
         
@@ -73,6 +95,8 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
                         self.handleAuthtenticationErrorForTask(networkRequest: request)
                     } else {
+                        
+                        self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithError: error)
                         request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
                     }
                 } else {
