@@ -68,19 +68,22 @@ public class InMemoryDataStore: DataStore {
 
         self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
     }
-    //Mark: TODO FIX THIS
+    
     public func removeEntity<T>(type: T.Type, entity: T) where T : Storable {
 
-        var typeDictionary = dictionaryForType(typeName: T.typeName)
+        if let id = entity.id {
 
-        if (entity.id) != nil {
-
-            self.storageDictionary.setValue(nil, forKey: type.typeName)
+            var typeDictionary = dictionaryForType(typeName: T.typeName)
+            typeDictionary[id] = nil
+            self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
         }
     }
 
     public func removeEntities<T>(type: T.Type, entities: [T]) where T : Storable {
 
+        entities.forEach { (entity) in
+           removeEntity(type: type, entity: entity)
+        }
     }
 
     public func removeAllObjects() {
