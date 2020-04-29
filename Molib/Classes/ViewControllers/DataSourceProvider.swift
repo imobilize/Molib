@@ -41,7 +41,7 @@ public protocol DataSourceProviderDelegate {
     
     mutating func providerWillChangeContent()
     
-    mutating func providerDidEndChangeContent()
+    mutating func providerDidEndChangeContent(completion: @escaping VoidCompletion)
     
     
     mutating func providerDidInsertSectionAtIndex(index: Int)

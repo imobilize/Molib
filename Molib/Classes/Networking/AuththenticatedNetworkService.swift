@@ -1,7 +1,7 @@
 
 import Foundation
 
-public protocol AuththenticatedNetworkServiceDelegate {
+public protocol AuththenticatedNetworkServiceDelegate: class {
     
     func authenticatedNetworkServiceHeader() -> [String: String]
 
@@ -16,11 +16,9 @@ public protocol AuththenticatedNetworkServiceDelegate {
 
 public class AuththenticatedNetworkService: NetworkRequestService {
     
-    public var delegate: AuththenticatedNetworkServiceDelegate?
+    public weak var delegate: AuththenticatedNetworkServiceDelegate?
     
     let networkService: NetworkRequestService
-
-    var authHeaders: [String: String]?
     
     public init(networkService: NetworkRequestService) {
         
@@ -33,10 +31,9 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
         var authRequest = request.urlRequest
 
-         if let headers = authHeaders ?? delegate?.authenticatedNetworkServiceHeader() {
-            authHeaders = headers
+         if let headers = delegate?.authenticatedNetworkServiceHeader() {
             headers.forEach { (key: String, value: String) in
-                authRequest.setValue(key, forHTTPHeaderField: value)
+                authRequest.setValue(value, forHTTPHeaderField: key)
             }
         }
         
@@ -58,10 +55,9 @@ public class AuththenticatedNetworkService: NetworkRequestService {
         
         var authRequest = request.urlRequest
         
-        if let headers = authHeaders ?? delegate?.authenticatedNetworkServiceHeader() {
-            authHeaders = headers
+        if let headers = delegate?.authenticatedNetworkServiceHeader() {
             headers.forEach { (key: String, value: String) in
-                authRequest.setValue(key, forHTTPHeaderField: value)
+                authRequest.setValue(value, forHTTPHeaderField: key)
             }
         }
         

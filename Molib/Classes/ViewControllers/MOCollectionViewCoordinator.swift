@@ -32,8 +32,8 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     }
 
     
-    public func providerDidEndChangeContent() {
-        
+    public func providerDidEndChangeContent(completion: @escaping VoidCompletion) {
+
         DispatchQueue.main.async {
             
             self.collectionView?.performBatchUpdates( {  () -> Void in
@@ -45,6 +45,8 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
             }, completion: { (_) -> Void in
                 self.sectionChanges.removeAll(keepingCapacity: true)
                 self.objectChanges.removeAll(keepingCapacity: true)
+                
+                completion()
             })
         }
     }

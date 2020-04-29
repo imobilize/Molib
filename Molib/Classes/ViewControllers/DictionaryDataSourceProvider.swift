@@ -113,9 +113,10 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
         updatesBlock()
 
-        delegate?.providerDidEndChangeContent()
-
-        objc_sync_exit(self)
+        delegate?.providerDidEndChangeContent(completion: {
+            objc_sync_exit(self)
+        })
+        
     }
     
     //MARK:- Header

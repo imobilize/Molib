@@ -29,10 +29,11 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
         }
     }
     
-    public func providerDidEndChangeContent() {
+    public func providerDidEndChangeContent(completion: @escaping VoidCompletion) {
         
         DispatchQueue.main.async {
             self.tableView.endUpdates()
+            completion()
         }
     }
         
