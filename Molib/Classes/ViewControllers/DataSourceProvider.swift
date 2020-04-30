@@ -21,41 +21,41 @@ public protocol DataSourceProvider {
     
     func headerDetailsAtSection(index: Int) -> [String: Any]?
 
-    mutating func deleteItemAtIndexPath(indexPath: IndexPath)
+    func deleteItemAtIndexPath(indexPath: IndexPath)
     
-    mutating func insertItem(item: ItemType, atIndexPath: IndexPath)
+    func insertItem(item: ItemType, atIndexPath: IndexPath)
     
-    mutating func updateItem(item: ItemType, atIndexPath: IndexPath)
+    func updateItem(item: ItemType, atIndexPath: IndexPath)
  
-    mutating func deleteAllInSection(section: Int)
+    func deleteAllInSection(section: Int)
     
-    mutating func insertHeaderDetails(details: [String: Any], atSection: Int)
+    func insertHeaderDetails(details: [String: Any], atSection: Int)
 
 }
 
 
-public protocol DataSourceProviderDelegate {
+public protocol DataSourceProviderDelegate : class {
     
     associatedtype ItemType
 
     
-    mutating func providerWillChangeContent()
+    func providerWillChangeContent()
     
-    mutating func providerDidEndChangeContent(completion: @escaping VoidCompletion)
-    
-    
-    mutating func providerDidInsertSectionAtIndex(index: Int)
-    
-    mutating func providerDidDeleteSectionAtIndex(index: Int)
+    func providerDidEndChangeContent(completion: @escaping VoidCompletion)
     
     
-    mutating func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
+    func providerDidInsertSectionAtIndex(index: Int)
     
-    mutating func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
+    func providerDidDeleteSectionAtIndex(index: Int)
     
-    mutating func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
     
-    mutating func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath)
+    func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
     
-    mutating func providerDidDeleteAllItemsInSection(section: Int)
+    func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
+    
+    func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths: [IndexPath])
+    
+    func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath)
+    
+    func providerDidDeleteAllItemsInSection(section: Int)
 }

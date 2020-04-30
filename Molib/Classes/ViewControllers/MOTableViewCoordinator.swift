@@ -15,7 +15,7 @@ public protocol TableViewEditingDelegate: class {
 
 public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDelegate {
     
-    private let tableView: UITableView
+    private unowned let tableView: UITableView
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -24,72 +24,53 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
     // conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
         
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-        }
+        self.tableView.beginUpdates()
     }
     
     public func providerDidEndChangeContent(completion: @escaping VoidCompletion) {
         
-        DispatchQueue.main.async {
-            self.tableView.endUpdates()
-            completion()
-        }
+        self.tableView.endUpdates()
+        completion()
     }
         
     public func providerDidInsertSectionAtIndex(index: Int) {
         
-        DispatchQueue.main.async {
-            self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidDeleteSectionAtIndex(index: Int) {
         
-        DispatchQueue.main.async {
-            self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
     }
     
     
     public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        DispatchQueue.main.async {
-            self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        DispatchQueue.main.async {
-            self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        DispatchQueue.main.async {
-            self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        DispatchQueue.main.async {
+        self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
 
-            self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
-
-            self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
     }
     
     public func providerDidDeleteAllItemsInSection(section: Int) {
         
-        DispatchQueue.main.async {
-            let sectionSet = IndexSet(integer: section)
+        let sectionSet = IndexSet(integer: section)
         
-            self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
-        }
+        self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
     }
 }
 
@@ -178,8 +159,6 @@ public class PlaceholderTableViewCoordinator<CollectionType, DataSource: DataSou
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
         return dataSource.isEmpty() ? placeholderCells : dataSource.numberOfRowsInSection(section: section)
-        
     }
-    
 }
 

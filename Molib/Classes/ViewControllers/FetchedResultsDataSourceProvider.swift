@@ -5,7 +5,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
 
     private var headerItems: [Int: [String: Any]]
 
-    public var delegate: Delegate? { didSet {
+    public weak var delegate: Delegate? { didSet {
 
         fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<ObjectType, Delegate>(delegate: delegate!)
 
@@ -42,8 +42,8 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
 
     public func numberOfRowsInSection(section: Int) -> Int {
 
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
+        let sectionInfo = self.fetchedResultsController.sections?[section]
+        return sectionInfo?.numberOfObjects ?? 0
     }
 
     public func itemAtIndexPath(indexPath: IndexPath) -> ObjectType {

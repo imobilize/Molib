@@ -13,7 +13,7 @@ enum DataSourceChangeType {
 
 public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
     
-    weak var collectionView: UICollectionView?
+    private unowned let collectionView: UICollectionView?
     
     private var objectChanges: Array<(DataSourceChangeType,[IndexPath])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
