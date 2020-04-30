@@ -27,10 +27,10 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
         self.tableView.beginUpdates()
     }
     
-    public func providerDidEndChangeContent(completion: @escaping VoidCompletion) {
+    public func providerDidEndChangeContent(updatesBlock: VoidCompletion) {
         
+        updatesBlock()
         self.tableView.endUpdates()
-        completion()
     }
         
     public func providerDidInsertSectionAtIndex(index: Int) {

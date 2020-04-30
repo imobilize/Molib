@@ -66,20 +66,18 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
 
         arrayItems.removeAll()
 
-        delegate?.providerDidDeleteAllItemsInSection(section: 0)
+        delegate?.providerDidDeleteAllItemsInSection(section: section)
     }
 
-    public func batchUpdates(updatesBlock: VoidCompletion) {
+    public func batchUpdates(updatesBlock: @escaping VoidCompletion) {
 
         objc_sync_enter(self)
 
         delegate?.providerWillChangeContent()
 
-        updatesBlock()
-
-        delegate?.providerDidEndChangeContent(completion: {
-            objc_sync_exit(self)
-        })
+        delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+        
+        objc_sync_exit(self)
     }
     
     //MARK:- Header

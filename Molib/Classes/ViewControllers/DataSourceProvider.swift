@@ -41,7 +41,7 @@ public protocol DataSourceProviderDelegate : class {
     
     func providerWillChangeContent()
     
-    func providerDidEndChangeContent(completion: @escaping VoidCompletion)
+    func providerDidEndChangeContent(updatesBlock: @escaping VoidCompletion)
     
     
     func providerDidInsertSectionAtIndex(index: Int)

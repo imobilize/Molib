@@ -7,7 +7,7 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
     private var sectionsInserted: [Int]
     private var dictionaryItems: [IndexPath: T]
     private var headerItems: [Int: [String: Any]]
-
+    
     public init() {
         sectionsInserted = [Int]()
         dictionaryItems = [IndexPath: T]()
@@ -20,7 +20,6 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
     }
 
     public func numberOfSections() -> Int {
-
         return sectionsInserted.count
     }
 
@@ -79,8 +78,11 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func deleteAllInSection(section: Int) {
 
+        guard sectionsInserted.isEmpty == false else { return }
+        
         if sectionsInserted.contains(section) {
             sectionsInserted.removeAll(where: { $0 == section })
+            delegate?.providerDidDeleteSectionAtIndex(index: section)
         }
         
         let keysOfItemsToRemove = dictionaryItems.keys.filter { $0.section == section }
@@ -101,22 +103,17 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
             delegate?.providerDidDeleteItemsAtIndexPaths(items: items, atIndexPaths: keysOfItemsToRemove)
         }
-        
-        delegate?.providerDidDeleteSectionAtIndex(index: section)
     }
 
-    public func batchUpdates(updatesBlock: VoidCompletion) {
-
+    public func batchUpdates(updatesBlock: @escaping VoidCompletion) {
+        
         objc_sync_enter(self)
-
         delegate?.providerWillChangeContent()
 
-        updatesBlock()
-
-        delegate?.providerDidEndChangeContent(completion: {
-            objc_sync_exit(self)
-        })
+        delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
         
+        objc_sync_exit(self)
+
     }
     
     //MARK:- Header
