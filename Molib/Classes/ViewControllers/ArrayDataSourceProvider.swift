@@ -2,7 +2,7 @@ import Foundation
 
 public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: DataSourceProvider where Delegate.ItemType == T {
 
-    public var delegate: Delegate?
+    public weak var delegate: Delegate?
 
     private var arrayItems: [T]
     private var headerItems: [Int: [String: Any]]

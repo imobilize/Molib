@@ -2,7 +2,7 @@ import Foundation
 
 public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: DataSourceProvider where Delegate.ItemType == T {
 
-    public var delegate: Delegate?
+    public weak var delegate: Delegate?
 
     private var sectionsInserted: [Int]
     private var dictionaryItems: [IndexPath: T]
