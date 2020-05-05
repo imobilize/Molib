@@ -41,7 +41,7 @@ extension ALDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
                 info.state = ALDownloadState.Failed
             }
         }
-
+        
         try? fileManager.removeItem(at: location)
     }
 

@@ -138,7 +138,9 @@ class ALDownloadManager: NSObject {
     }
 
     @objc func taskComplete(notification: Notification)  {
+        
         if let info = notification.userInfo, let url = info["url"] as? URL {
+            
             let info = downloadInfoForURL(url: url)
             info?.state = ALDownloadState.Completed
             if let close = self.completeClose {
