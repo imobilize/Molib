@@ -27,9 +27,9 @@ public enum DownloadServiceOperationState {
 
 public protocol DownloadService {
 
-    func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation
+    @discardableResult func enqueueDownload(downloadable: Downloadable) -> DownloadServiceOperation
 
-    func resumeDownload(downloadable: Downloadable) -> DownloadServiceOperation
+    @discardableResult func resumeDownload(downloadable: Downloadable) -> DownloadServiceOperation
 
     func currentDownloadServiceOperations() -> [DownloadServiceOperation]
 }
