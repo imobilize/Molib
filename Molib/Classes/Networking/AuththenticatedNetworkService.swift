@@ -1,5 +1,6 @@
 
 import Foundation
+import Alamofire
 
 public protocol AuththenticatedNetworkServiceDelegate: class {
     
@@ -7,19 +8,17 @@ public protocol AuththenticatedNetworkServiceDelegate: class {
 
     func authenticatedNetworkServiceShouldReAuthenticate(service: AuththenticatedNetworkService) -> Bool
     
-    func authenticatedNetworkServiceURLRequestForAuthentication(service: AuththenticatedNetworkService) -> URLRequest?
-    
-    func authenticatedNetworkServiceDidReauthenticate(service: AuththenticatedNetworkService)
-    
-    func authenticatedNetworkService(service: AuththenticatedNetworkService, failedToAuthenticateWithError: Error)
+    func authenticatedNetworkServiceDidRequestReAuthentication(service: AuththenticatedNetworkService, completion: @escaping ErrorCompletion)
 }
+
 
 public class AuththenticatedNetworkService: NetworkRequestService {
     
     public weak var delegate: AuththenticatedNetworkServiceDelegate?
     
     let networkService: NetworkRequestService
-    
+    var retryOperation: NetworkOperation?
+
     public init(networkService: NetworkRequestService) {
         
         self.networkService = networkService
@@ -27,7 +26,7 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
     public func enqueueNetworkRequest(request: NetworkRequest) -> NetworkOperation? {
 
-        let taskCompletion = authenticatedCheckResponseHandler(request: request)
+        let taskCompletion = authenticatedCheckResponseHandler(initialRequest: request)
 
         var authRequest = request.urlRequest
 
@@ -51,7 +50,7 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
     public func enqueueNetworkUploadRequest(request: NetworkUploadRequest) -> NetworkUploadOperation? {
         
-        let taskCompletion = authenticatedCheckResponseHandler(request: request)
+        let taskCompletion = authenticatedCheckResponseHandler(initialRequest: request)
         
         var authRequest = request.urlRequest
         
@@ -70,7 +69,7 @@ public class AuththenticatedNetworkService: NetworkRequestService {
     
     public func enqueueNetworkDownloadRequest(request: NetworkDownloadRequest) -> NetworkDownloadOperation? {
 
-        let taskCompletion = authenticatedCheckResponseHandler(request: request)
+        let taskCompletion = authenticatedCheckResponseHandler(initialRequest: request)
 
         let authenticatedCheckTask = DataDownloadTask(urlRequest: request.urlRequest, downloadLocationURL: request.downloadLocationURL, fileName: request.fileName, taskCompletion: taskCompletion)
         let operation = networkService.enqueueNetworkDownloadRequest(request: authenticatedCheckTask)
@@ -79,75 +78,52 @@ public class AuththenticatedNetworkService: NetworkRequestService {
     }
     
     
-    func authenticatedCheckResponseHandler(request: NetworkRequest) -> DataResponseCompletion {
+    func authenticatedCheckResponseHandler(initialRequest: NetworkRequest) -> DataResponseCompletion {
         
         let taskCompletion: DataResponseCompletion = { (dataOptional: Data?, errorOptional: Error?)  in
+                        
+            if let error = errorOptional, let networkError = error.asAFError, networkError.responseCode == 401 {
+
+                if let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(service: self), shouldRefresh == true {
+
+                    self.handleReAuthtentication(forRequest: initialRequest)
+                    return
+                }
+            }
+                
+            initialRequest.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
+        }
+        
+        return taskCompletion
+    }
+    
+    func handleReAuthtentication(forRequest initialRequest: NetworkRequest) {
+
+        delegate?.authenticatedNetworkServiceDidRequestReAuthentication(service: self, completion: { [weak self] (errorOptional) in
+            
+            guard let `self` = self else { return }
             
             if let error = errorOptional {
+                
+                let userInfo: [String: Any] = [NSLocalizedDescriptionKey: "User not authenticated to use this service. Please logout, then log back in and try again", NSUnderlyingErrorKey: error]
+                
+                let authError = NSError(domain: "Authenticated Service", code: 101, userInfo: userInfo)
+                
+                initialRequest.handleResponse(dataOptional: nil, errorOptional: authError)
+            } else {
+                
+                var authRequest = initialRequest.urlRequest
 
-                if (error as NSError).code == 401 {
-                    
-                    if let shouldRefresh = self.delegate?.authenticatedNetworkServiceShouldReAuthenticate(service: self), shouldRefresh == true {
-
-                        self.handleAuthtenticationErrorForTask(networkRequest: request)
-                    } else {
-                        
-                        self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithError: error)
-                        request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
-                    }
-                } else {
-                    
-                    request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
+                if let headers = self.delegate?.authenticatedNetworkServiceHeader() {
+                      headers.forEach { (key: String, value: String) in
+                          authRequest.setValue(value, forHTTPHeaderField: key)
+                      }
                 }
-            } else {
                 
-                request.handleResponse(dataOptional: dataOptional, errorOptional: errorOptional)
+                let dataRequestTask = DataRequestTask(urlRequest: authRequest, taskCompletion: initialRequest.handleResponse)
+
+                self.retryOperation = self.networkService.enqueueNetworkRequest(request: dataRequestTask)
             }
-        }
-        
-        return taskCompletion
-    }
-    
-    func handleAuthtenticationErrorForTask(networkRequest: NetworkRequest) {
-
-        if let request = delegate?.authenticatedNetworkServiceURLRequestForAuthentication(service: self) {
-
-            let taskCompletion = refreshTokenResponseHandler(initialNetworkRequest: networkRequest)
-
-            let authenticationTask = JSONRequestTask(urlRequest: request, taskCompletion: taskCompletion)
-
-            networkService.enqueueNetworkRequest(request: authenticationTask)
-
-        } else {
-            
-            let userInfo = [NSLocalizedDescriptionKey: "User not authenticated to use this service"]
-            
-            let error = NSError(domain: "Authenticated Service", code: 101, userInfo: userInfo)
-            
-            networkRequest.handleResponse(dataOptional: nil, errorOptional: error)
-        }
-    }
-    
-    func refreshTokenResponseHandler(initialNetworkRequest: NetworkRequest) -> JSONResponseCompletion {
-
-        let taskCompletion: JSONResponseCompletion = {
-            
-            (responseOptional: AnyObject?, errorOptional: Error?) in
-            
-            if errorOptional == nil {
-                
-                self.delegate?.authenticatedNetworkServiceDidReauthenticate(service: self)
-
-                _ = self.networkService.enqueueNetworkRequest(request: initialNetworkRequest)
-                
-            } else {
-                
-                self.delegate?.authenticatedNetworkService(service: self, failedToAuthenticateWithError: errorOptional!)
-                
-                initialNetworkRequest.handleResponse(dataOptional: nil, errorOptional: errorOptional)
-            }
-        }
-        
-        return taskCompletion
+        })
     }
 }
