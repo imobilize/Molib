@@ -6,6 +6,13 @@ public protocol TableViewCellProvider: class {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell
 }
 
+public protocol DataSourceProviderTableViewAdapterDelegate: class {
+        
+    func tableViewWillUpdateContent(_ tableView: UITableView)
+    func tableViewDidUpdateContent(_ tableView: UITableView)
+}
+
+
 public protocol TableViewEditingDelegate: class {
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
@@ -16,6 +23,7 @@ public protocol TableViewEditingDelegate: class {
 public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDelegate {
     
     private unowned let tableView: UITableView
+    public weak var delegate: DataSourceProviderTableViewAdapterDelegate? = nil
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -24,6 +32,7 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
     // conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
         
+        self.delegate?.tableViewWillUpdateContent(tableView)
         self.tableView.beginUpdates()
     }
     
@@ -31,6 +40,7 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
         
         updatesBlock()
         self.tableView.endUpdates()
+        self.delegate?.tableViewDidUpdateContent(tableView)
     }
         
     public func providerDidInsertSectionAtIndex(index: Int) {

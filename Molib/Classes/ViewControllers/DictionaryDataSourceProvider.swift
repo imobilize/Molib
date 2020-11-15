@@ -128,7 +128,7 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func itemsArray(atSection section: Int) -> [T] {
 
-        let items = dictionaryItems.flatMap { (key, value) -> T? in
+        let items = dictionaryItems.compactMap { (key, value) -> T? in
             if key.section == section {
                 return value
             }

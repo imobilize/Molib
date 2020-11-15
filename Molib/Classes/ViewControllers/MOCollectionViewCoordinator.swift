@@ -10,14 +10,20 @@ enum DataSourceChangeType {
     case Update
 }
 
+public protocol DataSourceProviderCollectionViewAdapterDelegate: class {
+        
+    func collectionViewWillUpdateContent(_ collectionView: UICollectionView)
+    func collectionViewDidUpdateContent(_ collectionView: UICollectionView)
+}
 
 public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
     
-    private unowned let collectionView: UICollectionView?
+    private unowned let collectionView: UICollectionView
+    public weak var delegate: DataSourceProviderCollectionViewAdapterDelegate? = nil
     
     private var objectChanges: Array<(DataSourceChangeType,[IndexPath])>!
     private var sectionChanges: Array<(DataSourceChangeType,Int)>!
-    
+    var updating = false
     
     init(collectionView: UICollectionView) {
         
@@ -28,25 +34,48 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
     //MARK:  conformance to the DataSourceProviderDelegate
     public func providerWillChangeContent() {
-        
+
+        delegate?.collectionViewWillUpdateContent(collectionView)
     }
 
     
     public func providerDidEndChangeContent(updatesBlock: @escaping VoidCompletion) {
 
-        DispatchQueue.main.async {
+        guard updating == false else {
+            return
+        }
+        
+        updating = true
+        
+        DispatchQueue.main.async { [weak self] in
             
-            self.collectionView?.performBatchUpdates( {  () -> Void in
+            guard let `self` = self else {
+                return
+            }
+            
+            self.collectionView.performBatchUpdates( { [weak self] () -> Void in
 
+                guard let `self` = self else {
+                    return
+                }
+                
                 updatesBlock()
 
                 self.handleSectionChanges()
 
                 self.handleObjectChanges()
             
-            }, completion: { (_) -> Void in
+            }, completion: { [weak self] (_) -> Void in
+                
+                guard let `self` = self else {
+                    return
+                }
+                
                 self.sectionChanges.removeAll(keepingCapacity: true)
                 self.objectChanges.removeAll(keepingCapacity: true)
+                
+                self.delegate?.collectionViewDidUpdateContent(self.collectionView)
+                self.updating = false
             })
         }
     }
@@ -63,16 +92,16 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                         
                     case .Insert:
                         
-                        self.collectionView?.insertSections(set)
+                        self.collectionView.insertSections(set)
                         break
                         
                     case .Delete:
-                        self.collectionView?.deleteSections(set)
+                        self.collectionView.deleteSections(set)
                         break
                         
                     case .Update:
                         
-                        self.collectionView?.reloadSections(set)
+                        self.collectionView.reloadSections(set)
                         break
                         
                     default:
@@ -87,13 +116,13 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
             
             let shouldReload = shouldReloadCollectionViewToPreventKnownIssue()
             
-            if shouldReload || self.collectionView?.window == nil {
+            if shouldReload || self.collectionView.window == nil {
                 // This is to prevent a bug in UICollectionView from occurring.
                 // The bug presents itself when inserting the first object or deleting the last object in a collection view.
                 // http://stackoverflow.com/questions/12611292/uicollectionview-assertion-failure
                 // This code should be removed once the bug has been fixed, it is tracked in OpenRadar
                 // http://openradar.appspot.com/12954582
-                self.collectionView?.reloadData()
+                self.collectionView.reloadData()
                 
             } else {
                                     
@@ -103,22 +132,22 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                             
                         case .Insert:
                             
-                            self.collectionView?.insertItems(at: obj)
+                            self.collectionView.insertItems(at: obj)
                             
                         case .Delete:
                             
-                            self.collectionView?.deleteItems(at: obj)
+                            self.collectionView.deleteItems(at: obj)
                             
                         case .Update:
                             
-                            self.collectionView?.reloadItems(at: obj)
+                            self.collectionView.reloadItems(at: obj)
                             
                         case .Move:
                             
                             let oldIndexPath = obj.first
                             let newIndexPath = obj.last
                             
-                            self.collectionView?.moveItem(at: oldIndexPath!, to: newIndexPath!)
+                            self.collectionView.moveItem(at: oldIndexPath!, to: newIndexPath!)
                         }
                     }
 
@@ -158,14 +187,14 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
     public func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        self.collectionView?.moveItem(at: atIndexPath, to: toIndexPath)
+        self.collectionView.moveItem(at: atIndexPath, to: toIndexPath)
     }
     
     public func providerDidDeleteAllItemsInSection(section: Int) {
         
         let indexSet = IndexSet(integer: section)
         
-        self.collectionView?.reloadSections(indexSet)
+        self.collectionView.reloadSections(indexSet)
     }
     
     
@@ -190,7 +219,7 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                 
                 let indexPath = indexPaths.first
                 
-                if self.collectionView?.numberOfItems(inSection: indexPath!.section) == 0 {
+                if self.collectionView.numberOfItems(inSection: indexPath!.section) == 0 {
                     
                     shouldReload = true
                     
@@ -204,7 +233,7 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
                 
                 let indexPath = indexPaths.first
                 
-                if self.collectionView?.numberOfItems(inSection: indexPath!.section) == 1 {
+                if self.collectionView.numberOfItems(inSection: indexPath!.section) == 1 {
                     
                     shouldReload = true
                 } else {
@@ -239,10 +268,18 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
     
 }
 
+@objc public protocol CollectionViewCoordinatorDelegate: class {
+    
+    func collectionViewWillUpdateContent(collectionView: UICollectionView)
+    func collectionViewDidUpdateContent(collectionView: UICollectionView)
+}
+
 
 public class CollectionViewCoordinator<CollectionType, DataSource: DataSourceProvider> : NSObject, UICollectionViewDataSource where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType> {
     
     var dataSource: DataSource
+    
+    public var delegate: CollectionViewCoordinatorDelegate? = nil
     
     var dataSourceProviderCollectionViewAdapter: DataSourceProviderCollectionViewAdapter<CollectionType>
     
@@ -259,6 +296,7 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
         
         collectionView.dataSource = self
         self.dataSource.delegate = self.dataSourceProviderCollectionViewAdapter
+        self.dataSourceProviderCollectionViewAdapter.delegate = self
     }
     
     // MARK: - Collection View Datasource
@@ -301,6 +339,19 @@ public class CollectionViewCoordinator<CollectionType, DataSource: DataSourcePro
         self.dataSource.deleteItemAtIndexPath(indexPath: sourceIndexPath)
     }
 }
+
+
+extension CollectionViewCoordinator: DataSourceProviderCollectionViewAdapterDelegate {
+
+    public func collectionViewWillUpdateContent(_ collectionView: UICollectionView) {
+        delegate?.collectionViewWillUpdateContent(collectionView: collectionView)
+    }
+    
+    public func collectionViewDidUpdateContent(_ collectionView: UICollectionView) {
+        delegate?.collectionViewDidUpdateContent(collectionView: collectionView)
+    }
+}
+
 
 public class CollectionViewCoordinatorWithItemCountLimit<CollectionType, DataSource: DataSourceProvider>: CollectionViewCoordinator<CollectionType, DataSource> where DataSource.ItemType == CollectionType, DataSource.DataSourceDelegate == DataSourceProviderCollectionViewAdapter<CollectionType> {
     
