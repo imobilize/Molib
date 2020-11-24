@@ -30,16 +30,26 @@ public class AuththenticatedNetworkService: NetworkRequestService {
 
         var authRequest = request.urlRequest
 
-         if let headers = delegate?.authenticatedNetworkServiceHeader() {
-            headers.forEach { (key: String, value: String) in
-                authRequest.setValue(value, forHTTPHeaderField: key)
+        var operation: NetworkOperation?
+        
+        let authenticated = (request as? AuthenticatableRequest)?.allowAuthentication() ?? true
+        
+        if authenticated {
+            
+            if let headers = delegate?.authenticatedNetworkServiceHeader() {
+                headers.forEach { (key: String, value: String) in
+                    authRequest.setValue(value, forHTTPHeaderField: key)
+                }
             }
+        
+            let authenticatedCheckTask = DataRequestTask(urlRequest: authRequest, taskCompletion: taskCompletion)
+
+            operation = networkService.enqueueNetworkRequest(request: authenticatedCheckTask)
+        } else {
+            
+            operation = networkService.enqueueNetworkRequest(request: request)
         }
         
-        let authenticatedCheckTask = DataRequestTask(urlRequest: authRequest, taskCompletion: taskCompletion)
-
-        let operation = networkService.enqueueNetworkRequest(request: authenticatedCheckTask)
-
         return operation
     }
 
