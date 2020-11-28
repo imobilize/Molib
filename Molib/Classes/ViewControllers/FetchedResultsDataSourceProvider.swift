@@ -183,7 +183,6 @@ class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: Da
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
-        
         self.delegate.providerDidEndChangeContent {
             do {
                 try controller.performFetch()

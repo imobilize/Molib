@@ -107,13 +107,22 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func batchUpdates(updatesBlock: @escaping VoidCompletion) {
         
-        objc_sync_enter(self)
-        delegate?.providerWillChangeContent()
 
-        delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
-        
-        objc_sync_exit(self)
+        if Thread.isMainThread {
+           
+            self.delegate?.providerWillChangeContent()
 
+            self.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            
+        } else {
+            
+            DispatchQueue.main.sync { [weak self] in
+                
+                self?.delegate?.providerWillChangeContent()
+
+                self?.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            }
+        }
     }
     
     //MARK:- Header

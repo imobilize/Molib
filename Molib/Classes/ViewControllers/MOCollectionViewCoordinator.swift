@@ -46,38 +46,32 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
         }
         
         updating = true
-        
-        DispatchQueue.main.async { [weak self] in
-            
+
+        self.collectionView.performBatchUpdates( { [weak self] () -> Void in
+
             guard let `self` = self else {
                 return
             }
             
-            self.collectionView.performBatchUpdates( { [weak self] () -> Void in
+            updatesBlock()
 
-                guard let `self` = self else {
-                    return
-                }
-                
-                updatesBlock()
+            self.handleSectionChanges()
 
-                self.handleSectionChanges()
-
-                self.handleObjectChanges()
+            self.handleObjectChanges()
             
-            }, completion: { [weak self] (_) -> Void in
+        }, completion: { [weak self] (_) -> Void in
                 
-                guard let `self` = self else {
-                    return
-                }
+            guard let `self` = self else {
+                return
+            }
                 
-                self.sectionChanges.removeAll(keepingCapacity: true)
-                self.objectChanges.removeAll(keepingCapacity: true)
+            self.sectionChanges.removeAll(keepingCapacity: true)
+            self.objectChanges.removeAll(keepingCapacity: true)
                 
-                self.delegate?.collectionViewDidUpdateContent(self.collectionView)
-                self.updating = false
-            })
-        }
+            self.delegate?.collectionViewDidUpdateContent(self.collectionView)
+            self.updating = false
+        })
+        
     }
     
     fileprivate func handleSectionChanges() {
