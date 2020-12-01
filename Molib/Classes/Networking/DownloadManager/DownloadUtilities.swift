@@ -86,7 +86,7 @@ public class DownloadUtility: NSObject {
                 try url.setResourceValue(NSNumber(value: true), forKey: URLResourceKey.isExcludedFromBackupKey)
                 return true
             } catch let error as NSError {
-                print("Error excluding \(String(describing: url.lastPathComponent)) from backup \(error)")
+               debugPrint("Error excluding \(String(describing: url.lastPathComponent)) from backup \(error)")
                 return false
             }
             
@@ -102,7 +102,7 @@ public class DownloadUtility: NSObject {
             let freeSize = systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber
             return freeSize?.int64Value
         } catch let error as NSError {
-            print("Error Obtaining System Memory Info: Domain = \(error.domain), Code = \(error.code)")
+           debugPrint("Error Obtaining System Memory Info: Domain = \(error.domain), Code = \(error.code)")
             return nil
         }
     }

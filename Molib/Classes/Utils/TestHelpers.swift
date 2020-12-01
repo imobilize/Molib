@@ -16,7 +16,7 @@ class TestHelpers {
                 
             } catch let error {
                 
-                print("Couldn't parse JSON loaded from test file: %@", error)
+               debugPrint("Couldn't parse JSON loaded from test file: %@", error)
 
                 returnJSON = Dictionary<String, String>() as AnyObject
 
@@ -50,7 +50,7 @@ class TestHelpers {
             }
         } catch let error {
             
-            print("Couldn't load Data from test file: %@", error)
+           debugPrint("Couldn't load Data from test file: %@", error)
         }
         
         return returnData

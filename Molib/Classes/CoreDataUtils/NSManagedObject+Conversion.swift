@@ -6,14 +6,14 @@ extension NSManagedObject {
 
     open override func value(forUndefinedKey key: String) -> Any? {
 
-        print("Not able to set undefined key: %@", key)
+       debugPrint("Not able to set undefined key: %@", key)
         
         return nil
     }
 
     open override func setValue(_ value: Any?, forUndefinedKey key: String) {
 
-        print("Couldn't set value for key: %@", key)
+       debugPrint("Couldn't set value for key: %@", key)
     }
 }
 

@@ -118,7 +118,7 @@ public class CoreDataUtils {
                 } catch _ {
                 }
                 
-                print("Removed incompatible model version: %", url.lastPathComponent, terminator: "")
+               debugPrint("Removed incompatible model version: %", url.lastPathComponent, terminator: "")
                 
                 if(deleteStoreError != nil) {
                     
@@ -210,7 +210,7 @@ public class CoreDataUtils {
                     error = error1
                     // Replace this implementation with code to handle the error appropriately.
                     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                    print("Unresolved error \(String(describing: error))")
+                   debugPrint("Unresolved error \(String(describing: error))")
                     abort()
                 }
             }
@@ -305,7 +305,7 @@ public class CoreDataUtils {
                 } catch _ {
                 }
                 
-                print("Removed incompatible model version: %", url.lastPathComponent , terminator: "")
+               debugPrint("Removed incompatible model version: %", url.lastPathComponent , terminator: "")
                 
                 if(deleteStoreError != nil) {
                     

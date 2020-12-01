@@ -116,7 +116,7 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
     }
 
     deinit {
-        print("FetchedResultsDataSourceProvider dying")
+       debugPrint("FetchedResultsDataSourceProvider dying")
     }
 }
 
@@ -191,7 +191,7 @@ class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: Da
     }
 
     deinit {
-        print("FetchedResultsControllerDelegate dying")
+       debugPrint("FetchedResultsControllerDelegate dying")
     }
 }
 
