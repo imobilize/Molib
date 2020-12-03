@@ -13,6 +13,9 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         headerItems = [Int: [String: Any]]()
     }
 
+    public func reload() {}
+        
+    
     public func isEmpty() -> Bool {
 
         return arrayItems.isEmpty

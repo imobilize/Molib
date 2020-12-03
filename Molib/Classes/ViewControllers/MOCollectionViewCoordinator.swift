@@ -16,7 +16,7 @@ public protocol DataSourceProviderCollectionViewAdapterDelegate: class {
     func collectionViewDidUpdateContent(_ collectionView: UICollectionView)
 }
 
-public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProviderDelegate {
+public class DataSourceProviderCollectionViewAdapter<ItemType>: NSObject, DataSourceProviderDelegate {
     
     private unowned let collectionView: UICollectionView
     public weak var delegate: DataSourceProviderCollectionViewAdapterDelegate? = nil
@@ -59,18 +59,34 @@ public class DataSourceProviderCollectionViewAdapter<ItemType>: DataSourceProvid
 
             self.handleObjectChanges()
             
+            //Just in case the completion doesn't get called. Happens sometimes :-(
+            perform(#selector(cleanupAndInformDelegate), with: nil, afterDelay: 2)
+
         }, completion: { [weak self] (_) -> Void in
                 
             guard let `self` = self else {
                 return
             }
                 
+            NSObject.cancelPreviousPerformRequests(withTarget: self)
+
             self.sectionChanges.removeAll(keepingCapacity: true)
             self.objectChanges.removeAll(keepingCapacity: true)
                 
             self.delegate?.collectionViewDidUpdateContent(self.collectionView)
             self.updating = false
+            
         })
+        
+    }
+    
+    @objc func cleanupAndInformDelegate() {
+        
+        self.sectionChanges.removeAll(keepingCapacity: true)
+        self.objectChanges.removeAll(keepingCapacity: true)
+                        
+        self.delegate?.collectionViewDidUpdateContent(self.collectionView)
+        self.updating = false
         
     }
     

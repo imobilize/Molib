@@ -14,6 +14,8 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
         headerItems =  [Int: [String: Any]]()
     }
 
+    public func reload() {}
+    
     public func isEmpty() -> Bool {
 
         return dictionaryItems.isEmpty
