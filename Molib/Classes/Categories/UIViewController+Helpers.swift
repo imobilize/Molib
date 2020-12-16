@@ -12,13 +12,9 @@ extension UIStoryboard {
     
     public class func controllerWithIdentifier(identifier: String) -> AnyObject {
         
-        let application = UIApplication.shared
-        
-        let backWindow = application.windows[0]
-        
-        let storyBoard = backWindow.rootViewController!.storyboard
-        
-        return storyBoard!.instantiateViewController(withIdentifier: identifier)
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+
+        return storyBoard.instantiateViewController(withIdentifier: identifier)
     }
 }
 

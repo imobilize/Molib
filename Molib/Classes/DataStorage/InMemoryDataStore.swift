@@ -2,14 +2,12 @@ import Foundation
 
 public class InMemoryDataStore: DataStore {
 
-    private var storageDictionary: NSMutableDictionary
+    private static var storageDictionary = NSMutableDictionary()
 
-    public init() {
-        storageDictionary = NSMutableDictionary()
-    }
+    public init() {}
 
     public init(dictionary: NSMutableDictionary) {
-        storageDictionary = dictionary
+        InMemoryDataStore.storageDictionary = dictionary
     }
 
     public func synchronize() {}
@@ -51,7 +49,7 @@ public class InMemoryDataStore: DataStore {
 
             typeDictionary[id] = itemDictionary as AnyObject
 
-            self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
+            InMemoryDataStore.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
         }
     }
 
@@ -66,7 +64,7 @@ public class InMemoryDataStore: DataStore {
             }
         })
 
-        self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
+        InMemoryDataStore.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
     }
     
     public func removeEntity<T>(type: T.Type, entity: T) where T : Storable {
@@ -75,7 +73,7 @@ public class InMemoryDataStore: DataStore {
 
             var typeDictionary = dictionaryForType(typeName: T.typeName)
             typeDictionary[id] = nil
-            self.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
+            InMemoryDataStore.storageDictionary.setValue(typeDictionary, forKey: type.typeName)
         }
     }
 
@@ -88,8 +86,7 @@ public class InMemoryDataStore: DataStore {
 
     public func removeAllObjects() {
 
-        self.storageDictionary.removeAllObjects()
-
+        InMemoryDataStore.storageDictionary.removeAllObjects()
     }
 
     private func fetchAllEntities<T: Storable>(type: T.Type, predicateOptional: NSPredicate? = nil) -> [T] {
@@ -124,7 +121,7 @@ public class InMemoryDataStore: DataStore {
 
     private func dictionaryForType(typeName: String) -> [String: AnyObject] {
 
-        var typeDictionary: [String: AnyObject]! = self.storageDictionary.value(forKey: typeName) as? [String: AnyObject]
+        var typeDictionary: [String: AnyObject]! = InMemoryDataStore.storageDictionary.value(forKey: typeName) as? [String: AnyObject]
 
         if typeDictionary == nil {
             typeDictionary = [String: AnyObject]()
@@ -134,7 +131,7 @@ public class InMemoryDataStore: DataStore {
     }
 
     fileprivate func underlyingDictionary() -> NSMutableDictionary {
-        return self.storageDictionary
+        return InMemoryDataStore.storageDictionary
     }
 }
 
