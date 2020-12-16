@@ -24,7 +24,23 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
     
     private unowned let tableView: UITableView
     public weak var delegate: DataSourceProviderTableViewAdapterDelegate? = nil
-
+    private var tableViewRowAnimations: UITableViewRowAnimation = .automatic
+    
+    public var tableAnimationsEnabled: Bool {
+        set {
+            if newValue {
+                tableViewRowAnimations = .automatic
+            } else {
+                tableViewRowAnimations = .none
+            }
+        }
+        
+        get {
+            return (tableViewRowAnimations != .none)
+        }
+    }
+    
+    
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -45,42 +61,42 @@ public class DataSourceProviderTableViewAdapter<ItemType>: DataSourceProviderDel
         
     public func providerDidInsertSectionAtIndex(index: Int) {
         
-        self.tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        self.tableView.insertSections(IndexSet(integer: index), with: tableViewRowAnimations)
     }
     
     public func providerDidDeleteSectionAtIndex(index: Int) {
         
-        self.tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.automatic)
+        self.tableView.deleteSections(IndexSet(integer: index), with: tableViewRowAnimations)
     }
     
     
     public func providerDidInsertItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        self.tableView.insertRows(at: indexPaths, with: tableViewRowAnimations)
     }
     
     public func providerDidDeleteItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.deleteRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        self.tableView.deleteRows(at: indexPaths, with: tableViewRowAnimations)
     }
     
     public func providerDidUpdateItemsAtIndexPaths(items: [ItemType], atIndexPaths indexPaths: [IndexPath]) {
         
-        self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+        self.tableView.reloadRows(at: indexPaths, with: tableViewRowAnimations)
     }
     
     public func providerDidMoveItem(item: ItemType, atIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        self.tableView.deleteRows(at: [atIndexPath], with: UITableViewRowAnimation.automatic)
+        self.tableView.deleteRows(at: [atIndexPath], with: tableViewRowAnimations)
 
-        self.tableView.insertRows(at: [toIndexPath], with: UITableViewRowAnimation.automatic)
+        self.tableView.insertRows(at: [toIndexPath], with: tableViewRowAnimations)
     }
     
     public func providerDidDeleteAllItemsInSection(section: Int) {
         
         let sectionSet = IndexSet(integer: section)
         
-        self.tableView.reloadSections(sectionSet, with: UITableViewRowAnimation.automatic)
+        self.tableView.reloadSections(sectionSet, with: tableViewRowAnimations)
     }
 }
 
@@ -96,6 +112,15 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
     private unowned let tableViewCellProvider: TableViewCellProvider
     public weak var tableViewEditingDelegate: TableViewEditingDelegate?
     
+    public var tableViewAnimations: Bool {
+        set {
+            dataSourceProviderTableViewAdapter.tableAnimationsEnabled = false
+        }
+        get {
+            return dataSourceProviderTableViewAdapter.tableAnimationsEnabled
+        }
+    }
+    
     public init(tableView: UITableView, dataSource: DataSource, cellProvider: TableViewCellProvider) {
 
         self.dataSource = dataSource
@@ -108,6 +133,7 @@ public class TableViewCoordinator<CollectionType, DataSource: DataSourceProvider
         tableView.dataSource = self
         self.dataSource.delegate = self.dataSourceProviderTableViewAdapter
     }
+    
 
     public func setName(_ name: String, forSection section: Int) {
         sectionNames["\(section)"] = name
