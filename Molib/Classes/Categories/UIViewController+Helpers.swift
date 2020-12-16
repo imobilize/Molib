@@ -115,6 +115,8 @@ extension UIViewController {
         myView?.translatesAutoresizingMaskIntoConstraints = false
 
         myView?.pinToSuperview([.top, .bottom, .left, .right])
+        
+        inView.sizeToFit()
 
         viewController.didMove(toParentViewController: parentController)
     }
