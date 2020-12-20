@@ -28,34 +28,77 @@ struct MOHUDController: ProgressHUD {
     
     func showSuccessWithMessage(message: String) {
      
-        SVProgressHUD.showSuccess(withStatus: message)
+        if Thread.isMainThread {
+            SVProgressHUD.showSuccess(withStatus: message)
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.showSuccess(withStatus: message)
+            }
+        }
     }
     
     func showSuccess() {
-        
-        SVProgressHUD.showSuccess(withStatus: "Success")
+        if Thread.isMainThread {
+            SVProgressHUD.showSuccess(withStatus: "Success")
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.showSuccess(withStatus: "Success")
+            }
+        }
     }
     
     func showError() {
-        
-        SVProgressHUD.showError(withStatus: "Error")
+        if Thread.isMainThread {
+            SVProgressHUD.showError(withStatus: "Error")
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.showError(withStatus: "Error")
+            }
+        }
     }
     
     func showErrorWithMessage(message: String) {
-        
-        SVProgressHUD.showError(withStatus: message)
+        if Thread.isMainThread {
+            SVProgressHUD.showError(withStatus: message)
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.showError(withStatus: message)
+            }
+        }
     }
     
     func showLoading() {
-        
-        SVProgressHUD.setDefaultMaskType(.black)
-        
-        SVProgressHUD.show()
+        if Thread.isMainThread {
+            SVProgressHUD.setDefaultMaskType(.black)
+            SVProgressHUD.show()
+            
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.setDefaultMaskType(.black)
+                SVProgressHUD.show()            }
+        }
     }
  
     func dismiss() {
-        
-        SVProgressHUD.dismiss()
+        if Thread.isMainThread {
+            SVProgressHUD.dismiss()
+        } else {
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.dismiss()
+            }
+        }
     }
 }
 
