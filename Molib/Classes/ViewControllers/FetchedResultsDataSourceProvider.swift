@@ -23,6 +23,12 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
         self.headerItems = [Int: [String: Any]]()
     }
 
+    public func reload() {
+        do {
+            try self.fetchedResultsController.performFetch()
+        } catch {}
+    }
+    
 
     public func isEmpty() -> Bool {
 
@@ -116,14 +122,14 @@ public class FetchedResultsDataSourceProvider<ObjectType: NSManagedObject, Deleg
     }
 
     deinit {
-        print("FetchedResultsDataSourceProvider dying")
+       debugPrint("FetchedResultsDataSourceProvider dying")
     }
 }
 
 
 class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: DataSourceProviderDelegate>: NSObject, NSFetchedResultsControllerDelegate where Delegate.ItemType == ObjectType {
 
-    var delegate: Delegate
+    unowned var delegate: Delegate
 
     init(delegate: Delegate) {
 
@@ -183,16 +189,11 @@ class FetchedResultsControllerDelegate<ObjectType: NSManagedObject, Delegate: Da
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
-        
-        self.delegate.providerDidEndChangeContent {
-            do {
-                try controller.performFetch()
-            } catch {}
-        }
+        self.delegate.providerDidEndChangeContent {}
     }
 
     deinit {
-        print("FetchedResultsControllerDelegate dying")
+       debugPrint("FetchedResultsControllerDelegate dying")
     }
 }
 

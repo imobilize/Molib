@@ -14,6 +14,8 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
         headerItems =  [Int: [String: Any]]()
     }
 
+    public func reload() {}
+    
     public func isEmpty() -> Bool {
 
         return dictionaryItems.isEmpty
@@ -107,13 +109,22 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func batchUpdates(updatesBlock: @escaping VoidCompletion) {
         
-        objc_sync_enter(self)
-        delegate?.providerWillChangeContent()
 
-        delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
-        
-        objc_sync_exit(self)
+        if Thread.isMainThread {
+           
+            self.delegate?.providerWillChangeContent()
 
+            self.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            
+        } else {
+            
+            DispatchQueue.main.sync { [weak self] in
+                
+                self?.delegate?.providerWillChangeContent()
+
+                self?.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            }
+        }
     }
     
     //MARK:- Header
@@ -128,7 +139,7 @@ public class DictionaryDataSourceProvider<T, Delegate: DataSourceProviderDelegat
 
     public func itemsArray(atSection section: Int) -> [T] {
 
-        let items = dictionaryItems.flatMap { (key, value) -> T? in
+        let items = dictionaryItems.compactMap { (key, value) -> T? in
             if key.section == section {
                 return value
             }

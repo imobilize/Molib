@@ -2,25 +2,23 @@
 import Foundation
 import UIKit
 import MessageUI
+import WebKit
 
-public class MOWebViewController: UIViewController, MFMailComposeViewControllerDelegate, UIWebViewDelegate {
+public class MOWebViewController: UINavigationController, MFMailComposeViewControllerDelegate {
     
     var request: URLRequest!
-    
-    @IBOutlet weak var webView: UIWebView!
-    
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    
-    @IBOutlet weak var failureMessageContainer: UILabel!
-    
+    let webView = WKWebView()
+    let viewController = UIViewController()
+    var isInitialLoad = true
     
     public init(request: URLRequest) {
         
         self.request = request
-       
-        let bundle = Bundle(for: MOWebViewController.self)
+        viewController.view = webView
+
+        super.init(rootViewController: viewController)
         
-        super.init(nibName: "MOWebViewController", bundle: bundle)
+        webView.navigationDelegate = self
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -31,47 +29,40 @@ public class MOWebViewController: UIViewController, MFMailComposeViewControllerD
     public convenience init(request: URLRequest, title: String) {
         
         self.init(request: request)
-        self.title = title
-
+        self.navigationBar.topItem?.title = title
     }
     
     override public func viewDidLoad() {
     
         super.viewDidLoad()
         
-        self.webView.delegate = self
-
         refreshButtonPressed(sender: self)
     }
-    
-    
-    //MARK: UIWebViewDelegate protocol implementation
-    
-    public func webViewDidStartLoad(_ webView: UIWebView) {
-        
-        self.activityIndicatorView.startAnimating()
-    }
-    
-    public func webViewDidFinishLoad(_ webView: UIWebView) {
-    
-        self.activityIndicatorView.stopAnimating()
-    }
-    
-    public func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-        
-        self.activityIndicatorView.stopAnimating()
-        self.failureMessageContainer.isHidden = false
-
-    }
-    
     
     //MARK: pragma mark Action callbacks
     
     @IBAction func refreshButtonPressed(sender: AnyObject) {
     
-        self.webView.loadRequest(self.request)
+        self.webView.load(self.request)
+    }
+}
 
-        self.failureMessageContainer.isHidden = true
+extension MOWebViewController: WKNavigationDelegate {
+    
+    @objc public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+
+    }
+
+    @objc public func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
         
+    }
+    
+    @objc public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+
+        if self.isInitialLoad {
+            self.isInitialLoad = false
+        } else {
+            webView.stopLoading()
+        }
     }
 }

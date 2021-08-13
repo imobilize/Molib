@@ -13,6 +13,9 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
         headerItems = [Int: [String: Any]]()
     }
 
+    public func reload() {}
+        
+    
     public func isEmpty() -> Bool {
 
         return arrayItems.isEmpty
@@ -71,13 +74,21 @@ public class ArrayDataSourceProvider<T, Delegate: DataSourceProviderDelegate>: D
 
     public func batchUpdates(updatesBlock: @escaping VoidCompletion) {
 
-        objc_sync_enter(self)
+        if Thread.isMainThread {
+           
+            self.delegate?.providerWillChangeContent()
 
-        delegate?.providerWillChangeContent()
+            self.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            
+        } else {
+            
+            DispatchQueue.main.sync { [weak self] in
+                
+                self?.delegate?.providerWillChangeContent()
 
-        delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
-        
-        objc_sync_exit(self)
+                self?.delegate?.providerDidEndChangeContent(updatesBlock: updatesBlock)
+            }
+        }
     }
     
     //MARK:- Header

@@ -71,15 +71,15 @@ struct MockRequestOperation: NetworkUploadOperation {
     func startConnection(completion: DataResponseCompletion) {
 
         guard let urlString = request.url?.absoluteString else {
-            print("No url given for loading mock request")
+           debugPrint("No url given for loading mock request")
             return
         }
 
-        print("Requesting url: \(urlString)")
+       debugPrint("Requesting url: \(urlString)")
         
         guard let fileURL = MockRequestQueue.dequeueResponeFileForRequestURL(urlString: urlString) else {
 
-            print("File url not found: \(urlString)")
+           debugPrint("File url not found: \(urlString)")
 
             let error = NSError(domain: "Network", code: 101, userInfo: nil)
 
@@ -89,7 +89,7 @@ struct MockRequestOperation: NetworkUploadOperation {
 
         if let url = URL(string: fileURL) {
         
-            print("Loading file url for request: \(String(describing: urlString)) \n")
+           debugPrint("Loading file url for request: \(String(describing: urlString)) \n")
 
             let data = try? Data (contentsOf: url)
             
@@ -97,7 +97,7 @@ struct MockRequestOperation: NetworkUploadOperation {
             
         } else {
             
-            print("File url for request not found\n")
+           debugPrint("File url for request not found\n")
 
             let error = NSError(domain: "Network", code: 101, userInfo: nil)
             

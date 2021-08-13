@@ -11,7 +11,8 @@ extension NSManagedObjectContext {
             let childContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
         
             childContext.parent = self
-        
+            childContext.automaticallyMergesChangesFromParent = true
+
             return childContext
         }
     }

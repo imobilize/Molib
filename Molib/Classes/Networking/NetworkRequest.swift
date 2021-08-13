@@ -3,13 +3,14 @@ import Foundation
 import UIKit
 import AVFoundation
 
+
 public struct DataRequestTask: NetworkRequest {
     
     public let urlRequest: URLRequest
-    
+        
     let taskCompletion: DataResponseCompletion
     
-    init(urlRequest: URLRequest, taskCompletion: @escaping DataResponseCompletion) {
+    public init(urlRequest: URLRequest, taskCompletion: @escaping DataResponseCompletion) {
         
         self.urlRequest = urlRequest
         self.taskCompletion = taskCompletion
@@ -19,6 +20,29 @@ public struct DataRequestTask: NetworkRequest {
     public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
         
         self.taskCompletion(dataOptional, errorOptional)
+    }
+}
+
+public struct NonAuthenticatedDataRequestTask: NetworkRequest, AuthenticatableRequest {
+    
+    public let urlRequest: URLRequest
+        
+    let taskCompletion: DataResponseCompletion
+    
+    public init(urlRequest: URLRequest, taskCompletion: @escaping DataResponseCompletion) {
+        
+        self.urlRequest = urlRequest
+        self.taskCompletion = taskCompletion
+    }
+    
+    
+    public func handleResponse(dataOptional: Data?, errorOptional: Error?) {
+        
+        self.taskCompletion(dataOptional, errorOptional)
+    }
+    
+    public func allowAuthentication() -> Bool {
+        return false
     }
 }
 

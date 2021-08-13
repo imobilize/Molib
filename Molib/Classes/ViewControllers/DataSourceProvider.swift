@@ -30,6 +30,8 @@ public protocol DataSourceProvider {
     func deleteAllInSection(section: Int)
     
     func insertHeaderDetails(details: [String: Any], atSection: Int)
+    
+    func reload()
 
 }
 

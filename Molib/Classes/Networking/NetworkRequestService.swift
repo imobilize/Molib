@@ -14,6 +14,11 @@ public typealias JSONResponseCompletion = (_ responseOptional: AnyObject?, _ err
 public typealias ProgressUpdate = (_ progress: Float) -> Void
 
 
+public protocol AuthenticatableRequest {
+    
+    func allowAuthentication() -> Bool
+}
+
 public protocol NetworkRequest {
 
     var urlRequest: URLRequest { get }

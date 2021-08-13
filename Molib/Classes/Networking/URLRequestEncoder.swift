@@ -37,9 +37,9 @@ public struct URLEncoder: URLRequestEncoder {
 
     /// The destination defining where the encoded query string is to be applied to the URL request.
     let destination: Destination
-    let parameters: [String: AnyObject]
+    let parameters: [String: Any]
 
-    init(parameters: [String: AnyObject]) {
+    public init(parameters: [String: Any]) {
        self.parameters = parameters
         self.destination = .methodDependent
 
@@ -194,9 +194,9 @@ public struct URLEncoder: URLRequestEncoder {
 
 public struct JsonEncoder: URLRequestEncoder {
 
-    let parameterToSerialize: AnyObject
+    let parameterToSerialize: Any
 
-    init(parameterToSerialize: AnyObject) {
+    public init(parameterToSerialize: Any) {
         self.parameterToSerialize = parameterToSerialize
     }
 
@@ -205,7 +205,7 @@ public struct JsonEncoder: URLRequestEncoder {
         return tuple.0
     }
 
-    func encodeRequestWithTypeJSON(request: URLRequest, params: AnyObject) -> (URLRequest, NSError?)  {
+    func encodeRequestWithTypeJSON(request: URLRequest, params: Any) -> (URLRequest, NSError?)  {
         var updatedURLRequest = request
         var encodingError: NSError? = nil
 
@@ -226,11 +226,11 @@ public struct JsonEncoder: URLRequestEncoder {
 
 public struct PropertyListEncoder: URLRequestEncoder {
 
-    let parameterToSerialize: AnyObject
+    let parameterToSerialize: Any
     let format: PropertyListSerialization.PropertyListFormat
     let writeOptions: PropertyListSerialization.WriteOptions
 
-    init(parameterToSerialize: AnyObject, format: PropertyListSerialization.PropertyListFormat, writeOptions: PropertyListSerialization.WriteOptions) {
+    public init(parameterToSerialize: Any, format: PropertyListSerialization.PropertyListFormat, writeOptions: PropertyListSerialization.WriteOptions) {
         self.parameterToSerialize = parameterToSerialize
         self.format = format
         self.writeOptions = writeOptions
@@ -241,7 +241,7 @@ public struct PropertyListEncoder: URLRequestEncoder {
         return tuple.0
     }
 
-    func encodeRequestWithTypePropertyList(request: URLRequest, params: AnyObject, types: (format: PropertyListSerialization.PropertyListFormat, options: PropertyListSerialization.WriteOptions)) -> (URLRequest, NSError?)  {
+    func encodeRequestWithTypePropertyList(request: URLRequest, params: Any, types: (format: PropertyListSerialization.PropertyListFormat, options: PropertyListSerialization.WriteOptions)) -> (URLRequest, NSError?)  {
 
         var updatedRequest = request
         var encodingError: NSError? = nil

@@ -2,76 +2,73 @@
 import Foundation
 
 
-let kDefaultsKey = "Defaults"
-let kSecureDefaultsKey = "SecureDefaults"
+public class UserDefaultsImpl: UserConfig {
+
+    let kDefaultsKey = "Defaults"
+    let kSecureDefaultsKey = "SecureDefaults"
 
 
-var defaultsDictionary: NSMutableDictionary! = nil
+    static var defaultsDictionary: NSMutableDictionary! = nil
+    static var secureItemsDictionary: NSMutableDictionary! = nil
 
-var secureItemsDictionary: NSMutableDictionary! = nil
-
-
-public struct UserDefaultsImpl: UserConfig {
-
-    
     public init() {
         
-        if(defaultsDictionary == nil) {
+        if(UserDefaultsImpl.defaultsDictionary == nil) {
             
             let dictionary = Foundation.UserDefaults.standard.dictionary(forKey: kDefaultsKey)
             
             if dictionary != nil {
             
-                defaultsDictionary = NSMutableDictionary(dictionary: dictionary!)
+                UserDefaultsImpl.defaultsDictionary = NSMutableDictionary(dictionary: dictionary!)
             } else {
                 
-                defaultsDictionary = NSMutableDictionary()
+                UserDefaultsImpl.defaultsDictionary = NSMutableDictionary()
             }
             
-            let secureDictionary = defaultsDictionary.object(forKey: kSecureDefaultsKey) as? NSDictionary
+            let secureDictionary = UserDefaultsImpl.defaultsDictionary.object(forKey: kSecureDefaultsKey) as? NSDictionary
             
             if secureDictionary != nil {
             
                 let decryptedDictionary = decryptDictionary(dictionary: secureDictionary!)
                 
-                secureItemsDictionary = NSMutableDictionary(dictionary: decryptedDictionary)
+                UserDefaultsImpl.secureItemsDictionary = NSMutableDictionary(dictionary: decryptedDictionary)
             } else {
                 
-                secureItemsDictionary = NSMutableDictionary()
+                UserDefaultsImpl.secureItemsDictionary = NSMutableDictionary()
             }
         }
     }
     
     public func stringForKey(key: String) -> String? {
         
-        return defaultsDictionary.object(forKey: key) as? String
+        return UserDefaultsImpl.defaultsDictionary.object(forKey: key) as? String
     }
     
     public func secureStringForKey(key: String) -> String? {
         
-        return secureItemsDictionary.object(forKey: key) as? String
+        return UserDefaultsImpl.secureItemsDictionary.object(forKey: key) as? String
     }
     
     public func dictionaryForKey(key: String) -> Dictionary<String, AnyObject>? {
         
-        return defaultsDictionary.object(forKey: key) as? Dictionary
+        return UserDefaultsImpl.defaultsDictionary.object(forKey: key) as? Dictionary
     }
     
     public func dataForKey(key: String) -> NSData? {
         
-        return defaultsDictionary.object(forKey: key) as? NSData
+        return UserDefaultsImpl.defaultsDictionary.object(forKey: key) as? NSData
     }
     
     public func boolForKey(key: String) -> Bool? {
         
-        let number = defaultsDictionary.object(forKey: key) as? NSNumber
+        let number = UserDefaultsImpl.defaultsDictionary.object(forKey: key) as? NSNumber
         
         return number?.boolValue
     }
     
     public func integerForKey(key: String) -> Int? {
         
-        return defaultsDictionary.object(forKey: key) as? Int
+        return UserDefaultsImpl.defaultsDictionary.object(forKey: key) as? Int
         
     }
     
@@ -84,18 +81,18 @@ public struct UserDefaultsImpl: UserConfig {
     
     public func setSecureString(value: String?, forKey key: String) {
     
-        if(secureItemsDictionary == nil) {
+        if(UserDefaultsImpl.secureItemsDictionary == nil) {
     
-            secureItemsDictionary = NSMutableDictionary()
+            UserDefaultsImpl.secureItemsDictionary = NSMutableDictionary()
         }
     
         if (value == nil) {
     
-            secureItemsDictionary.removeObject(forKey: key)
+            UserDefaultsImpl.secureItemsDictionary.removeObject(forKey: key)
             
         } else {
     
-            secureItemsDictionary[key] = value
+            UserDefaultsImpl.secureItemsDictionary[key] = value
         }
     }
     
@@ -123,16 +120,16 @@ public struct UserDefaultsImpl: UserConfig {
     
     public func synchronize() -> Bool {
     
-        if (secureItemsDictionary != nil) {
+        if (UserDefaultsImpl.secureItemsDictionary != nil) {
     
-            let encryptedDictionary = encryptDictionary(dictionary: secureItemsDictionary)
+            let encryptedDictionary = encryptDictionary(dictionary: UserDefaultsImpl.secureItemsDictionary)
     
-            defaultsDictionary[kSecureDefaultsKey] = encryptedDictionary
+            UserDefaultsImpl.defaultsDictionary[kSecureDefaultsKey] = encryptedDictionary
         }
     
         let defaults = Foundation.UserDefaults.standard
     
-        defaults.set(defaultsDictionary, forKey: kDefaultsKey)
+        defaults.set(UserDefaultsImpl.defaultsDictionary, forKey: kDefaultsKey)
     
         return defaults.synchronize()
     }
@@ -144,11 +141,11 @@ public struct UserDefaultsImpl: UserConfig {
     
         if (value == nil) {
     
-            defaultsDictionary.removeObject(forKey: key)
+            UserDefaultsImpl.defaultsDictionary.removeObject(forKey: key)
             
         } else {
     
-            defaultsDictionary[key] = value
+            UserDefaultsImpl.defaultsDictionary[key] = value
         }
         
         _ = synchronize()
